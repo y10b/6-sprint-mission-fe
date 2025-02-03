@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>login</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="login">
+      <div class="login_wrap">
+        <div class="logo">
+          <a href="index.html" id="PM">
+            <img src="image/logo.png">판다마켓
+          </a>
+        </div>
+
+        <div class="stress">이메일</div>
+        <input type="email" id="email" placeholder="이메일을 입력해주세요">
+        <div class="stress">비밀번호</div>
+        <div class="password-container">
+          <input type="password" id="password" placeholder="비밀번호를 입력해주세요">
+          <span class="toggle-password material-symbols-outlined" onclick="togglePassword('password', 'toggleIcon')">
+            visibility_off
+          </span>
+        </div>
+        
+        <button class="btnLogin" disabled>로그인</button>
+
+        <div class="emailLogin">
+         <div class="emailLogin_wrap">
+          <p>간편 로그인하기</p>
+          <div class="loginImg">
+            <a href="https://www.google.com"><img src="image/google.png"></a>
+            <a href="https://www.kakaocorp.com/page/"><img src="image/kakao.png"></a>
+          </div>
+        </div>
+        </div>
+
+        <div class="crossLink">
+          판다마켓이 처음이신가요? <a href="signup.html">회원가입</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
