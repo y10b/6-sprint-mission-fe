@@ -17,11 +17,17 @@
 }
 
 html {
-    height: 100vh;
     width: 100vw;
+    height: 100vh;
     font-family: 'Pretendard';
     font-weight: 600;
     font-size: 16px;
+    -ms-overflow-style: none;
+    margin: 0 auto;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 /* ============================================ */
@@ -39,6 +45,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 1;
+    
 }
 
 header a {
@@ -109,6 +116,7 @@ nav button:hover {
     border-radius: 2.5rem;
     color: var(--btntext-color);
     cursor: pointer;
+    font-family: 'Pretendard';
     font-size: 1.25rem;
     font-weight: 600;
     height: 3.5rem;
@@ -124,8 +132,9 @@ nav button:hover {
 /* contents */
 .contents article {
     gap: 0.625rem;
-    height: 45rem;
-    padding: 8.625rem 21.5rem;
+    height: 32.5rem;
+    padding: 8.625rem 15.25rem;
+    margin: 0;
 }
 
 .contents section {
@@ -178,7 +187,7 @@ nav button:hover {
     gap: 1.5rem;
     white-space: nowrap;
     width: 335px;
-    height: 238px;
+    height: 14.875rem;
 }
 
 .contents2_text * {
@@ -240,7 +249,7 @@ nav button:hover {
     margin: 0;
     white-space: nowrap;
     margin-left: 12.5rem;
-    line-height: 19.09px;
+    line-height: 1.193125rem;
 }
 
 .maden p {
@@ -261,7 +270,7 @@ nav button:hover {
     text-decoration: none;
     white-space: nowrap;
     font-weight: 400;
-    line-height: 19.09px;
+    line-height: 1.193125rem;
 }
 
 .QA a:hover {
