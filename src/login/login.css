@@ -18,27 +18,63 @@ html {
     font-size: 16px;
     font-weight: 600;
     -ms-overflow-style: none;
-    margin: 0 auto;
 }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* 전체 화면 높이 */
+    margin: 0;
+}
+
 
 ::-webkit-scrollbar {
     display: none;
 }
+
+/* edge 브라우저에서 눈 아이콘 삭제 */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
 /* ========================================== */
 
 /* page  html 설정 */
 .login {
-    margin: 14.4375rem 40rem 17.75rem;
     width: 40rem;
     height: 38.625rem;
+    gap: 40px;
+
+    /* 기존 margin 대신 flexbox 사용 */
+    margin: 0 auto;
+
+    /* 중앙 정렬을 위한 flex 설정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
 
 .signup {
     width: 40rem;
     height: 52.5rem;
     gap: 2.5rem;
-    margin: 3.75rem 40rem 11.125rem;
+
+    /* 기존 margin 제거하고 flexbox 적용 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* 화면 중앙 정렬 */
+    margin: 0 auto;
 }
+
+
 /* ========================================== */
 
 /* header */
@@ -46,6 +82,7 @@ header img {
     display: block;
     margin: 0 auto;
 }
+
 /* ========================================== */
 
 /* section */
@@ -66,7 +103,7 @@ section input {
     border: none;
     background: var(--ipt-btnText-color);
     font-family: 'Pretendard';
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.625rem;
     color: var(--p-text-color);
 }
@@ -79,17 +116,35 @@ section input:focus {
     outline-color: var(--a-text-color);
 }
 
+.to_password {
+    position: relative;
+}
+
+.to_password input {
+    width: 100%;
+}
+
+.to_password i {
+    position: absolute;
+    right: 0;
+    top: 78%;
+    transform: translateY(-50%);
+    color: var(--iptText-btn-color);
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin: auto;
+}
+
 .login_btn {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
 }
 
 .login_btn button {
-    width: 43rem;
+    width: 108%;
     height: 3.5rem;
     border-radius: 2.5rem;
     border: none;
-    padding: 1rem 7.75rem;
     gap: 0.625rem;
     background: var(--iptText-btn-color);
     font-family: 'Pretendard';
@@ -103,6 +158,8 @@ section input:focus {
 
 .login_btn button:hover {
     transform: scale(0.99);
+    background: var(--a-text-color);
+    color: var(--p-text-color);
 }
 
 .sns_login {
