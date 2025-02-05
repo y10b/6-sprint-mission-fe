@@ -128,7 +128,7 @@ section input:focus {
 
 .to_password i {
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 78%;
     transform: translateY(-50%);
     color: var(--iptText-btn-color);
