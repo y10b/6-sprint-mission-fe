@@ -96,7 +96,7 @@ section p {
 
 section input {
     width: 100%;
-    height: 1.5rem;
+    height: 3.3rem;
     border-radius: 0.75rem;
     padding: 1rem 1.5rem;
     gap: 0.625rem;
@@ -106,6 +106,7 @@ section input {
     font-size: 1.1rem;
     line-height: 1.625rem;
     color: var(--p-text-color);
+    box-sizing: border-box;
 }
 
 section input::placeholder {
@@ -121,18 +122,17 @@ section input:focus {
 }
 
 .to_password input {
-    width: 100%;
+    padding-right: 2.5rem;
 }
 
 .to_password i {
     position: absolute;
-    right: 0;
+    right: 10px;
     top: 78%;
     transform: translateY(-50%);
     color: var(--iptText-btn-color);
     cursor: pointer;
     font-size: 1.1rem;
-    margin: auto;
 }
 
 .login_btn {
@@ -141,7 +141,7 @@ section input:focus {
 }
 
 .login_btn button {
-    width: 108%;
+    width: 100%;
     height: 3.5rem;
     border-radius: 2.5rem;
     border: none;
@@ -159,12 +159,11 @@ section input:focus {
 .login_btn button:hover {
     transform: scale(0.99);
     background: var(--a-text-color);
-    color: var(--p-text-color);
 }
 
 .sns_login {
     background: var(--sns-bg-color);
-    width: 100%;
+    width: 93%;
     height: 2.625rem;
     border-radius: 0.5rem;
     gap: 0.625rem;
@@ -198,12 +197,12 @@ section input:focus {
 
 .google:hover {
     transform: scale(1.01);
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 .kakao:hover {
     transform: scale(1.01);
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 .sign_text {
@@ -229,5 +228,5 @@ section input:focus {
 }
 
 .sign_text a:hover {
-    opacity: 0.5;
+    opacity: 0.7;
 }

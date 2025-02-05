@@ -1,6 +1,5 @@
 @charset "UTF-8";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css");
-@import url("reset.css");
 
 /* 기본설정  */
 :root {
@@ -16,14 +15,23 @@
     --form-bg-color: #111827;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 html {
-    width: 100vw;
     height: 100vh;
     font-family: 'Pretendard';
     font-weight: 600;
     font-size: 16px;
     -ms-overflow-style: none;
     margin: 0 auto;
+}
+
+html,
+body {
+    width: 100%;
+    min-width: 320px;
 }
 
 ::-webkit-scrollbar {
@@ -75,6 +83,7 @@ nav button {
 
 nav button:hover {
     transform: scale(1.01);
+    background: var(--license-text);
 }
 
 /* =================================== */
@@ -126,6 +135,7 @@ nav button:hover {
 
 .banner_text button:hover {
     transform: scale(1.01);
+    background: var(--license-text);
 }
 
 /* ========================================= */
@@ -134,7 +144,7 @@ nav button:hover {
 
 .contents article {
     gap: 0.625rem;
-    height: 32.5rem;
+    height: 45rem;
     padding: 8.625rem 15.25rem;
     margin: 0;
 }
@@ -188,7 +198,7 @@ nav button:hover {
 .content2_text {
     gap: 1.5rem;
     white-space: nowrap;
-    width: 335px;
+    width: 20.9375rem;
     height: 14.875rem;
 }
 

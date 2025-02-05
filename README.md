@@ -25,7 +25,11 @@
 - scrollbar 표시 삭제
 - 로그인 & 회원가입 페이지 요소 가운데 정렬
 - index.html SNS icon 수정
-- sub(login,singup) Page button over 스타일 추가
+- sub(login,singup) Page button hover 스타일 추가
 
 - input 요소 눈모양 아이콘 추가(입력값이 없을 경우 눈 아이콘 클릭불가, 비밀번호 input 비밀번호 확인 input 각각 반응하게 수정)
 - 화면에 따라 sub Page 가운데 정렬이 아닌 오류 수정
+
+- main Page button hover 스타일 추가
+- main Page 100vw 스타일 오류 수정
+- input 입력 필드가 눈모양 아이콘을 넘지 않도록 수정
