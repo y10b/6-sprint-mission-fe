@@ -107,6 +107,7 @@ section input {
     line-height: 1.625rem;
     color: var(--p-text-color);
     box-sizing: border-box;
+    caret-color: var(--a-text-color);
 }
 
 section input::placeholder {

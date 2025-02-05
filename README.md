@@ -33,3 +33,4 @@
 - main Page button hover 스타일 추가
 - main Page 100vw 스타일 오류 수정
 - input 입력 필드가 눈모양 아이콘을 넘지 않도록 수정
+- input cursor color 변경
