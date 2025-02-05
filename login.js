@@ -17,7 +17,7 @@ function activeEvent() {
   }
 }
 
-function togglePassword(inputId, iconId) {
+function togglePassword(inputId) {
   const input = document.getElementById(inputId);
   const icon = document.querySelector(".toggle-password");
 
