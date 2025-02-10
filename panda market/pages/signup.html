@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - 판다마켓</title>
+    <!-- SEO 작업 -->
+    <meta name="description" content="(웹 사이트의 설명을 입력)" />
+    <meta name="author" content="(웹 사이트 제작자 입력)" />
+    <link rel="shortcut icon" href="/images/reset/favicon.ico" type="image/x-icon">
+
+    <!-- OG (Open Graph Data) -->
+    <meta property="og:site_name" content="(웹 사이트 이름을 입력)">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="(배포 후 생성된 URL)">
+    <meta property="og:title" content="(웹 사이트 이름 입력)">
+    <meta property="og:image" content="(배포 후 생성된 이미지)">
+    <meta property="og:description" content="(웹 사이트의 설명을 입력)">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/14dfbf5c1d.js" crossorigin="anonymous"></script>
+    
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- https://kenwheeler.github.io/slick/ -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <!-- css + js -->
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/signup.css">
+</head>
+<body>
+    <div id="auth"></div>
+    <script>
+        // auth.html 파일을 불러옴
+        fetch('/pages/auth.html')
+            .then(response => response.text())
+            .then(data => {
+                // auth.html을 'auth' div에 삽입
+                document.getElementById('auth').innerHTML = data;
+    
+                // auth.html이 삽입된 후 input 요소에 이벤트 리스너 추가
+                const inputWrites = document.querySelectorAll('.inputBox > input');
+                for (let i = 0; i < inputWrites.length; i++) {
+                    inputWrites[i].addEventListener('click', (e) => {
+                        if (e.target.classList.value.split(" ")[1] === 'write') {
+                            inputWrites.forEach(input => {
+                                input.style.border = 'none';
+                            });
+                            inputWrites[i].style.border = '1px solid #3692ff';
+                        }
+                    });
+                }
+    
+                // 클릭 시 입력 필드 스타일 초기화
+                window.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('write')) {
+                        inputWrites.forEach(input => {
+                            input.style.border = 'none';
+                        });
+                    }
+                });
+
+                // 해당 URL로 이동
+                const page = document.querySelector(".otherPage > a")
+                page.addEventListener('click', function (){
+                    location.href = "/pages/login.html"
+                })
+
+                // 로그인 -> 회원가입 and 회원가입 -> 로그인
+                document.querySelector('.submit > input').value = "회원가입"
+                document.querySelector('.secondSpan').innerHTML = '로그인'
+
+                //서버 없어서 막음
+                const form = document.querySelector('form')
+                form.addEventListener('submit',  function(e){
+                    e.preventDefault();
+                })
+
+                // toggle
+                const toggles = document.querySelectorAll(".toggle")
+                const userPassword = document.querySelector(".userPassword")
+                const userPasswordCheck = document.querySelector(".userPasswordCheck")
+                for(let i = 0; i < toggles.length; i++){
+                    toggles[i].addEventListener('click', function(){
+                        const toggleImg = toggles[i].querySelector("img")
+                        if(toggleImg.src.includes('on')) {
+                            toggleImg.src = '/images/auth/btn_visibility_off_24px.png'
+                            if(toggleImg.alt === 'password1') userPassword.type = 'text'
+                            else userPasswordCheck.type = 'text'
+                        } else {
+                            toggleImg.src = '/images/auth/btn_visibility_on_24px.png'
+                            if(toggleImg.alt === 'password1') userPassword.type = 'password'
+                            else userPasswordCheck.type = 'password'   
+                        }
+                    })
+                }
+            })
+            .catch(error => {
+                console.error('Error loading auth.html:', error);
+            });
+        </script>
+</body>
+</html>

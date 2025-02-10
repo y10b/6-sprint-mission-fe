@@ -1,0 +1,61 @@
+.authContainer {
+    position : absolute; transform: matrix(1, 0, 0, 1, -180, -223);
+    top : 50%; left : 50%; transform: translate(-50%, -50%);
+}
+.authContainer .content {
+    width : 640px; display: flex; flex-direction: column; gap : 40px;
+}
+.content .firstContent{
+    display: flex; flex-direction: column; align-items: center;
+}
+.content .firstConten .logo .svg {
+    width : 396px; height: 132px;
+}
+.content .secondContent form{
+    display: flex; flex-direction: column; gap : 24px; width : 100%;
+}
+.content .secondContent form .inputBox {
+    display: flex; flex-direction: column; gap : 16px;
+    position :relative;
+}
+.content .secondContent form .inputBox label {
+    font-size : 18px; font-weight: 700; color : #1F2937;
+}
+.content .secondContent form .inputBox input {
+    padding : 16px 24px; background-color: #F3F4F6;
+    border :none; border-radius: 12px; height: 56px;
+    color : #9CA3AF; font-size : 16px; font-weight: 400;
+}
+.content .secondContent form .inputBox .toggle {
+    position : absolute; right : 24px; bottom : 16px; 
+}
+.content .secondContent form .submit {
+    width : 100%; 
+}
+.content .secondContent form .submit input{
+    width: 100%; height : 56px; border: none; padding : 0px;
+    border-radius: 40px; background-color: #9CA3AF;
+    font-size : 20px; font-weight: 600; color : white; text-align: center;
+    cursor : pointer;
+}
+
+.content .secondContent form .anotherLogin {
+    display: flex; height: 74px; justify-content: space-between; align-items: center;
+    border-radius: 8px; padding : 16px 23px; background-color: #E6F2FF;
+} 
+.content .secondContent form .anotherLogin p {
+    font-size : 16px; font-weight: 500; color : #1F2937;
+}
+.content .secondContent form .anotherLogin .icons {
+    display: flex; gap : 16px;
+}
+.content .secondContent form .otherPage {
+    display: flex; gap : 4px; align-items: center; justify-content: center;
+}
+.content .secondContent form .otherPage span.firstSpan {
+    font-size : 14px; font-weight: 500; color : #1F2937
+}
+.content .secondContent form .otherPage span.secondSpan {
+    font-size : 15px; font-weight: 500; color : #3182F6;
+    text-decoration: underline;
+}
