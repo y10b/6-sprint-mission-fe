@@ -1,0 +1,43 @@
+:root{
+    /* 해당 폰트는 변경될 수 있다 */
+    font-family : "Pretendard";
+    font-size : 16px; font-weight: 400;
+    color : black;
+}
+* {
+  box-sizing: border-box;
+}
+#header {
+    position: sticky; background-color: white;
+    top : 0px; left : 0px; z-index: 10;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+h1, h2, h3, h4, h5, h6 , p {
+    margin: 0;
+    font-weight: normal;
+}
+a {
+    text-decoration: none;
+    color: var(--color) 
+}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* 이미지 아래 여백 제거 */
+}
+button {
+    background: transparent;
+    cursor: pointer;
+    padding: 0; 
+    border: 0px;
+}
+ul,ol,li {
+    list-style: none;
+    margin : 0px; padding : 0px;
+}
+input {
+    outline : none; 
+}
