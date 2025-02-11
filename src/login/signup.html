@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../img/pavicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="sign.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>판다마켓</title>
 </head>
 
@@ -17,27 +16,36 @@
             <a href="../index.html"><img src="../img/logo.png" alt="logo"></a>
         </header>
         <main>
-            <section>
-                <div class="to_email">
+            <form>
+                <div class="emailINPUT">
                     <p>이메일</p>
-                    <input id="to_email" type="email" placeholder="이메일을 입력하세요">
+                    <input id="email" type="email" placeholder="이메일을 입력하세요" required>
+                    <small id="email-error">
+                        <p></p>
+                    </small>
                 </div>
-                <div class="to_nick">
+                <div class="nicknameINPUT">
                     <p>닉네임</p>
-                    <input id="to_nick" type="text" placeholder="닉네임을 입력해주세요">
+                    <input id="nickname" type="text" placeholder="닉네임을 입력해주세요" required>
                 </div>
-                <div class="to_password">
+                <div class="passwordINPUT">
                     <p>비밀번호</p>
-                    <input id="to_password" type="password" placeholder="비밀번호를 입력해주세요">
+                    <input id="password" type="password" placeholder="비밀번호를 입력해주세요" required>
                     <i class="fa-regular fa-eye-slash"></i>
                 </div>
-                <div class="to_password">
+                <small id="password-error">
+                    <p></p>
+                </small>
+                <div class="confirm-passwordINPUT">
                     <p>비밀번호 확인</p>
-                    <input id="to_password_check" type="password" placeholder="비밀번호를 다시 한 번 입력해주세요">
+                    <input id="confirm-password" type="password" placeholder="비밀번호를 다시 한 번 입력해주세요" required>
                     <i class="fa-regular fa-eye-slash"></i>
                 </div>
-                <div class="login_btn">
-                    <button>회원가입</button>
+                <small id="confirm-password-error">
+                    <p></p>
+                </small>
+                <div class="sign_btn">
+                    <button id="sign_btn" type="submit" disabled>회원가입</button>
                 </div>
                 <div class="sns_login">
                     <div class="sns_inner">
@@ -52,16 +60,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="sign">
-                    <div class="sign_text">
+                <div class="login">
+                    <div class="login_text">
                         <p>이미 회원이신가요?</p>
                         <p><a href="login.html">로그인</a></p>
                     </div>
                 </div>
-            </section>
+            </form>
         </main>
     </article>
+
+    <div id="popup-bg"></div>
+    <div id="popup">
+        <div class="popup-text"></div>
+        <button id="popup-close">확인</button>
+    </div>
+
 </body>
-<script src="script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="sign.js"></script>
 
 </html>

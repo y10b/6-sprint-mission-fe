@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>판다마켓</title>
 </head>
 
@@ -18,18 +17,25 @@
             <a href="../index.html"><img src="../img/logo.png" alt="logo"></a>
         </header>
         <main>
-            <section>
-                <div class="to_email">
+            <form>
+                <div class="emailINPUT">
                     <p>이메일</p>
-                    <input id="to_email" type="email" placeholder="이메일을 입력하세요">
+                    <input id="email" type="email" placeholder="이메일을 입력하세요" required>
+                    <small id="email-error">
+                        <p></p>
+                    </small>
                 </div>
-                <div class="to_password">
+                <div class="passwordINPUT">
                     <p>비밀번호</p>
-                    <input id="to_password" type="password" placeholder="비밀번호를 입력해주세요">
+                    <input id="password" type="password" placeholder="비밀번호를 입력해주세요" required>
                     <i class="fa-regular fa-eye-slash"></i>
                 </div>
+                <small id="password-error">
+                    <p></p>
+                </small>
+                </div>
                 <div class="login_btn">
-                    <button>로그인</button>
+                    <button id="login_btn" disabled>로그인</button>
                 </div>
                 <div class="sns_login">
                     <div class="sns_inner">
@@ -50,11 +56,17 @@
                         <p><a href="signup.html">회원가입</a></p>
                     </div>
                 </div>
-            </section>
+            </form>
         </main>
     </article>
 
-    <script src="script.js"></script>
+    <div id="popup-bg"></div>
+    <div id="popup">
+        <div class="popup-text"></div>
+        <button id="popup-close">확인</button>
+    </div>
 </body>
+<script src="login.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </html>

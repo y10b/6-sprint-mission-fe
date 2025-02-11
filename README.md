@@ -34,3 +34,11 @@
 - main Page 100vw 스타일 오류 수정
 - input 입력 필드가 눈모양 아이콘을 넘지 않도록 수정
 - input cursor color 변경
+
+## subPage JS & CSS MOD
+요구사항에 따라 input MOD
+- JS로 유효성 검사
+- JS로 로그인 버튼 활성화 동작 추가
+- JS로 user data 내의 값만 로그인이 가능하게 구현
+- JS로 로그인 실패 시 popup 추가
+- main & sub Page hover 동작 삭제

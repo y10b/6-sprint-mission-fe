@@ -44,20 +44,21 @@ input::-ms-clear {
 /* ========================================== */
 
 /* page  html 설정 */
-.login {
+.signup {
     width: 40rem;
-    height: 38.625rem;
-    gap: 40px;
+    height: 52.5rem;
+    gap: 2.5rem;
 
-    /* 기존 margin 대신 flexbox 사용 */
-    margin: 0 auto;
-
-    /* 중앙 정렬을 위한 flex 설정 */
+    /* 기존 margin 제거하고 flexbox 적용 */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    /* 화면 중앙 정렬 */
+    margin: 0 auto;
 }
+
 
 /* ========================================== */
 
@@ -102,21 +103,20 @@ form input:focus {
     outline-color: var(--a-text-color);
 }
 
-.emailINPUT {
-    position: relative;
-}
-
-.passwordINPUT {
+.passwordINPUT,
+.confirm-passwordINPUT {
     position: relative;
     width: 100%;
 }
 
-.passwordINPUT input {
+.passwordINPUT input,
+.confirm-passwordINPUT input {
     padding-right: 2.5rem;
     /* 아이콘 공간을 확보 */
 }
 
-.passwordINPUT i {
+.passwordINPUT i,
+.confirm-passwordINPUT i {
     position: absolute;
     right: 15px;
     top: 78%;
@@ -127,31 +127,39 @@ form input:focus {
 }
 
 /* error 스타일 */
+/* 에러 메시지 기본 숨김 */
 .emailINPUT input.error,
 .passwordINPUT input.error {
     border: 1px solid var(--error-color);
 }
-/* 에러 메시지 기본 숨김 */
+
 #email-error p,
-#password-error p {
+#password-error p,
+#confirm-password-error p {
     color: var(--error-color);
     font-size: 15px;
     font-weight: 600;
     line-height: 17.9px;
     margin-top: 5px;
-    display: none; /* 기본적으로 숨김 */
+    display: none;
+    /* 기본적으로 숨김 */
     padding-top: 8px;
     padding-left: 16px;
 }
 
+/* 에러 메시지 보이게 할 때 */
+#error-message.show p {
+    display: block;
+}
+
 /* ======================= */
 /* 로그인 버튼 스타일 */
-.login_btn {
+.sign_btn {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
 }
 
-#login_btn {
+#sign_btn {
     width: 100%;
     height: 3.5rem;
     border-radius: 2.5rem;
@@ -171,7 +179,7 @@ form input:focus {
 
 
 /* 비활성화된 로그인 버튼 스타일 */
-#login_btn:disabled {
+#sign_btn:disabled {
     background: var(--iptText-btn-color);
     color: var(--ipt-btnText-color);
     cursor: not-allowed;
@@ -223,21 +231,21 @@ form input:focus {
     opacity: 0.7;
 }
 
-.sign_text {
+.login_text {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
 }
 
-.sign_text p {
+.login_text p {
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.5rem;
     color: var(--p-text-color);
 }
 
-.sign_text a {
+.login_text a {
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.044375rem;
@@ -245,7 +253,7 @@ form input:focus {
     color: var(--a-text-color);
 }
 
-.sign_text a:hover {
+.login_text a:hover {
     opacity: 0.7;
 }
 
