@@ -26,7 +26,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* 전체 화면 높이 */
     margin: 0;
 }
 
@@ -48,15 +47,12 @@ input::-ms-clear {
     width: 40rem;
     height: 38.625rem;
     gap: 40px;
-
-    /* 기존 margin 대신 flexbox 사용 */
     margin: 0 auto;
-
-    /* 중앙 정렬을 위한 flex 설정 */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    
 }
 
 /* ========================================== */
@@ -131,6 +127,7 @@ form input:focus {
 .passwordINPUT input.error {
     border: 1px solid var(--error-color);
 }
+
 /* 에러 메시지 기본 숨김 */
 #email-error p,
 #password-error p {
@@ -139,7 +136,8 @@ form input:focus {
     font-weight: 600;
     line-height: 17.9px;
     margin-top: 5px;
-    display: none; /* 기본적으로 숨김 */
+    display: none;
+    /* 기본적으로 숨김 */
     padding-top: 8px;
     padding-left: 16px;
 }
@@ -175,7 +173,6 @@ form input:focus {
     background: var(--iptText-btn-color);
     color: var(--ipt-btnText-color);
     cursor: not-allowed;
-    opacity: 0.5;
     transform: scale(1);
 }
 
@@ -306,4 +303,172 @@ form input:focus {
 #popup-close:hover {
     transform: scale(1.03);
     opacity: 0.5;
+}
+
+/* ========================================== */
+/*  Tablet (744px ~ 1199px) */
+@media (max-width: 1199px) and (min-width: 744px) {
+    .login {
+        width: 640px;
+        height: 602px;
+        padding: 48px 53px 183px 51px;
+    }
+    header{
+        padding: 0 112px;
+    }
+    header img{
+        width: 396px;
+        height: 132px;
+    }
+    main{
+        width: 640px;
+        height: 430px;
+    }
+    .emailINPUT p, .passwordINPUT p{
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 21.48px;
+    }
+    form input {
+        width: 100%;
+        height: 56px;
+        font-size: 16px;
+        padding: 16px 24px;
+    }
+
+    #login_btn {
+        width: 100%;
+        height: 56px;
+        border-radius: 40px;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .sns_login {
+        width: 93%;
+        height: 2.5rem;
+    }
+
+    .sns_inner {
+        width: 100%;
+    }
+
+    .sns_text p {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+
+    .sign_text p,
+    .sign_text a {
+        font-size: 15px;
+    }
+    #popup {
+        width: 540px;
+        height: 250px;
+    }
+
+    #popup-close {
+        width: 120px;
+        height: 48px;
+        top: 174px;
+        left: 392px;
+        border-radius: 8px;
+        padding: 12px 23px;
+    }
+}
+
+/* ========================================== */
+/* Mobile (375px ~ 743px) */
+@media (max-width: 743px) and (min-width: 375px) {
+
+    .login {
+        width: 344px;
+        height: 481px;
+        padding: 24px 15px  107px 16px;
+    }
+    header{
+        padding: 0 73px;
+    }
+
+    header img {
+        width: 198px;
+        height: 66px;
+    }
+    main{
+        width: 344px;
+        height: 391px;
+    }
+    .emailINPUT p,  .passwordINPUT p{
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16.71px;
+    }
+
+    form input {
+        width: 343px;
+        height: 56px;
+        padding: 16px 24px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    #login_btn {
+        width: 343px;
+        height: 56px;
+        border-radius: 40px;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+        text-align: center;
+    }
+
+    .sns_login {
+        width: 88%;
+    }
+
+    .sns_inner {
+        width: 100%;
+    }
+
+    .sns_text p {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .sns_img {
+        justify-content: center;
+    }
+
+    .sign_text p,
+    .sign_text a {
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 17.9px;
+    }
+
+    #popup {
+        width: 327px;
+        height: 220px;
+    }
+    .popup-text{
+        text-align: center;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19.09px;
+        padding: 81px 68px 49px 67px;
+    }
+    #popup-close {
+        width: 120px;
+        height: 48px;
+        top: 149px;
+        left: 104px;
+        border-radius: 8px;
+        padding: 12px 23px;
+    }
 }

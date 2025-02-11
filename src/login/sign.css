@@ -119,7 +119,7 @@ form input:focus {
 .confirm-passwordINPUT i {
     position: absolute;
     right: 15px;
-    top: 78%;
+    top: 76.5%;
     transform: translateY(-50%);
     color: var(--iptText-btn-color);
     cursor: pointer;
@@ -314,4 +314,193 @@ form input:focus {
 #popup-close:hover {
     transform: scale(1.03);
     opacity: 0.5;
+}
+
+/* ========================================== */
+/*  Tablet (744px ~ 1199px) */
+@media (max-width: 1199px) and (min-width: 744px) {
+    .signup {
+        width: 640px;
+        height: 812px;
+        padding: 48px 53px 273px 51px;
+    }
+
+    header {
+        padding: 0 112px;
+    }
+
+    header img {
+        width: 396px;
+        height: 132px;
+    }
+
+    main {
+        width: 640px;
+        height: 420px;
+    }
+
+    .emailINPUT p,
+    .passwordINPUT p,
+    .nicknameINPUT,
+    .confirm-passwordINPUT {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 21.48px;
+    }
+
+    form input {
+        width: 100%;
+        height: 56px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        padding: 16px 24px;
+    }
+
+    #login_btn {
+        width: 100%;
+        height: 56px;
+        border-radius: 40px;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .sns_login {
+        width: 93%;
+        height: 2.5rem;
+    }
+
+    .sns_inner {
+        width: 100%;
+    }
+
+    .sns_text p {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+
+    .sign_text p,
+    .sign_text a {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 17.9px;
+    }
+
+    #popup {
+        width: 540px;
+        height: 250px;
+    }
+
+    #popup-close {
+        width: 120px;
+        height: 48px;
+        top: 174px;
+        left: 392px;
+        border-radius: 8px;
+        padding: 12px 23px;
+    }
+}
+
+/* ========================================== */
+/* Mobile (375px ~ 743px) */
+@media (max-width: 743px) and (min-width: 375px) {
+
+    .signup {
+        width: 344px;
+        height: 675px;
+        padding: 24px 15px 10px 16px;
+    }
+
+    header {
+        padding: 0 73px;
+    }
+
+    header img {
+        width: 198px;
+        height: 66px;
+    }
+
+    main {
+        width: 344px;
+        height: 585px;
+    }
+
+    .emailINPUT p,
+    .passwordINPUT p,
+    .nicknameINPUT p,
+    .confirm-passwordINPUT {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16.71px;
+    }
+
+    form input {
+        width: 343px;
+        height: 56px;
+        padding: 16px 24px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    #login_btn {
+        width: 343px;
+        height: 56px;
+        border-radius: 40px;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+        text-align: center;
+    }
+
+    .sns_login {
+        width: 88%;
+    }
+
+    .sns_inner {
+        width: 100%;
+    }
+
+    .sns_text p {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .sns_img {
+        justify-content: center;
+    }
+
+    .sign_text p,
+    .sign_text a {
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 17.9px;
+    }
+
+    #popup {
+        width: 327px;
+        height: 220px;
+    }
+
+    .popup-text {
+        text-align: center;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19.09px;
+        padding: 81px 68px 49px 67px;
+    }
+
+    #popup-close {
+        width: 120px;
+        height: 48px;
+        top: 149px;
+        left: 104px;
+        border-radius: 8px;
+        padding: 12px 23px;
+    }
 }

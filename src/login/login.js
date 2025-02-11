@@ -116,16 +116,21 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/items";
     }
 
-    // 비밀번호 표시/숨기기 기능
-    function togglePasswordVisibility() {
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            passwordToggle.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            passwordInput.type = "password";
-            passwordToggle.classList.replace("fa-eye", "fa-eye-slash");
-        }
+// 비밀번호 표시/숨기기 기능
+function togglePasswordVisibility() {
+    const passwordValue = passwordInput.value.trim();
+    if (passwordValue === "") {
+        return; // 비밀번호 입력값이 없으면 아무 작업도 하지 않음
     }
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.classList.replace("fa-eye-slash", "fa-eye");
+    } else {
+        passwordInput.type = "password";
+        passwordToggle.classList.replace("fa-eye", "fa-eye-slash");
+    }
+}
 
     // 이벤트 리스너 추가
     emailInput.addEventListener("input", validateEmail);

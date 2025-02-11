@@ -42,3 +42,12 @@
 - JS로 user data 내의 값만 로그인이 가능하게 구현
 - JS로 로그인 실패 시 popup 추가
 - main & sub Page hover 동작 삭제
+
+- items 404Page 추가
+
+요구사항에 따라 반응형 제작
+- css로 화면 너비에 따라 반응하는 sub Page
+
+오류 수정
+- login.js password input 눈 아이콘 입력 값이 있을 때만 동작하게 변경
+- 모바일 화면에서 로고가 잘리는 오류 수정
