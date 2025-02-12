@@ -114,6 +114,7 @@ nav button:hover {
 }
 
 .banner_text p {
+    white-space: nowrap;
     padding-bottom: 2rem;
     font-size: 2.5rem;
     line-height: 3.5rem;
@@ -151,7 +152,6 @@ nav button:hover {
 
 .contents section {
     align-items: center;
-    background: var(--contents-bg-color);
     display: flex;
     gap: 4rem;
     height: 27.75rem;
@@ -306,7 +306,7 @@ nav button:hover {
     transform: scale(1.05);
 }
 
-
+/* ==header & footer == */
 /* 화면의 너비가 1920px보다 작을 때 */
 @media (max-width: 120rem) {
 
@@ -350,4 +350,389 @@ nav button:hover {
     img {
         display: block;
     }
+}
+
+/* ========================================== */
+/*  Tablet (744px ~ 1199px) */
+@media (min-width: 744px) and (max-width: 1199px) {
+    body {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    img {
+        display: block;
+    }
+
+    header {
+        width: 100%;
+        height: 70px;
+    }
+
+    header a {
+        margin-left: 24px;
+    }
+
+    header img {
+        width: 153px;
+        height: 51px;
+    }
+
+    nav button {
+        margin-right: 24px;
+        width: 128px;
+        height: 48px;
+        border-radius: 8px;
+        padding: 12px 23px;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    /* _____________________ */
+
+    .banner {
+        width: 100%;
+        height: 771px;
+    }
+
+    .banner_inner {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .banner_text {
+        width: 512px;
+        text-align: center;
+        gap: 24px;
+        padding-bottom: 280px;
+    }
+
+    .banner_text p {
+        white-space: nowrap;
+        padding-bottom: 24px;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 56px;
+        text-align: center;
+    }
+
+    .banner_text br {
+        display: none;
+    }
+
+    .banner_text button {
+        width: 357px;
+        height: 56px;
+        padding: 16px 124px;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 32px;
+        text-align: center;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .banner_img {
+        position: absolute;
+        bottom: 0;
+    }
+
+    .banner_img img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* ________________ */
+    .contents {
+        width: 100vw;
+        height: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contents section {
+        width: 100%;
+        padding-top: 50px;
+    }
+
+    .contents section img {
+        width: 100vw;
+        padding: 0 24px;
+        height: 524px;
+        object-fit: cover;
+    }
+
+    .p_highlight br {
+        display: none;
+    }
+
+    .content1 {
+        position: relative;
+        ;
+    }
+
+    .content1_text {
+        position: absolute;
+        bottom: -90px;
+        left: 0;
+        width: 319px;
+        height: 160px;
+        gap: 24px;
+    }
+
+    .content2 {
+        position: relative;
+    }
+
+    .contents2_text {
+        position: absolute;
+        bottom: -90px;
+        right: 0;
+        width: 319px;
+        height: 160px;
+        gap: 24px;
+        width: 100%;
+    }
+
+    .content3 {
+        position: relative;
+    }
+
+    .contents3_text {
+        position: absolute;
+        bottom: -110px;
+        left: 0px;
+    }
+
+    /* _________________ */
+    footer {
+        margin-top: 100px;
+    }
+
+    .prom {
+        width: 100%;
+        height: 927px;
+    }
+
+    .prom_inner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .prom_text p {
+        padding-top: 80px;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 56px;
+        text-align: center;
+    }
+
+    .prom_img {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .prom_img img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .license {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 160px;
+        flex-direction: row;
+        padding: 32px 24px 108px;
+    }
+
+    .QA {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+
+/* ========================================== */
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px){
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    height: 70px;
+}
+
+header a {
+    margin-left: 16px;
+}
+
+header img {
+    height: 51px;
+    object-fit: cover;
+}
+
+nav button {
+    margin-right: 16px;
+}
+
+/* _____ */
+
+.banner {
+    width: 100vw;
+    height: 540px;
+    position: relative;
+
+}
+
+.banner_inner {
+    display: table;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.banner_text p {
+    text-align: center;
+}
+
+.banner_text button {
+    width: 240px;
+    height: 48px;
+    padding: 12px 71px;
+    margin: 0 67px 0 68px;
+    gap: 10px;
+}
+.banner_img{
+    display:table-cell;
+    vertical-align:middle;
+    position: absolute;
+    bottom: 0;
+}
+.banner_img img{
+    max-width: 100%;
+    padding: auto;
+}
+/* ______ */
+.contents{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.contents section{
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+.contents section img{
+    width: 100vw;
+    padding: 0 16px;
+    height: 259px;
+    object-fit: cover;
+}
+
+.p_title{
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 26px;
+    padding-bottom: 8px;
+}
+.p_highlight{
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    padding-bottom: 16px;
+}
+.p_highlight br{
+    display: none;
+}
+
+.content1,.content3{
+    position: relative;
+}
+.content1_text,.content3_text{
+    position: absolute;
+    bottom: -20px;
+}
+.content2 section{
+    flex-direction: column-reverse; 
+}
+.content2{
+    position: relative;
+}
+.content2_text{
+    position: absolute;
+}
+/* _____ */
+.prom {
+    width: 100%;
+    height: 540px;
+    position: relative;
+}
+.prom_inner{
+    display: table;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.prom_text p{
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 44.8px;
+}
+
+.prom_img{
+    display:table-cell;
+    vertical-align:middle;
+    position: absolute;
+    bottom: 0;
+}
+.prom_img img{
+    max-width: 100%;
+    padding: auto;
+}
+.license {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 160px;
+    flex-direction: row;
+    padding: 32px 16px 65px;
+    position: relative;
+}
+.maden{
+    position: absolute;
+    bottom: 50px;
+    left: 16px;
+}
 }

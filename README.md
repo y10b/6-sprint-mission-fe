@@ -44,10 +44,13 @@
 - main & sub Page hover 동작 삭제
 
 - items 404Page 추가
+- class name 변경
 
 요구사항에 따라 반응형 제작
-- css로 화면 너비에 따라 반응하는 sub Page
+- css로 화면 너비에 따라 반응하는 main & sub Page
+- meta tag 설정
 
 오류 수정
 - login.js password input 눈 아이콘 입력 값이 있을 때만 동작하게 변경
-- 모바일 화면에서 로고가 잘리는 오류 수정
+- 모바일 화면에서 sign Page 로고가 잘리는 오류 수정
+- main Page @tablet에서 기기마다 위치가 달라지는 오류 수정
