@@ -29,7 +29,10 @@
 
 <body>
     <header>
-        <a href="/"><img src="img/logo.png" alt="판다마켓_logo"></a>
+        <picture>
+            <source srcset="img/mobile_logo.png" media="(max-width: 743px)">
+            <a href="/"><img src="img/logo.png" alt="판다마켓_logo"></a>
+        </picture>
         <nav>
             <button type="button" onclick="location.href='login/login.html'">로그인</button>
         </nav>
