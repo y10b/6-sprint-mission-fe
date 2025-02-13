@@ -2,7 +2,6 @@
 <html lang="ko">
 
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T66DVFE3R1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -10,6 +9,7 @@
         gtag('js', new Date());
         gtag('config', 'G-T66DVFE3R1');
     </script>
+    <!-- meta 미리보기 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="판다마켓">
@@ -18,7 +18,7 @@
     <meta property="og:image" content="img/pavicon.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="판다마켓">
-
+    <!-- style 적용 -->
     <link rel="icon" href="img/pavicon.png" type="image/x-icon">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
@@ -29,10 +29,7 @@
 
 <body>
     <header>
-        <picture>
-            <source srcset="img/mobile_logo.png" media="(max-width: 743px)">
-            <a href="/"><img src="img/logo.png" alt="판다마켓_logo"></a>
-        </picture>
+        <a href="/"><img src="img/logo.png" alt="판다마켓_logo"></a>
         <nav>
             <button type="button" onclick="location.href='login/login.html'">로그인</button>
         </nav>

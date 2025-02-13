@@ -43,7 +43,7 @@
 - JS로 로그인 실패 시 popup 추가
 - main & sub Page hover 동작 삭제
 
-- items 404Page 추가
+- items & faq & privacy 404Page 추가
 - class name 변경
 
 요구사항에 따라 반응형 제작
@@ -54,3 +54,10 @@
 - login.js password input 눈 아이콘 입력 값이 있을 때만 동작하게 변경
 - 모바일 화면에서 sign Page 로고가 잘리는 오류 수정
 - main Page @tablet에서 기기마다 위치가 달라지는 오류 수정
+- 반응형 사이즈에서 header가 page 끝까지 적용되게 수정
+- @mobile에서 오른쪽 스크롤 가능 오류 수정
+- 반응형 사이즈 sign & login logo 위치 잘림 현상 수정
+- 아이폰에서 sign & login text-decoration 스타일 적용이 안되는 현상 발견 수정(var 인식 불가 현상)
+- @mobile에서 main Page max-width와 비슷한 디바이스 너비일 경우 banner & footer에서 이미지가 텍스트를 가리는 오류 수정
+- @mobile에서 footer class 배치 수정
+- main Page class name 수정
