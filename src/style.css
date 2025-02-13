@@ -141,7 +141,9 @@ nav button:hover {
 /* contents */
 
 
-.contents article {
+.first,
+.second,
+.third {
     gap: 0.625rem;
     height: 45rem;
     padding: 8.625rem 15.25rem;
@@ -185,34 +187,34 @@ nav button:hover {
     line-height: 2rem;
 }
 
-.content1_text,
-.content3_text {
+.first_text,
+.third_text {
     gap: 0.75rem;
     white-space: nowrap;
     width: 20.9375rem;
     height: 14.875rem;
 }
 
-.content2_text {
+.second_text {
     gap: 1.5rem;
     white-space: nowrap;
     width: 20.9375rem;
     height: 14.875rem;
 }
 
-.contents2_text * {
+.second_text * {
     text-align: right;
     white-space: nowrap;
 }
 
 /* ======================== */
 /* footer */
-.emp {
+.footer-decoration {
     background: var(--color-contents);
     height: 3.125rem;
 }
 
-.prom {
+.footer-banner {
     align-items: flex-end;
     background: var(--color-skyblue);
     bottom: 0;
@@ -223,7 +225,7 @@ nav button:hover {
     width: 100%;
 }
 
-.prom_inner {
+.footer-banner_inner {
     align-items: flex-end;
     display: flex;
     gap: 0.4375rem;
@@ -232,7 +234,7 @@ nav button:hover {
     width: 100%;
 }
 
-.prom_text {
+.footer-banner_text {
     padding-bottom: 7rem;
     padding-top: 7rem;
     text-align: left;
@@ -240,13 +242,13 @@ nav button:hover {
     width: 18.75rem;
 }
 
-.prom_text p {
+.footer-banner_text p {
     font-size: 2.5rem;
     padding-bottom: 3.75rem;
     line-height: 3.5rem;
 }
 
-.license {
+.footer_license {
     align-items: flex-start;
     background: var(--color-footer);
     display: flex;
@@ -255,14 +257,14 @@ nav button:hover {
     padding: 2rem;
 }
 
-.maden {
+.copy {
     margin: 0;
     white-space: nowrap;
     margin-left: 12.5rem;
     line-height: 1.193125rem;
 }
 
-.maden p {
+.copy p {
     color: var(--color-gray);
     font-weight: 400;
 }
@@ -307,7 +309,7 @@ nav button:hover {
 @media (max-width: 120rem) {
 
     h1,
-    .maden {
+    .copy {
         margin-left: calc(12.5rem - (120rem - 100vw) * 0.1);
     }
 
@@ -331,7 +333,7 @@ nav button:hover {
 @media (min-width: 1920px) {
 
     .banner_inner,
-    .prom_inner {
+    .footer-banner_inner {
         padding-left: 25.3125rem;
         padding-right: 25.3125rem;
     }
@@ -368,6 +370,8 @@ nav button:hover {
         display: block;
     }
 
+    /* ---------- */
+    /* header */
     header {
         width: 100%;
         height: 70px;
@@ -392,8 +396,8 @@ nav button:hover {
         line-height: 26px;
     }
 
-    /* _____________________ */
-
+    /* ---------- */
+    /* banner */
     .banner {
         width: 100%;
         height: 771px;
@@ -453,7 +457,8 @@ nav button:hover {
         object-fit: cover;
     }
 
-    /* ________________ */
+    /* ---------- */
+    /* contents */
     .contents {
         width: 100vw;
         height: auto;
@@ -478,55 +483,50 @@ nav button:hover {
         display: none;
     }
 
-    .content1 {
-        position: relative;
-        ;
-    }
-
-    .content1_text {
-        position: absolute;
-        bottom: -90px;
-        left: 0;
-        width: 319px;
-        height: 160px;
-        gap: 24px;
-    }
-
-    .content2 {
+    .first {
         position: relative;
     }
 
-    .contents2_text {
+    .first_text {
         position: absolute;
-        bottom: -90px;
-        right: 0;
-        width: 319px;
-        height: 160px;
-        gap: 24px;
         width: 100%;
+        bottom: -180px;
     }
 
-    .content3 {
+    .second {
+        margin-top: 50px;
         position: relative;
     }
 
-    .contents3_text {
+    .second_text {
         position: absolute;
-        bottom: -110px;
-        left: 0px;
+        width: 100%;
+        bottom: -180px;
     }
 
-    /* _________________ */
+    .third {
+        margin-top: 50px;
+        position: relative;
+    }
+
+    .third_text {
+        position: absolute;
+        width: 100%;
+        bottom: -180px;
+    }
+
+    /* ---------- */
+    /* footer */
     footer {
-        margin-top: 100px;
+        margin-top: 150px;
     }
 
-    .prom {
+    .footer-banner {
         width: 100%;
         height: 927px;
     }
 
-    .prom_inner {
+    .footer-banner_inner {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -534,7 +534,7 @@ nav button:hover {
         justify-content: flex-end;
     }
 
-    .prom_text p {
+    .footer-banner_text p {
         padding-top: 80px;
         font-weight: 700;
         font-size: 40px;
@@ -542,19 +542,19 @@ nav button:hover {
         text-align: center;
     }
 
-    .prom_img {
+    .footer-banner_img {
         display: flex;
         justify-content: center;
         width: 100%;
         margin-top: 20px;
     }
 
-    .prom_img img {
+    .footer-banner_img img {
         max-width: 100%;
         height: auto;
     }
 
-    .license {
+    .footer_license {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -587,6 +587,8 @@ nav button:hover {
         height: 100vh;
     }
 
+    /* ----- */
+    /* header */
     header {
         width: 100%;
         height: 70px;
@@ -594,6 +596,10 @@ nav button:hover {
 
     header a {
         margin-left: 16px;
+    }
+
+    .responsive_logo {
+        content: url('/src/img/mobile_logo.png');
     }
 
     header img {
@@ -607,13 +613,12 @@ nav button:hover {
         margin-right: 16px;
     }
 
-    /* _____ */
-
+    /* ----- */
+    /* baner */
     .banner {
         width: 100vw;
         height: 540px;
         position: relative;
-
     }
 
     .banner_inner {
@@ -655,7 +660,8 @@ nav button:hover {
         padding: auto;
     }
 
-    /* ______ */
+    /* ----- */
+    /* contents */
     .contents {
         width: 100%;
         display: flex;
@@ -695,58 +701,56 @@ nav button:hover {
         display: none;
     }
 
-    .content1 section {
-        width: 100%;
+    .first section {
         position: relative;
     }
 
-    .content1_text {
-        padding: 0 16px;
+    .first_text {
         position: absolute;
+        width: 100%;
         bottom: -250px;
-        left: 0;
+        padding: 0 16px;
     }
 
-    .content2 section {
+    .second section {
         display: flex;
-        width: 100%;
         position: relative;
         flex-direction: column-reverse;
     }
 
-    .contents2_text {
-        padding: 0 16px;
+    .second_text {
         position: absolute;
-        bottom: -150px;
-        right: 0;
+        width: 100%;
+        padding: 0 16px;
+        bottom: -250px;
     }
 
-    .content3 section {
+    .third section {
         display: flex;
-        width: 100%;
         position: relative;
     }
 
-    .contents3_text {
+    .third_text {
         position: absolute;
         padding: 0 16px;
-        left: 0;
-        bottom: -150px;
+        width: 100%;
+        padding: 0 16px;
+        bottom: -250px;
     }
 
-
-    /* _____ */
+    /* ----- */
+    /* footer */
     footer {
         margin-top: 50px;
     }
 
-    .prom {
+    .footer-banner {
         width: 100%;
         height: 540px;
         position: relative;
     }
 
-    .prom_inner {
+    .footer-banner_inner {
         display: table;
         width: 100%;
         height: 100%;
@@ -757,35 +761,37 @@ nav button:hover {
         position: relative;
     }
 
-    .prom_text {
+    .footer-banner_text {
         padding-bottom: 40%;
     }
 
-    .prom_text p {
+    .footer-banner_text p {
         text-align: center;
         font-size: 32px;
         font-weight: 700;
         line-height: 44.8px;
     }
 
-    .prom_img {
+    .footer-banner_img {
         display: table-cell;
         vertical-align: middle;
         position: absolute;
         bottom: 0;
     }
 
-    .prom_img img {
+    .footer-banner_img img {
         max-width: 375px;
         padding: auto;
     }
 
-    .license {
+    .footer_license {
         position: relative;
         padding-top: 42px;
+        display: flex;
+        justify-content: space-between;
     }
 
-    .maden {
+    .copy {
         position: absolute;
         top: 50%;
         left: 0;
@@ -794,11 +800,11 @@ nav button:hover {
 
     .SNS {
         margin-right: 16px;
-        gap: 8px;
+        gap: calc(8px + 3.5vw);
     }
 
     .QA {
         margin-left: 16px;
-        gap: 12px;
+        gap: calc(12px + 3.5vw);
     }
 }

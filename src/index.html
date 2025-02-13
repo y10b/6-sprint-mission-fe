@@ -2,6 +2,7 @@
 <html lang="ko">
 
 <head>
+    <!-- Google Analytics (비동기 로딩) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T66DVFE3R1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -9,7 +10,8 @@
         gtag('js', new Date());
         gtag('config', 'G-T66DVFE3R1');
     </script>
-    <!-- meta 미리보기 -->
+
+    <!-- 메타 태그 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="판다마켓">
@@ -18,22 +20,26 @@
     <meta property="og:image" content="img/pavicon.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="판다마켓">
-    <!-- style 적용 -->
+
+    <!-- 스타일 시트 -->
     <link rel="icon" href="img/pavicon.png" type="image/x-icon">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" as="style" crossorigin
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" as="style"
+        crossorigin>
+
     <title>판다마켓</title>
 </head>
 
 <body>
     <header>
-        <a href="/"><img src="img/logo.png" alt="판다마켓_logo"></a>
+        <a href="/"><img src="img/logo.png" alt="판다마켓_logo" class="responsive_logo"></a>
         <nav>
             <button type="button" onclick="location.href='login/login.html'">로그인</button>
         </nav>
     </header>
+
     <main>
         <article class="banner">
             <section class="banner_inner">
@@ -42,74 +48,78 @@
                     <button type="button" onclick="location.href='/items'">구경하러 가기</button>
                 </div>
                 <div class="banner_img">
-                    <img src="img/home_top.png" alt="banner_picture">
+                    <img src="img/home_top.png" alt="배너 이미지">
                 </div>
             </section>
         </article>
-        <div class="contents">
-            <article class="content1">
+
+        <article class="contents">
+            <div class="first">
                 <section>
-                    <div class="content1_img"><img src="img/Img_home_01.png" alt="Img_home_01"></div>
-                    <div class="content1_text">
+                    <div class="first_img"><img src="img/Img_home_01.png" alt="Hot item 이미지"></div>
+                    <div class="first_text">
                         <p class="p_title">Hot item</p>
                         <p class="p_highlight">인기 상품을 <br>확인해 보세요</p>
                         <p class="p_explain">가장 HOT한 중고거래 물품을 <br> 판다 마켓에서 확인해 보세요</p>
                     </div>
                 </section>
-            </article>
-            <article class="content2">
+            </div>
+            <div class="second">
                 <section>
-                    <div class="contents2_text">
+                    <div class="second_text">
                         <p class="p_title">Search</p>
                         <p class="p_highlight">구매를 원하는 <br>상품을 검색하세요</p>
                         <p class="p_explain">구매하고 싶은 물품은 검색해서 <br> 쉽게 찾아보세요</p>
                     </div>
-                    <div class="contents2_img"><img src="img/Img_home_02.png" alt="Img_home_02"></div>
+                    <div class="second_img"><img src="img/Img_home_02.png" alt="Search 이미지"></div>
                 </section>
-            </article>
-            <article class="content3">
+            </div>
+            <div class="third">
                 <section>
-                    <div class="contents3_img"><img src="img/Img_home_03.png" alt="Img_home_03"></div>
-                    <div class="contents3_text">
+                    <div class="third_img"><img src="img/Img_home_03.png" alt="Register 이미지"></div>
+                    <div class="third_text">
                         <p class="p_title">Register</p>
                         <p class="p_highlight">판매를 원하는 <br> 상품을 등록하세요</p>
                         <p class="p_explain">어떤 물건이든 판매하고 싶은 상품을 <br> 쉽게 등록하세요</p>
                     </div>
                 </section>
-            </article>
-        </div>
+            </div>
+        </article>
     </main>
+
     <footer>
-        <div class="foot">
-            <article class="emp"></article>
-            <article class="prom">
-                <div class="prom_inner">
-                    <section class="prom_text">
+        <article class="foot">
+            <div class="footer-decoration"></div>
+            <section class="footer-banner">
+                <div class="footer-banner_inner">
+                    <div class="footer-banner_text">
                         <p>믿을 수 있는 <br>판다마켓 중고 거래</p>
-                    </section>
-                    <section class="prom_img">
-                        <img src="img/home_bottom.png" alt="footer_img">
-                    </section>
+                    </div>
+                    <div class="footer-banner_img">
+                        <img src="img/home_bottom.png" alt="footer 이미지">
+                    </div>
                 </div>
-            </article>
-            <article class="license">
-                <section class="maden">
+            </section>
+            <section class="footer_license">
+                <div class="copy">
                     <p>&copy;codeit - 2024</p>
-                </section>
-                <section class="QA">
+                </div>
+                <div class="QA">
                     <a href="/privacy">Privacy Policy</a>
                     <a href="/faq">FAQ</a>
-                </section>
+                </div>
                 <section class="SNS">
-                    <a href="https://www.facebook.com/" target="_blank"><img src="img/ic_facebook.png"
-                            alt="facebook"></a>
-                    <a href="https://x.com/" target="_blank"><img src="img/ic_twitter.png" alt="twitter"></a>
-                    <a href="https://www.youtube.com/" target="_blank"><img src="img/ic_youtube.png" alt="youtube"></a>
-                    <a href="https://www.instagram.com/" target="_blank"><img src="img/ic_instagram.png"
-                            alt="instagram"></a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><img
+                            src="img/ic_facebook.png" alt="Facebook"></a>
+                    <a href="https://x.com/" target="_blank" rel="noopener noreferrer"><img src="img/ic_twitter.png"
+                            alt="Twitter"></a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><img
+                            src="img/ic_youtube.png" alt="YouTube"></a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img
+                            src="img/ic_instagram.png" alt="Instagram"></a>
                 </section>
-            </article>
-        </div>
+            </section>
+        </article>
     </footer>
 </body>
 

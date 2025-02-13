@@ -50,6 +50,10 @@
 - css로 화면 너비에 따라 반응하는 main & sub Page
 - meta tag 설정
 
+- sub Page 공통부분 모듈화 
+- @mobile에서 사이즈 너비가 커지면 QA & SNS 간격도 너비에 맞춰 커지게 수정
+
+
 오류 수정
 - login.js password input 눈 아이콘 입력 값이 있을 때만 동작하게 변경
 - 모바일 화면에서 sign Page 로고가 잘리는 오류 수정
@@ -61,3 +65,5 @@
 - @mobile에서 main Page max-width와 비슷한 디바이스 너비일 경우 banner & footer에서 이미지가 텍스트를 가리는 오류 수정
 - @mobile에서 footer class 배치 수정
 - main Page class name 수정
+
+- HTML CSS 최적화
