@@ -599,7 +599,7 @@ nav button:hover {
     }
 
     .responsive_logo {
-        content: url('/src/img/mobile_logo.png');
+        content: url('img/mobile_logo.png');
     }
 
     header img {
@@ -800,11 +800,11 @@ nav button:hover {
 
     .SNS {
         margin-right: 16px;
-        gap: calc(8px + 3.5vw);
+        gap: calc(8px + 0.5vw);
     }
 
     .QA {
         margin-left: 16px;
-        gap: calc(12px + 3.5vw);
+        gap: calc(12px + 1.5vw);
     }
 }
