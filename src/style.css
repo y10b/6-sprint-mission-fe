@@ -446,15 +446,15 @@ nav button:hover {
     }
 
     .banner_img {
+        margin-top: 20px;
         position: absolute;
         bottom: 0;
     }
 
     .banner_img img {
-        max-width: 447.6px;
-        max-height: 297.75px;
+
         height: auto;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     /* ---------- */
