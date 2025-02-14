@@ -65,5 +65,6 @@
 - @mobile에서 main Page max-width와 비슷한 디바이스 너비일 경우 banner & footer에서 이미지가 텍스트를 가리는 오류 수정
 - @mobile에서 footer class 배치 수정
 - main Page class name 수정
+- main Page banner & footer IMG padding 추가
 
 - HTML CSS 최적화
