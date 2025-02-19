@@ -79,3 +79,4 @@
 변경 사항
 - login & sign page input class 이름 수정
 - 회원가입 시 로그인 페이지로 이동하지 않는 오류 수정
+- API 오류 및 성공 메시지 수정

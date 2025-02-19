@@ -21,71 +21,37 @@ async function getProductList(page = 1, pageSize = 100, keyword = "") {
             },
         });
 
-        // 응답 확인
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        // 응답 상태 코드가 200인 경우 JSON 데이터 반환
+        if (response.status === 200) {
+            console.log("성공: 상품 목록 조회");
+            return await response.json(); // JSON 데이터 반환
         }
 
-        // JSON 데이터 반환
-        const data = await response.json();
-        return data;
+        // 그 외의 오류 처리
+        const error = await response.json(); // 오류 메시지 JSON 반환
+        throw new Error(error); // 오류를 던짐
+
     } catch (error) {
-        console.error("Error fetching products:", error);
-        return null;
-    }
-}
-
-/* 상품 상세 조회 */
-async function getProduct(id) {
-    // 입력값 검증: ID가 존재하고 숫자인지 확인
-    if (!id || isNaN(id)) {
-        console.error("Error: 유효한 상품 ID를 입력해주세요.");
-        return null; // 유효하지 않은 ID일 경우 null 반환
-    }
-
-    const url = `${baseURL}/${id}`; // 요청할 상품의 API URL
-
-    try {
-        // 상품 상세 조회 API 호출 (GET 요청)
-        const response = await fetch(url, { method: "GET" });
-
-        // 응답 코드 404: 상품을 찾을 수 없음
-        if (response.status === 404) {
-            console.error(`Error: 상품을 찾을 수 없습니다. (ID: ${id})`);
-            return null;
-        }
-
-        // 응답이 정상적이지 않을 경우 오류 처리
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json(); // JSON 데이터 변환
-        return data; // 상품 정보 반환
-    } catch (error) {
-        // 네트워크 오류 또는 예외 발생 시 오류 메시지 출력
-        console.error("Error fetching product:", error);
-        return null;
+        console.error("오류: 상품 목록 조회", error);
+        return null; // 오류 발생 시 null 반환
     }
 }
 
 /* 상품 등록 */
 async function createProduct(name, description, price, manufacturer, tags = [], images = []) {
-    // 입력값 검증: 필수 값(name, description, price, manufacturer)이 존재하는지 확인
-    // tags와 images는 배열인지 체크
     if (!name || !description || !price || !manufacturer || !Array.isArray(tags) || !Array.isArray(images)) {
-        console.error("Error: 모든 필수 입력값을 확인해주세요.");
+        console.error("유효성 검사(상품 등록): 오류 모든 필수 입력 값을 확인 해주세요.");
         return null; // 유효하지 않은 입력값이면 null 반환
     }
 
     const url = baseURL; // API 엔드포인트 URL
     const requestBody = {
-        name,            // 상품명
-        description,     // 상품 설명
-        price,          // 가격
-        manufacturer,   // 제조사
-        tags,          // 태그 목록 (배열)
-        images        // 이미지 목록 (배열)
+        name,
+        description,
+        price,
+        manufacturer,
+        tags,
+        images
     };
 
     try {
@@ -98,21 +64,64 @@ async function createProduct(name, description, price, manufacturer, tags = [], 
             body: JSON.stringify(requestBody), // JSON 형식으로 변환하여 전송
         });
 
-        if (response.status === 201) { // 응답 코드 201: 성공적으로 생성됨
-            const data = await response.json(); // JSON 데이터 변환
-            console.log(" 상품이 성공적으로 등록되었습니다:", data);
-            return data; // 생성된 상품 데이터 반환
-        } else if (response.status === 400) { // 응답 코드 400: 유효성 검사 오류
-            console.error(" Error: 유효성 검사 오류. 입력값을 확인해주세요.");
+        // 응답이 성공적이면 데이터 반환, 아니면 에러 처리
+        const responseData = await response.json();
+
+        if (response.status === 201) {
+            console.log("성공: 상품 등록", responseData);
+            return responseData; // 생성된 상품 데이터 반환
+        } else if (response.status === 404) {
+            // 404 에러 처리
+            console.error("실패(상품 등록): 유효성 검사 오류", responseData.message);
             return null;
         } else {
-            // 예상하지 못한 응답 코드 처리
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            // 다른 모든 오류는 여기에 처리
+            throw new Error(responseData.message || "상품 등록 오류");
         }
+
     } catch (error) {
         // 네트워크 오류 또는 예외 발생 시 오류 메시지 출력
-        console.error(" Error creating product:", error);
+        console.error("오류: 상품 등록", error.message || error);
         return null;
+    }
+}
+
+/* 상품 상세 조회 */
+async function getProduct(id) {
+    // 입력값 검증: ID가 존재하고 숫자인지 확인
+    if (!id || isNaN(id)) {
+        console.error("유효성 검사: 유효한 상품 ID를 입력해주세요");
+        return null; // 유효하지 않은 ID일 경우 null 반환
+    }
+
+    const url = `${baseURL}/${id}`; // 요청할 상품의 API URL
+
+    try {
+        // 상품 상세 조회 API 호출 (GET 요청)
+        const response = await fetch(url, { method: "GET" });
+
+        // 응답 결과를 JSON으로 변환
+        const responseData = await response.json();
+
+        // 응답 코드 200: 상품 상세 조회 성공
+        if (response.status === 200) {
+            console.log("성공: 상품 상세 조회");
+            return responseData; // 상품 정보 반환
+        }
+        // 응답 코드 404: 상품을 찾을 수 없음
+        else if (response.status === 404) {
+            console.error(`실패: 상품 상세 조회 (ID: ${id})`);
+            return null; // 상품을 찾을 수 없으면 null 반환
+        }
+        // 그 외의 오류 처리
+        else {
+            throw new Error(responseData.message || "상품 상세 조회 오류");
+        }
+
+    } catch (error) {
+        // 네트워크 오류 또는 예외 발생 시 오류 메시지 출력
+        console.error("오류: 상품 상세 조회", error);
+        return null; // 오류 발생 시 null 반환
     }
 }
 
@@ -120,13 +129,13 @@ async function createProduct(name, description, price, manufacturer, tags = [], 
 async function patchProduct(id, updates) {
     // 입력값 검증: ID가 존재하고 숫자인지 확인
     if (!id || isNaN(id)) {
-        console.error(" Error: 유효한 상품 ID를 입력해주세요.");
+        console.error("유효성 검사(상품 수정): 유효한 상품 ID를 입력해주세요.");
         return null; // 유효하지 않은 ID일 경우 null 반환
     }
 
     // 입력값 검증: updates가 객체인지, 업데이트할 데이터가 있는지 확인
     if (typeof updates !== "object" || Object.keys(updates).length === 0) {
-        console.error(" Error: 업데이트할 데이터가 없습니다.");
+        console.error("오류(상품 수정): 업데이트할 데이터가 없습니다.");
         return null; // 업데이트할 내용이 없을 경우 null 반환
     }
 
@@ -142,29 +151,33 @@ async function patchProduct(id, updates) {
             body: JSON.stringify(updates), // 업데이트할 데이터 JSON 변환 후 전송
         });
 
-        if (response.status === 200) { // 응답 코드 200: 성공적으로 수정됨
-            const data = await response.json(); // JSON 데이터 변환
-            console.log(`상품 (ID: ${id})이 성공적으로 수정되었습니다:`, data);
+        // 응답 코드에 따른 처리
+        const data = await response.json(); // JSON 데이터 변환
+
+        if (response.status === 200) {
+            // 응답 코드 200: 성공적으로 수정됨
+            console.log(`성공: 상품 수정(ID: ${id})`, data);
             return data; // 수정된 상품 데이터 반환
-        } else if (response.status === 404) { // 응답 코드 404: 상품을 찾을 수 없음
-            console.error(`Error: 상품을 찾을 수 없습니다. (ID: ${id})`);
+        } else if (response.status === 404) {
+            // 응답 코드 404: 상품을 찾을 수 없음
+            console.error(`오류: 상품 수정 (ID: ${id}) - 상품을 찾을 수 없습니다.`);
             return null;
         } else {
-            // 예상하지 못한 응답 코드 처리
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            // 그 외의 오류 처리
+            throw new Error(data.message || "상품 수정 오류");
         }
+
     } catch (error) {
         // 네트워크 오류 또는 예외 발생 시 오류 메시지 출력
-        console.error("Error updating product:", error);
+        console.error("오류: 상품 수정", error);
         return null;
     }
 }
 
 /* 상품 삭제 */
 async function deleteProduct(id) {
-    // 입력값 검증: ID가 존재하고 숫자인지 확인
     if (!id || isNaN(id)) {
-        console.error("Error: 유효한 상품 ID를 입력해주세요.");
+        console.error("유효성검사(상품 삭제): 유효한 상품 ID를 입력해주세요.");
         return null; // 유효하지 않은 ID일 경우 null 반환
     }
 
@@ -179,26 +192,31 @@ async function deleteProduct(id) {
             },
         });
 
-        // 응답 코드 204: 삭제 성공
+        // 응답 코드에 따른 처리
         if (response.status === 204) {
-            console.log(`상품 (ID: ${id})이 성공적으로 삭제되었습니다.`);
+            // 응답 코드 204: 삭제 성공 (본문이 없으므로 그냥 성공으로 처리)
+            console.log(`성공: 상품 삭제(ID: ${id})`);
             return true; // 삭제 성공 시 true 반환
         }
+
         // 응답 코드 404: 상품을 찾을 수 없음
-        else if (response.status === 404) {
-            console.error(`Error: 상품을 찾을 수 없습니다. (ID: ${id})`);
+        if (response.status === 404) {
+            console.error(`상품을 찾을 수 없음 (ID: ${id})`);
             return null; // 상품이 존재하지 않을 경우 null 반환
         }
-        // 기타 오류 처리
-        else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+
+        // 그 외의 경우, JSON 응답을 처리
+        const data = await response.json(); // 오류 응답을 JSON으로 변환
+        throw new Error(data.message || "상품 삭제 오류");
+
     } catch (error) {
         // 네트워크 오류 또는 예외 발생 시 오류 메시지 출력
-        console.error("Error deleting product:", error);
+        console.error(`오류: 상품 삭제(ID: ${id})`, error);
         return null;
     }
 }
+
+
 
 /* 함수 내보내기 */
 export {

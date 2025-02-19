@@ -19,53 +19,16 @@ function getArticleList(page = 1, pageSize = 100, keyword = "") {
         },
     })
         .then(response => {
-            // 응답이 성공적이지 않으면 에러 처리
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+            if (response.status === 200) {
+                console.log("성공: 게시글 목록 조회");
+                return response.json(); // 응답 데이터 반환
             }
-            return response.json(); // 응답 데이터 반환
+            // 200이 아닐 경우 에러 처리
+            return response.json().then(error => { throw new Error(error); });
         })
-        .then(data => data) // 데이터를 그대로 반환
         .catch(error => {
             // 오류 발생 시 콘솔에 오류 메시지 출력
-            console.error("Error fetching articles:", error);
-            return null; // 오류 발생 시 null 반환
-        });
-}
-
-/* 게시글 상세 조회 */
-function getArticle(id) {
-    // 유효한 ID인지 확인
-    if (!id || isNaN(id)) {
-        console.error("Invalid ID: ID는 숫자여야 합니다.");
-        return null;
-    }
-
-    // 게시글 상세 조회 URL 설정
-    const url = `${baseURL}/${id}`;
-
-    return fetch(url, {
-        method: "GET", // GET 요청
-        headers: {
-            "Content-Type": "application/json", // 요청 헤더 설정
-        },
-    })
-        .then(response => {
-            // 게시글이 없으면 404 오류 처리
-            if (response.status === 404) {
-                console.error(`Error: 게시글을 찾을 수 없습니다. (ID: ${id})`);
-                return null;
-            }
-            // 응답이 성공적이지 않으면 에러 처리
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // 응답 데이터 반환
-        })
-        .then(data => data) // 데이터를 그대로 반환
-        .catch(error => {
-            // 오류 발생 시 콘솔에 오류 메시지 출력
-            console.error("Error fetching article:", error);
+            console.error("오류: 게시글 목록 조회", error);
             return null; // 오류 발생 시 null 반환
         });
 }
@@ -74,7 +37,7 @@ function getArticle(id) {
 function createArticle(title, content, image) {
     // 제목, 내용, 이미지가 모두 있는지 확인
     if (!title || !content || !image) {
-        console.error("Error: 제목, 내용, 이미지 URL은 필수입니다.");
+        console.error("유효성 검사: 제목, 내용, 이미지 URL은 필수입니다.");
         return null;
     }
 
@@ -97,18 +60,66 @@ function createArticle(title, content, image) {
         .then(response => {
             // 응답 상태가 201(생성됨)일 경우 데이터를 반환
             if (response.status === 201) {
-                return response.json();
-            } else {
-                // 에러가 있을 경우 응답 데이터를 에러로 처리
+                console.log("성공: 게시글 등록")
+                return response.json(); // 응답 데이터 반환
+            }
+            // 404 오류 처리
+            else if (response.status === 404) {
+                console.error("실패: 게시글 등록");
+                return null; // 404 오류 시 null 반환
+            }
+            // 그 외의 에러 처리
+            else {
+                return response.json().then(error => { throw new Error(error); });
+            }
+        })
+        .catch(error => {
+            // 네트워크 오류나 다른 예기치 않은 오류 처리
+            console.error("오류: 게시글 생성", error); // 에러 출력
+            return null; // 오류 발생 시 null 반환
+        });
+}
+
+/* 게시글 상세 조회 */
+function getArticle(id) {
+    // 유효한 ID인지 확인
+    if (!id || isNaN(id)) {
+        console.error("유효성 검사: ID는 숫자여야 합니다.");
+        return null;
+    }
+
+    // 게시글 상세 조회 URL 설정
+    const url = `${baseURL}/${id}`;
+
+    return fetch(url, {
+        method: "GET", // GET 요청
+        headers: {
+            "Content-Type": "application/json", // 요청 헤더 설정
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json(); // 응답 데이터 반환
+            }
+            // 게시글이 없으면 404 오류 처리
+            else if (response.status === 404) {
+                console.error(`오류: 게시글을 찾을 수 없음 (ID: ${id})`);
+                return null; // 게시글을 찾을 수 없으면 null 반환
+            }
+            // 그 외의 에러 처리
+            else {
                 return response.json().then(error => { throw new Error(error); });
             }
         })
         .then(data => {
-            console.log("게시글이 성공적으로 생성되었습니다:", data); // 성공 시 데이터 출력
-            return data; // 생성된 데이터 반환
+            if (data) {
+                console.log("성공: 게시글 상세 조회", data);
+            }
+            return data; // 실패 시 data는 null로 전달됨
         })
         .catch(error => {
-            console.error("Error creating article:", error); // 에러 출력
+            // 네트워크 오류나 다른 예기치 않은 오류 처리
+            console.error("오류: 게시글 상세 조회", error);
             return null; // 오류 발생 시 null 반환
         });
 }
@@ -117,12 +128,12 @@ function createArticle(title, content, image) {
 function patchArticle(id, title, content, image) {
     // 유효한 ID인지 확인
     if (!id || isNaN(id)) {
-        console.error("Error: 유효한 ID를 입력해주세요.");
+        console.error("유효성 검사: 유효한 ID를 입력해주세요.");
         return null;
     }
     // 제목, 내용, 이미지가 모두 있는지 확인
     if (!title || !content || !image) {
-        console.error("Error: 제목, 내용, 이미지 URL은 필수입니다.");
+        console.error("유효성 검사: 제목, 내용, 이미지 URL은 필수입니다.");
         return null;
     }
 
@@ -143,23 +154,18 @@ function patchArticle(id, title, content, image) {
         body: JSON.stringify(requestBody), // 수정할 데이터 본문에 추가
     })
         .then(response => {
-            // 수정이 성공했으면 데이터 반환
             if (response.status === 200) {
-                return response.json();
+                console.log(`성공: 게시글 수정 (ID: ${id})`)
+                return response.json(); // 수정 성공 시 응답 데이터 반환
             } else if (response.status === 404) {
-                console.error(`Error: 게시글을 찾을 수 없습니다. (ID: ${id})`);
-                return null;
+                console.error(`실패: 게시글 수정 (ID: ${id})`);
+                return null; // 404 오류 발생 시 null 반환
             } else {
-                // 에러가 있을 경우 응답 데이터를 에러로 처리
-                return response.json().then(error => { throw new Error(error); });
+                return response.json().then(error => { throw new Error(error); }); // 그 외 에러 처리
             }
         })
-        .then(data => {
-            console.log("게시글이 성공적으로 수정되었습니다:", data); // 수정된 데이터 출력
-            return data; // 수정된 데이터 반환
-        })
         .catch(error => {
-            console.error("Error updating article:", error); // 에러 출력
+            console.error("오류: 게시글 수정", error); // 에러 출력
             return null; // 오류 발생 시 null 반환
         });
 }
@@ -168,7 +174,7 @@ function patchArticle(id, title, content, image) {
 function deleteArticle(id) {
     // 유효한 ID인지 확인
     if (!id || isNaN(id)) {
-        console.error("Error: 유효한 ID를 입력해주세요.");
+        console.error("유효성 검사: 유효한 ID를 입력해주세요.");
         return null;
     }
 
@@ -184,21 +190,21 @@ function deleteArticle(id) {
         .then(response => {
             // 응답 상태가 204(삭제 성공)일 경우 성공 메시지 출력
             if (response.status === 204) {
-                console.log(`게시글 (ID: ${id})이 성공적으로 삭제되었습니다.`);
+                console.log(`성공: 게시글 삭제 (ID:${id})`);
                 return true; // 삭제 성공 시 true 반환
             } else if (response.status === 404) {
-                console.error(`Error: 게시글을 찾을 수 없습니다. (ID: ${id})`);
+                console.error(`실패: 게시글 삭제 (ID: ${id})`);
                 return null; // 게시글이 없으면 null 반환
-            } else {
-                // 에러가 있을 경우 응답 데이터를 에러로 처리
-                return response.json().then(error => { throw new Error(error); });
             }
+            // 그 외의 오류 처리
+            return response.json().then(error => { throw new Error(error); });
         })
         .catch(error => {
-            console.error("Error deleting article:", error); // 에러 출력
+            console.error("오류: 게시글 삭제", error); // 에러 출력
             return null; // 오류 발생 시 null 반환
         });
 }
+
 
 /* 함수 내보내기 */
 export {
