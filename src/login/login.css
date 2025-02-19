@@ -94,20 +94,20 @@ form input:focus {
     outline-color: var(--color-blue);
 }
 
-.emailINPUT {
+.email-input {
     position: relative;
 }
 
-.passwordINPUT {
+.password-input {
     position: relative;
     width: 100%;
 }
 
-.passwordINPUT input {
+.password-input input {
     padding-right: 2.5rem;
 }
 
-.passwordINPUT i {
+.password-input i {
     position: absolute;
     right: 15px;
     top: 78%;
@@ -118,8 +118,8 @@ form input:focus {
 }
 
 /* error 스타일 */
-.emailINPUT input.error,
-.passwordINPUT input.error {
+.email-input input.error,
+.password-input input.error {
     border: 1px solid var(--color-red);
 }
 
@@ -316,14 +316,14 @@ form input:focus {
         height: 430px;
     }
 
-    .emailINPUT p,
-    .passwordINPUT p {
+    .email-input p,
+    .password-input p {
         font-size: 18px;
         font-weight: 700;
         line-height: 21.48px;
     }
 
-    .passwordINPUT i {
+    .password-input i {
         top: 75%;
     }
 
@@ -401,14 +401,14 @@ form input:focus {
         height: 391px;
     }
 
-    .emailINPUT p,
-    .passwordINPUT p {
+    .email-input p,
+    .password-input p {
         font-weight: 700;
         font-size: 14px;
         line-height: 16.71px;
     }
 
-    .passwordINPUT i {
+    .password-input i {
         top: 75%;
     }
 

@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginButton = document.getElementById("login_btn"); // 로그인 버튼
     const emailError = document.getElementById("email-error"); // 이메일 오류 메시지 영역
     const passwordError = document.getElementById("password-error"); // 비밀번호 오류 메시지 영역
-    const passwordToggle = document.querySelector(".passwordINPUT i"); // 비밀번호 표시/숨기기 아이콘
+    const passwordToggle = document.querySelector(".password-input i"); // 비밀번호 표시/숨기기 아이콘
 
     // 사용자 데이터 배열 (이메일과 비밀번호)
     const USER_DATA = [

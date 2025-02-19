@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailError = document.getElementById("email-error"); // 이메일 오류 메시지 영역
     const passwordError = document.getElementById("password-error"); // 비밀번호 오류 메시지 영역
     const confirmPasswordError = document.getElementById("confirm-password-error"); // 비밀번호 확인 오류 메시지 영역
-    const passwordToggle = document.querySelector(".passwordINPUT i"); // 비밀번호 표시/숨기기 아이콘
-    const confirmPasswordToggle = document.querySelector(".confirm-passwordINPUT i"); // 비밀번호 확인 표시/숨기기 아이콘
+    const passwordToggle = document.querySelector(".password-input i"); // 비밀번호 표시/숨기기 아이콘
+    const confirmPasswordToggle = document.querySelector(".confirm-password-input i"); // 비밀번호 확인 표시/숨기기 아이콘
 
     // 사용자 데이터 배열 (이메일과 비밀번호)
     const USER_DATA = [
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             // 새로운 사용자 추가
             USER_DATA.push({ email: emailValue, password: passwordValue });
-            window.location.href = "/login/login.html"; // 로그인 페이지로 이동
+            window.location.href = "login.html"; // 로그인 페이지로 이동
         }
     });
 

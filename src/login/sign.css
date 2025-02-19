@@ -99,20 +99,20 @@ form input:focus {
     outline-color: var(--color-blue);
 }
 
-.passwordINPUT,
-.confirm-passwordINPUT {
+.password-input,
+.confirm-password-input {
     position: relative;
     width: 100%;
 }
 
-.passwordINPUT input,
-.confirm-passwordINPUT input {
+.password-input input,
+.confirm-password-input input {
     padding-right: 2.5rem;
     /* 아이콘 공간을 확보 */
 }
 
-.passwordINPUT i,
-.confirm-passwordINPUT i {
+.password-input i,
+.confirm-password-input i {
     position: absolute;
     right: 15px;
     top: 76.5%;
@@ -123,8 +123,8 @@ form input:focus {
 }
 
 /* error 스타일 */
-.emailINPUT input.error,
-.passwordINPUT input.error {
+.email-input input.error,
+.password-input input.error {
     border: 1px solid var(--color-red);
 }
 
@@ -333,10 +333,10 @@ form input:focus {
         height: 420px;
     }
 
-    .emailINPUT p,
-    .passwordINPUT p,
-    .nicknameINPUT,
-    .confirm-passwordINPUT {
+    .email-input p,
+    .password-input p,
+    .nickname-input,
+    .confirm-password-input {
         font-size: 18px;
         font-weight: 700;
         line-height: 21.48px;
@@ -425,10 +425,10 @@ form input:focus {
         height: 585px;
     }
 
-    .emailINPUT p,
-    .passwordINPUT p,
-    .nicknameINPUT p,
-    .confirm-passwordINPUT {
+    .email-input p,
+    .password-input p,
+    .nickname-input p,
+    .confirm-password-input {
         font-weight: 700;
         font-size: 14px;
         line-height: 16.71px;

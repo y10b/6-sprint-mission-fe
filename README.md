@@ -35,7 +35,7 @@
 - input 입력 필드가 눈모양 아이콘을 넘지 않도록 수정
 - input cursor color 변경
 
-## subPage JS & CSS MOD
+## 3. subPage JS & CSS MOD
 요구사항에 따라 input MOD
 - JS로 유효성 검사
 - JS로 로그인 버튼 활성화 동작 추가
@@ -68,3 +68,14 @@
 - main Page banner & footer IMG padding 추가
 
 - HTML CSS 최적화
+
+
+## 4. API making
+요구사항에 맞게 API 제작
+- Articles (CRUD)
+- Product (CRUD)
+- main 
+
+변경 사항
+- login & sign page input class 이름 수정
+- 회원가입 시 로그인 페이지로 이동하지 않는 오류 수정
