@@ -58,10 +58,10 @@ const newProduct = await createProduct(
 );
 
 // 상품 수정(ID:13)
-const updatedProduct = await patchProduct(4, {
+const updatedProduct = await patchProduct(13, {
     name: "수정된 상품명",
     price: 29900
 });
 
-// 상품 삭제(ID:15)
+// 상품 삭제(ID:18)
 const deleteResultProduct = await deleteProduct(18);

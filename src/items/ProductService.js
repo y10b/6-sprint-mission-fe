@@ -75,7 +75,7 @@ async function createProduct(name, description, price, manufacturer, tags = [], 
             console.error("실패(상품 등록): 유효성 검사 오류", responseData.message);
             return null;
         } else {
-            // 다른 모든 오류는 여기에 처리
+            // 그 외(서버)
             throw new Error(responseData.message || "상품 등록 오류");
         }
 
@@ -110,7 +110,7 @@ async function getProduct(id) {
         }
         // 응답 코드 404: 상품을 찾을 수 없음
         else if (response.status === 404) {
-            console.error(`실패: 상품 상세 조회 (ID: ${id})`);
+            console.error(`실패(상품 상세 조회): 상품을 찾을 수 없음 (ID: ${id})`);
             return null; // 상품을 찾을 수 없으면 null 반환
         }
         // 그 외의 오류 처리
@@ -160,7 +160,7 @@ async function patchProduct(id, updates) {
             return data; // 수정된 상품 데이터 반환
         } else if (response.status === 404) {
             // 응답 코드 404: 상품을 찾을 수 없음
-            console.error(`오류: 상품 수정 (ID: ${id}) - 상품을 찾을 수 없습니다.`);
+            console.error(`실패(상품 수정): 상품을 찾을 수 없음  (ID: ${id})`);
             return null;
         } else {
             // 그 외의 오류 처리
@@ -201,7 +201,7 @@ async function deleteProduct(id) {
 
         // 응답 코드 404: 상품을 찾을 수 없음
         if (response.status === 404) {
-            console.error(`상품을 찾을 수 없음 (ID: ${id})`);
+            console.error(`실패(상품 삭제): 상품을 찾을 수 없음 (ID: ${id})`);
             return null; // 상품이 존재하지 않을 경우 null 반환
         }
 
