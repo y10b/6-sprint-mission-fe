@@ -1,0 +1,206 @@
+/* 기본 스타일 */
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: pretendard;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* 일반 스타일 */
+
+.main-header {
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+}
+
+.landing-page-nav {
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 9px 200px;
+  border-bottom: 1px solid #dfdfdf;
+}
+
+.login-button {
+  background-color: #3692ff;
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 12px 23px;
+}
+
+.header-landing-page {
+  height: 540px;
+  padding: 0px 400px;
+  padding-top: 70px;
+  background-color: #cfe5ff;
+  display: grid;
+  justify-content: center;
+  align-content: end;
+  grid-template-columns: 355px 746px;
+  grid-template-rows: 340px;
+  gap: 7px;
+}
+
+.top-banner {
+  align-self: center;
+}
+
+.top-img {
+  width: 746px;
+}
+
+h2.description-text {
+  margin-top: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 56px;
+  color: #374151;
+}
+
+a.move-to-shop {
+  position: relative;
+  top: 50%;
+  width: 357px;
+  height: 56px;
+  border-radius: 40px;
+  padding: 16px 124px;
+  background-color: #3692ff;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.section-landing-page {
+  height: 444px;
+  padding: 138px 344px;
+}
+
+.article-part {
+  background-color: #fcfcfc;
+  display: grid;
+  grid-template-columns: 4fr 3fr;
+  gap: 64px;
+  margin: 0 auto;
+}
+
+.arrangement2 {
+  align-self: center;
+  text-align: right;
+}
+
+.arrangement {
+  align-self: center;
+}
+
+.img-home {
+  width: 588px;
+  height: 444px;
+}
+
+.main-logo {
+  font-size: 1rem;
+  line-height: 26px;
+  font-weight: 700;
+  color: #3692ff;
+}
+
+p.normal-text {
+  font-size: 1.5rem;
+  line-height: 32px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.grey-color {
+  height: 180px;
+  width: 100%;
+  background-color: #fcfcfc;
+}
+
+.footer-landing-page {
+  height: 540px;
+  padding: 0px 400px;
+  padding-top: 70px;
+  background-color: #cfe5ff;
+  display: grid;
+  justify-content: center;
+  align-content: end;
+  grid-template-columns: 355px 746px;
+  grid-auto-rows: 397px;
+  gap: 7px;
+  margin: 0;
+}
+
+.bottom-banner {
+  align-self: center;
+}
+
+.bottom-img {
+  width: 746px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #111827;
+  height: 160px;
+  padding: 32px 200px
+}
+
+.footer-info-link {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.footer-info-logo {
+  color: #9ca3af;
+}
+
+.privacy {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.faq {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+/* 동작 스타일 */
+
+.login-button:default {
+  background-color: #3692ff;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #1967d6;
+  cursor: pointer;
+}
+
+.login-button:active {
+  background-color: #1251aa;
+  cursor: pointer;
+}
+
+.move-to-shop:default {
+  background-color: #3692ff;
+  cursor: pointer;
+}
+
+.move-to-shop:hover {
+  background-color: #1967d6;
+  cursor: pointer;
+}
+
+.move-to-shop:active{
+  background-color: #1251aa;
+  cursor: pointer;
+}
