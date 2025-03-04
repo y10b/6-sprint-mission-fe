@@ -1,24 +1,32 @@
 # 버전관리
+
 ---
+
 ## 1. main Page making
-메인 페이지 제작 
-요구사항에 맞춰 
-- CSS RESET 
+
+메인 페이지 제작
+요구사항에 맞춰
+
+- CSS RESET
 - 화면 사이즈에 반응하도록 제작
 - SNS icon 클릭 시 새로운 창으로 열리게
 
 ## 2. sub Page(login/sign) making
+
 서브 페이지 제작
 요구사항에 맞춰
+
 - CSS RESET
 - input 요소 & 색상
 - palette color 값 css 변수로 등록
 
 구글애널리틱스 등록 및 reset.css 수정
 요구사항에 맞춰 구글애널리틱스 등록
+
 - 기존 reset.css 삭제 후 모든 브라우저에 원하는 디자인이 적용될 수 있도록 reset.css를 통해 css 초기화
 
 오류 수정
+
 - 요구사항에 맞게 기존 픽셀로 크기를 나타내는 부분을 REM으로 변경
 - contents 간격 조절
 - 버튼요소에 폰트 스타일 적용
@@ -36,7 +44,9 @@
 - input cursor color 변경
 
 ## 3. subPage JS & CSS MOD
+
 요구사항에 따라 input MOD
+
 - JS로 유효성 검사
 - JS로 로그인 버튼 활성화 동작 추가
 - JS로 user data 내의 값만 로그인이 가능하게 구현
@@ -47,14 +57,15 @@
 - class name 변경
 
 요구사항에 따라 반응형 제작
+
 - css로 화면 너비에 따라 반응하는 main & sub Page
 - meta tag 설정
 
-- sub Page 공통부분 모듈화 
+- sub Page 공통부분 모듈화
 - @mobile에서 사이즈 너비가 커지면 QA & SNS 간격도 너비에 맞춰 커지게 수정
 
-
 오류 수정
+
 - login.js password input 눈 아이콘 입력 값이 있을 때만 동작하게 변경
 - 모바일 화면에서 sign Page 로고가 잘리는 오류 수정
 - main Page @tablet에서 기기마다 위치가 달라지는 오류 수정
@@ -69,14 +80,24 @@
 
 - HTML CSS 최적화
 
-
 ## 4. API making
+
 요구사항에 맞게 API 제작
+
 - Articles (CRUD)
 - Product (CRUD)
-- main 
+- main
 
 변경 사항
+
 - login & sign page input class 이름 수정
 - 회원가입 시 로그인 페이지로 이동하지 않는 오류 수정
 - API 오류 및 성공 메시지 수정
+
+## 5.
+
+요구사항에 맞게 제작
+
+- item Form 제작
+
+변경 사항
