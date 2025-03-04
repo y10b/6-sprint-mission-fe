@@ -3,7 +3,7 @@ import { getProductList } from "./Products"; // API 호출 함수
 import FavoriteButton from "./FavoriteButton"; // 좋아요 버튼 임포트
 import { formatNumber } from "./utils"; // 숫자 포맷 함수 임포트
 
-const BestProducts = () => {
+const BestProducts = ({ favoriteCounts, onFavoriteToggle }) => {
   const [bestProducts, setBestProducts] = useState([]);
 
   useEffect(() => {
@@ -29,11 +29,14 @@ const BestProducts = () => {
                 alt={product.name}
               />
               <h3 className="name">{product.name}</h3>
-              <p className="price">{formatNumber(product.price)}원</p>{" "}
-              {/* 숫자 포맷 적용 */}
+              <p className="price">{formatNumber(product.price)}원</p>
+              {/* FavoriteButton에 favoriteCounts와 onFavoriteToggle 전달 */}
               <FavoriteButton
                 productId={product.id}
-                initialCount={product.favoriteCount}
+                initialCount={
+                  favoriteCounts[product.id] || product.favoriteCount
+                }
+                onFavoriteToggle={onFavoriteToggle}
               />
             </div>
           ))

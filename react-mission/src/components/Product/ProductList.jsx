@@ -14,14 +14,15 @@ const ProductList = ({
   keyword,
   setOrderBy,
   setKeyword,
-  setPage, // 여기서 setPage를 제대로 전달 받음
+  setPage,
+  favoriteCounts,
+  onFavoriteToggle, // 추가된 prop
 }) => {
   const [items, setItems] = useState([]);
   const [hasNext, setHasNext] = useState(false); // 다음 페이지가 있는지 확인
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수 상태
   const [showForm, setShowForm] = useState(false); // 상품 등록 폼 표시 상태
 
-  // 상품 목록 불러오기
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProductList(page, pageSize, orderBy, keyword);
@@ -34,30 +35,24 @@ const ProductList = ({
     fetchData();
   }, [page, pageSize, orderBy, keyword]);
 
-  // 정렬 기준에 따라 정렬
   const sortedItems = items.sort((a, b) => {
     if (orderBy === "recent") {
-      // 최신 순: createdAt을 기준으로 내림차순 정렬
-      return new Date(b.createdAt) - new Date(a.createdAt); // b가 더 최신일수록 앞으로
+      return new Date(b.createdAt) - new Date(a.createdAt);
     } else if (orderBy === "favorite") {
-      // 좋아요 순: favoriteCount을 기준으로 내림차순 정렬
-      return b.favoriteCount - a.favoriteCount; // b가 더 많은 좋아요를 가질수록 앞으로
+      return b.favoriteCount - a.favoriteCount;
     }
     return 0;
   });
 
-  // 상품 등록 폼을 표시하거나 숨기기 위한 함수
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
 
-  // 상품 등록 폼 제출 처리
   const handleCreateProduct = async (productData) => {
-    const newProduct = await createProduct(productData); // API 호출하여 상품 생성
+    const newProduct = await createProduct(productData);
     if (newProduct) {
-      // 상품 생성 후 상품 목록 갱신
       setItems((prevItems) => [newProduct, ...prevItems]);
-      setShowForm(false); // 폼 닫기
+      setShowForm(false);
     }
   };
 
@@ -82,7 +77,6 @@ const ProductList = ({
         </div>
       </div>
 
-      {/* 상품 등록 폼이 열려 있으면 표시 */}
       {showForm && <ProductForm onSubmit={handleCreateProduct} />}
 
       <div className="products">
@@ -99,7 +93,10 @@ const ProductList = ({
                 <p className="price">{formatNumber(product.price)}원</p>
                 <FavoriteButton
                   productId={product.id}
-                  initialCount={product.favoriteCount}
+                  initialCount={
+                    favoriteCounts[product.id] || product.favoriteCount
+                  }
+                  onFavoriteToggle={onFavoriteToggle} // onFavoriteToggle 전달
                 />
               </div>
             ))
@@ -109,7 +106,6 @@ const ProductList = ({
         </div>
       </div>
 
-      {/* 페이지네이션 */}
       <Pagination
         className="pagination"
         page={page}

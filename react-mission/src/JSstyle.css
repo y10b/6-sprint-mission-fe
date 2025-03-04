@@ -111,7 +111,7 @@ img {
   border-radius: 16px;
 }
 
-/* 페이지네이션 스타일 */
+/* pagination */
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -176,6 +176,8 @@ img {
   text-align: left;
   font-family: "pretendard";
 }
+
+/* ProductForm */
 
 /*  Tablet (744px ~ 1199px) */
 @media (min-width: 744px) and (max-width: 1199px) {

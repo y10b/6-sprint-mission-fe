@@ -47,14 +47,16 @@ export async function getProductList(
 }
 
 /* 상품 생성 */
-export async function createProduct(productData) {
+export async function createProduct(productData, accessToken) {
   try {
     const url = new URL(baseURL);
 
+    // 상품 생성 요청 시 인증 토큰을 Authorization 헤더에 추가
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`, // 인증 토큰 추가
       },
       body: JSON.stringify(productData), // 상품 정보를 JSON 형식으로 전송
     });
@@ -186,8 +188,8 @@ export async function deleteProduct(productId) {
   }
 }
 
-// 상품 좋아요 추가
-export async function addProductToFavorite(productId) {
+// 좋아요 추가
+export async function addFavorite(productId) {
   try {
     const url = new URL(`${baseURL}/${productId}/favorite`);
 
@@ -199,24 +201,20 @@ export async function addProductToFavorite(productId) {
     });
 
     if (!response.ok) {
-      throw new Error(`상품 좋아요 추가 실패: ${response.statusText}`);
+      throw new Error(`좋아요 추가 실패: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    return {
-      id: data.id,
-      favoriteCount: data.favoriteCount,
-      isFavorite: true,
-    };
+    return data.favoriteCount; // 새로운 favoriteCount 반환
   } catch (error) {
-    console.error("오류: 상품 좋아요 추가", error);
+    console.error("오류: 좋아요 추가", error);
     return null;
   }
 }
 
-// 상품 좋아요 취소
-export async function removeProductFromFavorite(productId) {
+// 좋아요 취소
+export async function removeFavorite(productId) {
   try {
     const url = new URL(`${baseURL}/${productId}/favorite`);
 
@@ -228,18 +226,14 @@ export async function removeProductFromFavorite(productId) {
     });
 
     if (!response.ok) {
-      throw new Error(`상품 좋아요 취소 실패: ${response.statusText}`);
+      throw new Error(`좋아요 취소 실패: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    return {
-      id: data.id,
-      favoriteCount: data.favoriteCount,
-      isFavorite: false,
-    };
+    return data.favoriteCount; // 새로운 favoriteCount 반환
   } catch (error) {
-    console.error("오류: 상품 좋아요 취소", error);
+    console.error("오류: 좋아요 취소", error);
     return null;
   }
 }

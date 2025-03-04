@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // 빈 하트 아이콘 추가
 
-const FavoriteButton = ({ productId, initialCount }) => {
+const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
   const [clicked, setClicked] = useState(false);
   const [count, setCount] = useState(initialCount);
 
   const toggleClick = () => {
+    const newCount = clicked ? count - 1 : count + 1;
     setClicked(!clicked);
-    setCount((prev) => (clicked ? prev - 1 : prev + 1)); // 토글 시 +1 / -1
+    setCount(newCount); // 로컬 상태 업데이트
+
+    // 부모 컴포넌트로부터 전달된 함수 호출하여 서버에 좋아요 추가 요청
+    onFavoriteToggle(productId, newCount);
   };
 
   return (
