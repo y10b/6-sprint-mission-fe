@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/pavicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="sign.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>판다마켓</title>
+</head>
+
+<body>
+    <article class="signup">
+        <header>
+            <a href="../index.html"><img src="../img/logo.png" alt="logo"></a>
+        </header>
+        <main>
+            <form>
+                <div class="email-input">
+                    <p>이메일</p>
+                    <input id="email" type="email" placeholder="이메일을 입력하세요" required>
+                    <small id="email-error">
+                        <p></p>
+                    </small>
+                </div>
+                <div class="nickname-input">
+                    <p>닉네임</p>
+                    <input id="nickname" type="text" placeholder="닉네임을 입력해주세요" required>
+                </div>
+                <div class="password-input">
+                    <p>비밀번호</p>
+                    <input id="password" type="password" placeholder="비밀번호를 입력해주세요" required>
+                    <i class="fa-regular fa-eye-slash"></i>
+                </div>
+                <small id="password-error">
+                    <p></p>
+                </small>
+                <div class="confirm-password-input">
+                    <p>비밀번호 확인</p>
+                    <input id="confirm-password" type="password" placeholder="비밀번호를 다시 한 번 입력해주세요" required>
+                    <i class="fa-regular fa-eye-slash"></i>
+                </div>
+                <small id="confirm-password-error">
+                    <p></p>
+                </small>
+                <div class="sign_btn">
+                    <button id="sign_btn" type="submit" disabled>회원가입</button>
+                </div>
+                <div class="sns_login">
+                    <div class="sns_inner">
+                        <div class="sns_text">
+                            <p>간편 로그인하기</p>
+                        </div>
+                        <div class="sns_img">
+                            <a href="https://www.google.com/"><img class="google" src="../img/google.png"
+                                    alt="google"></a>
+                            <a href="https://www.kakaocorp.com/page/"><img class="kakao" src="../img/kakao.png"
+                                    alt="kakao"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="login">
+                    <div class="login_text">
+                        <p>이미 회원이신가요?</p>
+                        <p><a href="login.html">로그인</a></p>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </article>
+
+    <div id="popup-bg"></div>
+    <div id="popup">
+        <div class="popup-text"></div>
+        <button id="popup-close">확인</button>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="sign.js"></script>
+<script src="auth.js"></script>
+<script src="userdata.js"></script>
+
+</html>

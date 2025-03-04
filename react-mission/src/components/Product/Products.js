@@ -186,7 +186,7 @@ export async function deleteProduct(productId) {
   }
 }
 
-/* 상품 좋아요 */
+// 상품 좋아요 추가
 export async function addProductToFavorite(productId) {
   try {
     const url = new URL(`${baseURL}/${productId}/favorite`);
@@ -204,26 +204,18 @@ export async function addProductToFavorite(productId) {
 
     const data = await response.json();
 
-    // 좋아요가 추가된 상품 반환
     return {
       id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      tags: data.tags,
-      images: data.images,
       favoriteCount: data.favoriteCount,
-      createdAt: data.createdAt,
-      ownerId: data.ownerId,
-      isFavorite: data.isFavorite,
+      isFavorite: true,
     };
   } catch (error) {
     console.error("오류: 상품 좋아요 추가", error);
-    return null; // 실패 시 null 반환
+    return null;
   }
 }
 
-/* 상품 좋아요 취소 */
+// 상품 좋아요 취소
 export async function removeProductFromFavorite(productId) {
   try {
     const url = new URL(`${baseURL}/${productId}/favorite`);
@@ -241,21 +233,13 @@ export async function removeProductFromFavorite(productId) {
 
     const data = await response.json();
 
-    // 좋아요 취소된 상품 반환
     return {
       id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      tags: data.tags,
-      images: data.images,
       favoriteCount: data.favoriteCount,
-      createdAt: data.createdAt,
-      ownerId: data.ownerId,
-      isFavorite: data.isFavorite,
+      isFavorite: false,
     };
   } catch (error) {
     console.error("오류: 상품 좋아요 취소", error);
-    return null; // 실패 시 null 반환
+    return null;
   }
 }
