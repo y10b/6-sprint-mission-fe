@@ -100,7 +100,5 @@
 
 변경 사항
 
-- mobile에서 header의 font 값을 조절하여 겹치지 않게 배치 구현
-- mobile에서 filter를 그대로 유지하며 search의 크기를 줄여 배치
 - 내용이 없는 페이지 404 처리
 - productForm CSS 추가
