@@ -9,6 +9,7 @@
   --color-input: #f3f4f6;
   --color-btn: #3692ff;
   --color-btnwhite: #f9fafb;
+  --color-btnhover: #0056b3;
 }
 
 img {
@@ -93,6 +94,9 @@ img {
   line-height: 26px;
   cursor: pointer;
   font-family: "pretendard";
+}
+.productList-Btn:hover {
+  background-color: var(--color-btnhover);
 }
 .productList-grid {
   display: flex;
@@ -179,6 +183,153 @@ img {
 
 /* ProductForm */
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+/* 팝업 폼 스타일 */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 60vw;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 17.5px;
+  line-height: 32px;
+  right: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--color-Title);
+}
+
+.Form-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--color-Title);
+}
+
+.Form-images-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Form-name {
+  margin-top: 10px;
+}
+.Form-name-text {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--color-Name);
+}
+.Form-price,
+.Form-description {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 26px;
+  color: var(--color-Name);
+}
+
+.Form-Btn {
+  width: 80px;
+  height: 40px;
+  background-color: var(--color-btn);
+  color: var(--color-btnwhite);
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "pretendard";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.Form-Btn:hover {
+  background-color: var(--color-btnhover);
+}
+
+.Form-name-input,
+.Form-price-input,
+.Form-tags-input,
+textarea {
+  width: 100%;
+  color: var(--color-inputText);
+  background-color: var(--color-input);
+  line-height: 26px;
+  font-weight: 400;
+  font-style: 16px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-family: "pretendard";
+}
+
+/* image Preview */
+.image-preview {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.image-preview img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.image-item {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+}
+.img-span {
+  position: absolute;
+  background: var(--color-btn);
+  color: var(--color-btnwhite);
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+/* input[type="file"] css */
+input[type="file"]::file-selector-button {
+  background-color: var(--color-input);
+  border: none;
+  border-radius: 8px;
+  color: var(--color-inputText);
+  cursor: pointer;
+  font-family: "pretendard";
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 26px;
+}
+input[type="file"]:hover {
+  opacity: 0.5;
+}
 /*  Tablet (744px ~ 1199px) */
 @media (min-width: 744px) and (max-width: 1199px) {
   .bestproducts,
