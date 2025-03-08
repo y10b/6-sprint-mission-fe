@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createdProduct } from "../Product/Products"; // 경로는 프로젝트 구조에 맞게 수정
+import { createdProduct } from "./Products";
 
 const ProductForm = ({ onSubmit, accessToken }) => {
   const [showModal, setShowModal] = useState(true);
@@ -149,7 +149,7 @@ const ProductForm = ({ onSubmit, accessToken }) => {
               placeholder="쉼표로 구분된 태그"
             />
           </div>
-          {error && <p className="error-message">{error}</p>}{" "}
+          {error && <p className="error-message">{error}</p>}
           <button type="submit" className="Form-Btn" disabled={loading}>
             {loading ? "등록 중..." : "등록"}
           </button>
