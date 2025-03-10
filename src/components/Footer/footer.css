@@ -1,0 +1,143 @@
+/* 기본설정 */
+:root {
+  --color-QA: #e5e7eb;
+  --color-footer: #111827;
+}
+
+.footer-decoration {
+  background: var(--color-contents);
+  height: 3.125rem;
+}
+
+.footer_license {
+  align-items: flex-start;
+  background: var(--color-footer);
+  display: flex;
+  height: 10rem;
+  justify-content: space-between;
+  padding: 2rem;
+  font-family: "Pretendard";
+}
+
+.copy {
+  margin: 0;
+  white-space: nowrap;
+  margin-left: 12.5rem;
+  line-height: 1.193125rem;
+}
+
+.copy p {
+  color: var(--color-gray);
+  font-weight: 400;
+}
+
+.QA {
+  display: flex;
+  gap: 1.875rem;
+}
+
+.QA a {
+  color: var(--color-QA);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 400;
+  line-height: 1.193125rem;
+}
+
+.QA a:hover {
+  opacity: 0.5;
+}
+
+.SNS {
+  display: flex;
+  gap: 0.8125rem;
+  margin-right: 12.5rem;
+}
+
+.SNS img {
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.SNS img:hover {
+  opacity: 0.5;
+  transform: scale(1.05);
+}
+
+/* 화면의 너비가 1920px보다 작을 때 */
+@media (max-width: 120rem) {
+  .copy {
+    margin-left: calc(12.5rem - (120rem - 100vw) * 0.1);
+  }
+
+  img {
+    display: block;
+  }
+
+  .SNS {
+    margin-right: calc(12.5rem - (120rem - 100vw) * 0.1);
+  }
+
+  .lics {
+    display: flex;
+    gap: calc((100vw - 75rem) / 2);
+    justify-content: center;
+  }
+}
+
+/* Tablet (744px ~ 1199px) */
+
+@media (min-width: 744px) and (max-width: 1199px) {
+  footer {
+    margin-top: 150px;
+  }
+
+  .footer_license {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 160px;
+    flex-direction: row;
+    padding: 32px 24px 108px;
+  }
+
+  .QA {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  footer {
+    margin-top: 60px;
+  }
+
+  .footer_license {
+    position: relative;
+    padding-top: 42px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .copy {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-left: 45px;
+  }
+
+  .SNS {
+    margin-right: 16px;
+    gap: calc(8px + 0.5vw);
+  }
+
+  .QA {
+    margin-left: 16px;
+    gap: calc(12px + 1.5vw);
+  }
+}

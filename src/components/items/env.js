@@ -1,0 +1,1 @@
+export const DATABASE_URL = "mongodb+srv://y10b:seungjun73@items.50si3.mongodb.net/panda-market?retryWrites=true&w=majority&appName=items"

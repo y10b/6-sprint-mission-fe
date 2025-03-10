@@ -57,7 +57,7 @@ const ProductList = ({
   };
 
   return (
-    <div>
+    <div className="ProductListForm">
       <div className="productList-header">
         <h2 className="productList-text">판매 중인 상품</h2>
         <div className="productList-FilterBox">

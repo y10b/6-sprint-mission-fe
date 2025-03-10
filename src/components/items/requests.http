@@ -1,0 +1,30 @@
+#아이템 생성
+POST http://localhost:3001/items
+Content-Type: application/json
+
+{
+  "name": "아이템 테스트",
+  "description": "아이템 설명",
+  "price": 100000,
+  "tags": ["테스트", "test"],
+  "images": ["image1.jpg", "image2.jpg"],
+  "ownerId": 123
+}
+
+###
+#모든 아이템 조회
+GET http://localhost:3001/items
+
+###
+#아이템 수정
+PATCH http://localhost:3001/items/2
+Content-Type: application/json
+
+{
+  "price": 5500,
+  "tags": ["수정된 아이템", "newTag"]
+}
+
+###
+#아이템 삭제
+DELETE http://localhost:3001/items/4

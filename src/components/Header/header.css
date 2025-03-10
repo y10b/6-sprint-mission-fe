@@ -1,0 +1,140 @@
+:root {
+  --color-blue: #3692ff;
+  --color-loginText: #f3f4f6;
+  --color-headerText: #4b5563;
+}
+
+header {
+  width: 100%;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  background: #fff;
+  display: flex;
+  height: 4.375rem;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.header-logo {
+  margin-left: 12.5rem;
+}
+.header-logo img {
+  height: 3.1875rem;
+}
+
+.header-board,
+.header-market {
+  text-decoration: none;
+  color: var(--color-headerText);
+  font-weight: 700;
+  line-height: 26px;
+  font-size: 18px;
+}
+
+.header-board {
+  margin-left: 39px;
+}
+
+.header-market {
+  margin-left: 30px;
+}
+
+.header-market.active {
+  color: #3692ff;
+}
+nav {
+  margin-left: auto;
+}
+.header-button {
+  background-color: var(--color-blue);
+  border: none;
+  border-radius: 0.5rem;
+  color: var(--color-loginText);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  height: 3rem;
+  line-height: 1.625rem;
+  margin-right: 2rem; /* 오른쪽 마진 추가 */
+  padding: 0.75rem 1.4375rem;
+  width: 8rem;
+  font-family: "Pretendard";
+}
+
+.header-button:hover,
+.header-board:hover,
+.header-market:hover {
+  transform: scale(1.01);
+  opacity: 0.7;
+}
+
+/* 화면의 너비가 1920px 보다 작을 때 */
+@media (max-width: 120rem) {
+  .header-logo {
+    margin-left: calc(12.5rem - (120rem - 100vw) * 0.1);
+  }
+
+  img {
+    display: block;
+  }
+
+  .header-button {
+    margin-right: calc(12.5rem - (120rem - 100vw) * 0.1);
+  }
+}
+
+/* Tablet */
+@media (min-width: 744px) and (max-width: 1199px) {
+  header {
+    width: 100%;
+    height: 70px;
+  }
+
+  .header-logo {
+    margin-left: 24px;
+  }
+
+  header img {
+    width: 153px;
+    height: 51px;
+  }
+
+  .header-button {
+    margin-right: 24px;
+    width: 128px;
+    height: 48px;
+    border-radius: 8px;
+    padding: 12px 23px;
+    gap: 10px;
+    line-height: 26px;
+  }
+}
+
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  header {
+    width: 100%;
+    height: 70px;
+  }
+
+  .header-logo {
+    margin-left: 16px;
+  }
+
+  .responsive_logo {
+    content: url("/public/img/mobile_logo.png");
+  }
+
+  header img {
+    height: 51px;
+    object-fit: cover;
+    margin-bottom: 9px;
+    margin-top: 10px;
+  }
+
+  .header-button {
+    margin-right: 16px;
+  }
+}

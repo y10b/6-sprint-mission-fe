@@ -1,27 +1,32 @@
-import React, { useState, useEffect } from "react";
-import BestProducts from "./components/Product/BestProducts";
-import ProductList from "./components/Product/ProductList";
-import { getProductList } from "./components/Product/Products"; // 상품 목록을 가져오는 함수
-import { addFavorite, removeFavorite } from "./components/Product/FavoriteAPI"; // 좋아요 API
+import React, { useState, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from './components/HomePage/HomePage';
+import BestProducts from './components/Product/BestProducts';
+import ProductList from './components/Product/ProductList';
+import { getProductList } from './components/Product/Products';
+import { addFavorite, removeFavorite } from './components/Product/FavoriteAPI';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
-import "./JSstyle.css";
+
+import './JSstyle.css';
 
 const App = () => {
-  const [page, setPage] = useState(1); // 페이지 상태 정의
+  const [page, setPage] = useState(1); // 페이지 상태
   const [pageSize] = useState(10);
-  const [orderBy, setOrderBy] = useState("recent");
-  const [keyword, setKeyword] = useState("");
+  const [orderBy, setOrderBy] = useState('recent');
+  const [keyword, setKeyword] = useState('');
   const [products, setProducts] = useState([]); // 상품 목록
   const [hasNext, setHasNext] = useState(false); // 다음 페이지 여부
   const [favoriteCounts, setFavoriteCounts] = useState({}); // 각 상품의 favoriteCount 상태
 
-  // 상품 목록을 fetch하는 useEffect
+  // 상품 목록을 가져오는 useEffect
   useEffect(() => {
     const fetchProducts = async () => {
       const data = await getProductList(page, pageSize, orderBy, keyword);
       if (data) {
         setProducts(data.list); // 상품 목록 업데이트
-        setHasNext(data.totalCount > page * pageSize); // 다음 페이지 존재 여부
+        setHasNext(data.totalCount > page * pageSize); // 다음 페이지 여부
 
         // 각 상품의 favoriteCount 초기화
         const initialCounts = data.list.reduce((acc, product) => {
@@ -32,44 +37,54 @@ const App = () => {
       }
     };
     fetchProducts();
-  }, [page, pageSize, orderBy, keyword]); // page, pageSize, orderBy, keyword가 변경될 때마다 실행
+  }, [page, pageSize, orderBy, keyword]);
 
-  // 좋아요 증가 함수 (서버에 요청)
+  // 좋아요 클릭 시 카운트 업데이트
   const handleFavoriteToggle = async (productId, currentCount) => {
     try {
-      // 서버에 좋아요 추가 요청
       const newFavoriteCount = currentCount + 1;
-      const success = await addFavorite(productId); // 서버에 좋아요 추가 요청 (추후 서버 처리)
+      const success = await addFavorite(productId); // 좋아요 추가 API 요청
       if (success) {
-        // 서버 응답에 따라 favoriteCount 업데이트
         setFavoriteCounts((prevCounts) => ({
           ...prevCounts,
           [productId]: newFavoriteCount,
         }));
       }
     } catch (error) {
-      console.error("좋아요 추가 실패:", error);
+      console.error('좋아요 추가 실패:', error);
     }
   };
 
   return (
     <div>
-      {/* 베스트 상품 */}
-      <BestProducts favoriteCounts={favoriteCounts} onFavoriteToggle={handleFavoriteToggle} />
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/market"
+          element={
+            <div>
+              {/* 베스트 상품 */}
+              <BestProducts favoriteCounts={favoriteCounts} onFavoriteToggle={handleFavoriteToggle} />
 
-      {/* 상품 목록 */}
-      <ProductList
-        products={products}
-        keyword={keyword}
-        setKeyword={setKeyword}
-        orderBy={orderBy}
-        setOrderBy={setOrderBy}
-        page={page} // 페이지 상태 전달
-        setPage={setPage} // 페이지 변경을 위한 setPage 전달
-        hasNext={hasNext} // 다음 페이지 존재 여부 전달
-        favoriteCounts={favoriteCounts} // favoriteCounts 전달
-        onFavoriteToggle={handleFavoriteToggle} // onFavoriteToggle 전달
-      />
+              {/* 상품 목록 */}
+              <ProductList
+                products={products}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                orderBy={orderBy}
+                setOrderBy={setOrderBy}
+                page={page}
+                setPage={setPage}
+                hasNext={hasNext}
+                favoriteCounts={favoriteCounts}
+                onFavoriteToggle={handleFavoriteToggle}
+              />
+            </div>
+          }
+        />
+      </Routes>
+      <Footer />
     </div>
   );
 };

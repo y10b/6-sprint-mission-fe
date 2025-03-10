@@ -1,79 +1,24 @@
 @charset "utf-8";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css");
-@import url("header-footer.css");
 
-:root {
-  --color-headerText: #4b5563;
+* {
+  box-sizing: border-box;
 }
 
-/* ---------------------- */
-header {
-  text-align: center;
-  display: flex;
-}
-
-header a {
-  text-decoration: none;
-  color: var(--color-headerText);
-  font-size: 18px;
-}
-
-.header-board {
-  position: absolute;
-  left: 430px;
-  top: 40%;
-}
-.header-market {
-  position: absolute;
-  left: 550px;
-  top: 40%;
-}
-
-.header-board:hover,
-.header-market:hover {
-  opacity: 0.5;
-}
-
-#root {
+html {
+  height: 100vh;
   font-family: "pretendard";
+  font-weight: 600;
+  font-size: 16px;
   margin: 0 auto;
-  width: 1200px;
-  height: 1400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/*  Tablet (744px ~ 1199px) */
-@media (min-width: 744px) and (max-width: 1199px) {
-  #root {
-    width: 700px;
-  }
-  .header-board {
-    left: 230px;
-  }
-  .header-market {
-    left: 340px;
-  }
+html,
+body {
+  width: 100%;
+  min-width: 320px;
 }
 
-/* ========================================== */
-/* Mobile (375px ~ 743px) */
-@media (min-width: 375px) and (max-width: 743px) {
-  #root {
-    width: 350px;
-  }
-  .header-board {
-    left: 165px;
-    font-size: 15px;
-  }
-
-  .header-market {
-    left: 245px;
-    font-size: 15px;
-  }
-
-  .login {
-    width: 90px;
-  }
+::-webkit-scrollbar {
+  display: none;
 }

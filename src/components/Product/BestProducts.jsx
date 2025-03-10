@@ -17,7 +17,7 @@ const BestProducts = ({ favoriteCounts, onFavoriteToggle }) => {
   }, []);
 
   return (
-    <div>
+    <div className="BestprouctsForm">
       <h2 className="bestproduct-text">베스트 상품</h2>
       <div className="bestproducts">
         {bestProducts.length > 0 ? (
