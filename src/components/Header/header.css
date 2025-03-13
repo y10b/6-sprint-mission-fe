@@ -123,13 +123,13 @@ nav {
     font-size: 14px;
   }
   .header-board {
-    margin-left: 15px;
+    margin-left: min(10px);
   }
   .header-market {
     margin-left: 10px;
   }
-  .header-logo {
-    margin-left: 16px;
+  .responsive_logo {
+    margin-left: 8px;
   }
 
   .responsive_logo {
@@ -144,7 +144,7 @@ nav {
   }
 
   .header-button {
-    margin-right: 16px;
+    margin-right: 8px;
     width: 100px;
   }
 }

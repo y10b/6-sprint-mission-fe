@@ -6,8 +6,10 @@ import Search from "./asset/Search.jsx"; // Search 컴포넌트 임포트
 import Filters from "./asset/Filters"; // Filters 컴포넌트 임포트
 import Pagination from "./asset/Pagination"; // Pagination 컴포넌트 임포트
 import FavoriteButton from "./asset/FavoriteButton"; // FavoriteButton 임포트
-import "./css/ProductList.css";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { formatNumber } from "./asset/utils.js";
+
+import "./css/ProductList.css";
 
 const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
   const [items, setItems] = useState([]);
@@ -22,7 +24,7 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
   const fetchItems = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:3002/items", {
+      const response = await axios.get("http://localhost:3002/api/items", {
         params: {
           offset: (page - 1) * pageSize, // 페이지에 맞는 오프셋 계산
           pageSize: pageSize, // 동적으로 설정한 페이지 크기
@@ -109,7 +111,7 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
               />
               <div className="product-details">
                 <h3 className="product-name">{item.name}</h3>
-                <p className="product-price">{item.price}원</p>
+                <p className="product-price">{formatNumber(item.price)}원</p>
                 <FavoriteButton
                   productId={item.id}
                   initialCount={item.favoriteCount || 0}

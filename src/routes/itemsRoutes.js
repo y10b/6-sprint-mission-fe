@@ -1,6 +1,6 @@
 import express from 'express';
 import { Product } from '../models/Productmodel.js';
-import { asyncHandler } from '../utils/asyncHandler.js';  // 예외 처리 미들웨어
+import { asyncHandler } from '../components/Product/asset/asyncHandler.js';  // 예외 처리 미들웨어
 
 const router = express.Router();
 
