@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ItemSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
     id: {
         type: Number,
         required: true,
@@ -31,9 +31,14 @@ const ItemSchema = new mongoose.Schema({
     favoriteCount: {
         type: Number,
         default: 0,  // 기본값을 0으로 설정
+    },
+    totalCount: {
+        type: Number,
+        require: true,
+        default: 0,
     }
 }, {
     timestamps: true,  // createdAt, updatedAt 자동 관리
 });
 
-export const Item = mongoose.model("Item", ItemSchema);
+export const Product = mongoose.model("Product", ProductSchema);

@@ -118,7 +118,16 @@ nav {
     width: 100%;
     height: 70px;
   }
-
+  .header-board,
+  .header-market {
+    font-size: 14px;
+  }
+  .header-board {
+    margin-left: 15px;
+  }
+  .header-market {
+    margin-left: 10px;
+  }
   .header-logo {
     margin-left: 16px;
   }
@@ -136,5 +145,6 @@ nav {
 
   .header-button {
     margin-right: 16px;
+    width: 100px;
   }
 }

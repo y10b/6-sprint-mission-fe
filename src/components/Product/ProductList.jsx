@@ -1,119 +1,132 @@
 import React, { useState, useEffect } from "react";
-import { formatNumber } from "./utils";
-import FavoriteButton from "./FavoriteButton";
-import Filters from "./Filters"; // 필터 컴포넌트 임포트
-import Search from "./Search"; // 검색 컴포넌트 임포트
-import Pagination from "./Pagination"; // 페이지네이션 컴포넌트 임포트
-import { getProductList, createProduct } from "./Products"; // API 호출 함수 임포트
-import ProductForm from "./ProductForm"; // 상품 등록 폼 컴포넌트 임포트
+import axios from "axios";
+import Header from "../Header/Header.js";
+import Footer from "../Footer/Footer.js";
+import Search from "./asset/Search.jsx"; // Search 컴포넌트 임포트
+import Filters from "./asset/Filters"; // Filters 컴포넌트 임포트
+import Pagination from "./asset/Pagination"; // Pagination 컴포넌트 임포트
+import FavoriteButton from "./asset/FavoriteButton"; // FavoriteButton 임포트
+import "./css/ProductList.css";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 
-const ProductList = ({
-  page,
-  pageSize,
-  orderBy,
-  keyword,
-  setOrderBy,
-  setKeyword,
-  setPage,
-  favoriteCounts,
-  onFavoriteToggle, // 추가된 prop
-}) => {
+const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
   const [items, setItems] = useState([]);
-  const [hasNext, setHasNext] = useState(false); // 다음 페이지가 있는지 확인
-  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수 상태
-  const [showForm, setShowForm] = useState(false); // 상품 등록 폼 표시 상태
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1); // 현재 페이지 상태 추가
+  const [pageSize, setPageSize] = useState(10); // 페이지당 아이템 개수 (기본값은 10)
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getProductList(page, pageSize, orderBy, keyword);
-      if (data) {
-        setItems(data.list);
-        setHasNext(data.hasNext); // hasNext 값을 받아와서 상태에 저장
-        setTotalPages(data.totalPages); // totalPages 값을 받아와서 상태에 저장
-      }
-    };
-    fetchData();
-  }, [page, pageSize, orderBy, keyword]);
+  const fetchItems = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("http://localhost:3002/items", {
+        params: {
+          offset: (page - 1) * pageSize, // 페이지에 맞는 오프셋 계산
+          pageSize: pageSize, // 동적으로 설정한 페이지 크기
+          sort: orderBy,
+          search: keyword,
+        },
+        withCredentials: true, // 쿠키를 포함하여 요청
+      });
 
-  const sortedItems = items.sort((a, b) => {
-    if (orderBy === "recent") {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    } else if (orderBy === "favorite") {
-      return b.favoriteCount - a.favoriteCount;
+      setItems(response.data.items);
+      setTotalCount(response.data.totalCount);
+      setHasNext(response.data.hasNext);
+    } catch (err) {
+      setError("아이템을 불러오는 데 실패했습니다.");
+      console.error("API 요청 오류:", err);
+    } finally {
+      setIsLoading(false);
     }
-    return 0;
-  });
-
-  const handleToggleForm = () => {
-    setShowForm(!showForm);
   };
 
-  const handleCreateProduct = async (productData) => {
-    const newProduct = await createProduct(productData);
-    if (newProduct) {
-      setItems((prevItems) => [newProduct, ...prevItems]);
-      setShowForm(false);
-    }
+  // 화면 크기에 따라 페이지당 표시될 상품 개수를 설정
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+
+      if (width >= 1200) {
+        setPageSize(10); // 기본 화면에서는 10개
+      } else if (width >= 744) {
+        setPageSize(6); // 태블릿 화면에서는 6개
+      } else {
+        setPageSize(4); // 모바일 화면에서는 4개
+      }
+    };
+
+    handleResize(); // 초기 로드 시 화면 크기 설정
+    window.addEventListener("resize", handleResize); // 화면 크기 변경 시마다 실행
+
+    return () => window.removeEventListener("resize", handleResize); // 컴포넌트가 언마운트될 때 이벤트 제거
+  }, []);
+
+  useEffect(() => {
+    setItems([]); // 새로 검색되었을 때 상품 목록 초기화
+    fetchItems(); // 상품 리스트 가져오기
+  }, [keyword, orderBy, page, pageSize]); // keyword, orderBy, page, pageSize 변경 시마다 데이터 다시 가져오기
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1); // 검색할 때마다 첫 페이지로 리셋
+    fetchItems();
   };
 
   return (
-    <div className="ProductListForm">
-      <div className="productList-header">
-        <h2 className="productList-text">판매 중인 상품</h2>
-        <div className="productList-FilterBox">
-          <Search
-            className="productList-Search"
-            keyword={keyword}
-            setKeyword={setKeyword}
-          />
-          <button className="productList-Btn" onClick={handleToggleForm}>
-            상품 등록하기
-          </button>
-          <Filters
-            className="productList-Filter"
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-          />
+    <>
+      <Header />
+      <div className="ProductListForm">
+        <div className="productList-header">
+          <h1 className="productList-text">판매 중인 상품</h1>
+          <div className="productList-header-asset">
+            <form onSubmit={handleSearch}>
+              <Search keyword={keyword} setKeyword={setKeyword} />
+            </form>
+            <button
+              className="productList-Btn"
+              onClick={() => navigate("/registration")} // navigate 사용하여 이동
+            >
+              상품 등록하기
+            </button>
+            <Filters orderBy={orderBy} setOrderBy={setOrderBy} />
+          </div>
         </div>
-      </div>
-
-      {showForm && <ProductForm onSubmit={handleCreateProduct} />}
-
-      <div className="products">
-        <div className="productList-grid">
-          {sortedItems.length > 0 ? (
-            sortedItems.map((product) => (
-              <div key={product.id} className="product-item">
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="productsList-img"
-                />
-                <h3 className="name">{product.name}</h3>
-                <p className="price">{formatNumber(product.price)}원</p>
+        {error && <p>{error}</p>}
+        {isLoading && <p>로딩 중...</p>}
+        <ul className="productList-grid">
+          {items.map((item) => (
+            <li key={item.id} className="product-item">
+              <img
+                src={
+                  item.images && item.images.length > 0
+                    ? item.images[0]
+                    : "/img/making.png" // 기본 이미지 경로 수정
+                }
+                alt={item.name}
+                className="productsList-img" // 이미지 스타일 추가
+              />
+              <div className="product-details">
+                <h3 className="product-name">{item.name}</h3>
+                <p className="product-price">{item.price}원</p>
                 <FavoriteButton
-                  productId={product.id}
-                  initialCount={
-                    favoriteCounts[product.id] || product.favoriteCount
-                  }
-                  onFavoriteToggle={onFavoriteToggle} // onFavoriteToggle 전달
+                  productId={item.id}
+                  initialCount={item.favoriteCount || 0}
                 />
               </div>
-            ))
-          ) : (
-            <p>상품이 없습니다.</p>
-          )}
-        </div>
+            </li>
+          ))}
+        </ul>
+        <Pagination
+          page={page}
+          setPage={setPage}
+          hasNext={hasNext}
+          totalPages={Math.ceil(totalCount / pageSize)}
+        />
       </div>
-
-      <Pagination
-        className="pagination"
-        page={page}
-        setPage={setPage}
-        hasNext={hasNext}
-        totalPages={totalPages}
-      />
-    </div>
+      <Footer />
+    </>
   );
 };
 

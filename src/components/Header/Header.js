@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';  // Link 컴포넌트 추가
 import './header.css';
 
 function Header() {
@@ -14,12 +14,14 @@ function Header() {
                 <img src="img/logo.png" alt="판다마켓_logo" className="responsive_logo" />
             </a>
             <a className='header-board' href='/'>자유게시판</a>
-            <a
+
+            <Link
+                to='/items'
                 className={`header-market ${isActiveMarket ? 'active' : ''}`}
-                href='/items'
             >
                 중고마켓
-            </a>
+            </Link>
+
             <nav>
                 <button
                     className="header-button"

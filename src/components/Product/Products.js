@@ -1,239 +1,202 @@
-const baseURL = "https://panda-market-api.vercel.app/products";
+import { Product } from '../../models/Productmodel.js'; // Item 모델 임포트
+import { asyncHandler } from './utils/asyncHandler.js'; // 예외 처리 함수 임포트
 
-/* 상품 목록 조회 */
-export async function getProductList(
-  page = 1,
-  pageSize = 10,
-  orderBy = "recent",
-  keyword = ""
-) {
+// 아이템 추가
+export const createItemAPI = asyncHandler(async (req, res) => {
+  const { name, description, price, ownerId, tags, images, totalCount } = req.body;
+
+  // 필수 필드 확인
+  if (!name || !description || !price || !tags) {
+    return res.status(400).send({ message: "필수 필드가 누락되었습니다." });
+  }
+
   try {
-    const url = new URL(baseURL);
+    // 마지막 아이템을 찾아서, 그 아이템의 id에 +1을 하여 새로운 id 생성
+    const lastItem = await Product.findOne().sort({ id: -1 }); // id 내림차순으로 마지막 아이템 찾기
+    const newId = lastItem ? lastItem.id + 1 : 1; // 만약 아이템이 없다면 id는 1로 시작
 
-    // URL 파라미터 설정
-    url.searchParams.append("page", page);
-    url.searchParams.append("pageSize", pageSize);
-    url.searchParams.append("orderBy", orderBy); // 정렬 기준 (favorite 또는 recent)
-
-    if (keyword) {
-      url.searchParams.append("keyword", keyword);
-    }
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    // 아이템 생성
+    const item = await Product.create({
+      id: newId,
+      name,
+      description,
+      price,
+      ownerId,
+      tags,
+      images,
+      totalCount
     });
 
-    if (!response.ok) {
-      throw new Error(`상품 목록 조회 실패: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    // totalCount를 기반으로 totalPages 계산
-    const totalPages = Math.ceil(data.totalCount / pageSize);
-
-    return {
-      list: data.list,
-      hasNext: page < totalPages, // 다음 페이지가 있는지 여부
-      totalPages, // 전체 페이지 수
-    };
+    res.status(201).send(item); // 생성된 아이템 반환
   } catch (error) {
-    console.error("오류: 상품 목록 조회", error);
-    return { list: [], hasNext: false, totalPages: 1 };
+    console.error(error); // 서버 로그에 오류 출력
+    res.status(500).send({ message: error.message });
   }
-}
+});
 
-/* 상품 생성 */
-export async function createProduct(productData, accessToken) {
+// 모든 아이템 조회
+export const getAllItemsAPI = asyncHandler(async (req, res) => {
+  const {
+    sort = 'recent',
+    offset = 0,
+    pageSize = 10,
+    search
+  } = req.query;
+
+  // 1. 정렬 조건 설정
+  const sortOption = {
+    createdAt: sort === 'oldest' ? 1 : -1, // 1: 오름차순, -1: 내림차순
+  };
+
+  // 2. 검색 필터 생성
+  const filter = {};
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ];
+  }
+
   try {
-    const url = new URL(baseURL);
+    // 3. 데이터 조회 쿼리
+    const query = Product.find(filter)
+      .select('id name price createdAt')
+      .sort(sortOption)
+      .skip(Number(offset))
+      .limit(Number(pageSize));
 
-    // 상품 생성 요청 시 인증 토큰을 Authorization 헤더에 추가
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`, // 인증 토큰 추가
-      },
-      body: JSON.stringify(productData), // 상품 정보를 JSON 형식으로 전송
+    // 4. 병렬 처리로 성능 향상
+    const [items, totalCount] = await Promise.all([
+      query.lean().exec(),
+      Product.countDocuments(filter).exec()
+    ]);
+
+    // 5. 응답 데이터 계산
+    const hasNext = (Number(offset) + Number(pageSize)) < totalCount;
+
+    res.status(200).json({
+      items,
+      totalCount,
+      hasNext,
+      nextOffset: hasNext ? Number(offset) + Number(pageSize) : null
     });
 
-    if (!response.ok) {
-      throw new Error(`상품 생성 실패: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    // 성공적으로 생성된 상품 반환
-    return {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      tags: data.tags,
-      images: data.images,
-      favoriteCount: data.favoriteCount,
-      createdAt: data.createdAt,
-      ownerId: data.ownerId,
-    };
   } catch (error) {
-    console.error("오류: 상품 생성", error);
-    return null; // 실패시 null 반환
-  }
-}
-
-/* 상품 상세 조회 */
-export async function getProductDetail(productId) {
-  try {
-    const url = new URL(`${baseURL}/${productId}`);
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    console.error(`API Error: ${error.message}`);
+    res.status(500).json({
+      error: '서버 오류 발생',
+      details: error.message
     });
-
-    if (!response.ok) {
-      throw new Error(`상품 상세 조회 실패: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    // 성공적으로 상품 정보를 반환
-    return {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      tags: data.tags,
-      images: data.images,
-      favoriteCount: data.favoriteCount,
-      createdAt: data.createdAt,
-      ownerId: data.ownerId,
-      isFavorite: data.isFavorite,
-    };
-  } catch (error) {
-    console.error("오류: 상품 상세 조회", error);
-    return null; // 실패 시 null 반환
   }
-}
+});
 
-/* 상품 수정 */
-export async function updateProduct(productId, updatedData) {
+// 특정 아이템 조회
+export const getItemByIdAPI = asyncHandler(async (req, res) => {
+  const itemId = req.params.id; // URL 파라미터에서 id 가져오기
+
   try {
-    const url = new URL(`${baseURL}/${productId}`);
+    // 데이터베이스에서 id로 아이템 찾기
+    const item = await Product.findOne({ id: itemId });
 
-    const response = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData), // 수정할 상품 정보를 JSON 형식으로 전송
-    });
-
-    if (!response.ok) {
-      throw new Error(`상품 수정 실패: ${response.statusText}`);
+    if (!item) {
+      // 아이템이 없으면 404 상태와 메시지 반환
+      return res.status(404).send({ message: "아이템을 찾을 수 없습니다." });
     }
 
-    const data = await response.json();
-
-    // 수정된 상품 정보를 반환
-    return {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      tags: data.tags,
-      images: data.images,
-      favoriteCount: data.favoriteCount,
-      createdAt: data.createdAt,
-      ownerId: data.ownerId,
-      isFavorite: data.isFavorite,
-    };
+    // 아이템이 존재하면 반환
+    res.status(200).send(item);
   } catch (error) {
-    console.error("오류: 상품 수정", error);
-    return null; // 실패 시 null 반환
+    console.error(error); // 서버 로그에 오류 출력
+    res.status(500).send({ message: error.message });
   }
-}
+});
 
-/* 상품 삭제 */
-export async function deleteProduct(productId) {
+// 특정 아이템 수정
+export const updateItemAPI = asyncHandler(async (req, res) => {
+  const itemId = req.params.id;
+  const { name, description, price, tags, images, totalCount } = req.body;
+
+  const item = await Product.findOne({ id: itemId });
+
+  if (!item) {
+    return res.status(404).send({ message: "아이템을 찾을 수 없습니다." });
+  }
+
+  if (name) item.name = name;
+  if (description) item.description = description;
+  if (price) item.price = price;
+  if (tags) item.tags = tags;
+  if (images) item.images = images;
+  if (totalCount) item.totalCount = totalCount;
+
+  await item.save();
+  res.status(200).send(item);
+});
+
+// 특정 아이템 삭제
+export const deleteItemAPI = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const item = await Product.findOneAndDelete({ id: id });
+
+  if (!item) {
+    return res.status(404).send({ message: '아이템을 찾을 수 없습니다.' });
+  }
+
+  res.sendStatus(204);
+});
+
+// 모든 아이템 삭제
+export const deleteAllItemsAPI = asyncHandler(async (req, res) => {
+  await Product.deleteMany({});
+  res.sendStatus(204);
+});
+
+// 특정 아이템 좋아요 카운트 증가
+export const increaseFavoriteCountAPI = asyncHandler(async (req, res) => {
+  const itemId = req.params.id; // URL 파라미터에서 아이템 ID 가져오기
+
   try {
-    const url = new URL(`${baseURL}/${productId}`);
+    // 해당 아이템 찾기
+    const item = await Product.findOne({ id: itemId });
 
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`상품 삭제 실패: ${response.statusText}`);
+    if (!item) {
+      return res.status(404).send({ message: "아이템을 찾을 수 없습니다." });
     }
 
-    const data = await response.json();
+    // favoriteCount 증가
+    item.favoriteCount = item.favoriteCount ? item.favoriteCount + 1 : 1;
 
-    // 삭제 성공 시 상품 ID 반환
-    return {
-      id: data.id,
-    };
+    // 변경된 아이템 저장
+    await item.save();
+
+    res.status(200).send(item); // 변경된 아이템 반환
   } catch (error) {
-    console.error("오류: 상품 삭제", error);
-    return null; // 실패 시 null 반환
+    console.error(error); // 오류 로그 출력
+    res.status(500).send({ message: error.message });
   }
-}
+});
 
-// 좋아요 추가
-export async function addFavorite(productId) {
+// 특정 아이템 좋아요 카운트 감소
+export const decreaseFavoriteCountAPI = asyncHandler(async (req, res) => {
+  const itemId = req.params.id; // URL 파라미터에서 아이템 ID 가져오기
+
   try {
-    const url = new URL(`${baseURL}/${productId}/favorite`);
+    // 해당 아이템 찾기
+    const item = await Product.findOne({ id: itemId });
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`좋아요 추가 실패: ${response.statusText}`);
+    if (!item) {
+      return res.status(404).send({ message: "아이템을 찾을 수 없습니다." });
     }
 
-    const data = await response.json();
+    // favoriteCount 감소 (최소 0 이상으로 유지)
+    item.favoriteCount = item.favoriteCount > 0 ? item.favoriteCount - 1 : 0;
 
-    return data.favoriteCount; // 새로운 favoriteCount 반환
+    // 변경된 아이템 저장
+    await item.save();
+
+    res.status(200).send(item); // 변경된 아이템 반환
   } catch (error) {
-    console.error("오류: 좋아요 추가", error);
-    return null;
+    console.error(error); // 오류 로그 출력
+    res.status(500).send({ message: error.message });
   }
-}
-
-// 좋아요 취소
-export async function removeFavorite(productId) {
-  try {
-    const url = new URL(`${baseURL}/${productId}/favorite`);
-
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`좋아요 취소 실패: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    return data.favoriteCount; // 새로운 favoriteCount 반환
-  } catch (error) {
-    console.error("오류: 좋아요 취소", error);
-    return null;
-  }
-}
+});
