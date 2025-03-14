@@ -1,5 +1,5 @@
 import { Product } from '../../models/Productmodel.js'; // Item 모델 임포트
-import { asyncHandler } from './utils/asyncHandler.js'; // 예외 처리 함수 임포트
+import { asyncHandler } from '../Product/asset/asyncHandler.js'; // 예외 처리 함수 임포트
 
 // 아이템 추가
 export const createItemAPI = asyncHandler(async (req, res) => {

@@ -89,8 +89,8 @@
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  border: none;
-  color: var(--color-Like);
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
   font-weight: 600;
   font-size: 16px;
   line-height: 26px;
@@ -98,7 +98,7 @@
   cursor: pointer;
   font-family: "pretendard";
 }
-.pagination-container button:disabled {
+.pagination-container button.active {
   background-color: var(--color-btn);
   color: var(--color-btnwhite);
 }
@@ -143,6 +143,10 @@
   font-family: "pretendard";
 }
 
+/* favorite button */
+.favoriteCount {
+  font-size: 12px;
+}
 /*  Tablet (744px ~ 1199px) */
 @media (min-width: 744px) and (max-width: 1199px) {
   .ProductListForm {

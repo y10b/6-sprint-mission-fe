@@ -12,20 +12,35 @@ const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
   }, [initialCount]);
 
   const toggleClick = async () => {
-    const newCount = clicked ? count - 1 : count + 1;
-    setClicked(!clicked); // `clicked` 상태를 반전시킴
+    let newCount;
+
+    // 클릭할 때마다 좋아요 수를 증가시키거나 감소시킨다
+    if (clicked) {
+      // 이미 클릭되었으면 좋아요 수를 감소시킨다
+      newCount = count - 1;
+    } else {
+      // 처음 클릭되었으면 좋아요 수를 증가시킨다
+      newCount = count + 1;
+    }
+
+    // UI 상태 업데이트
+    setClicked(!clicked); // 클릭 상태 반전
     setCount(newCount); // 새로운 `count` 값으로 업데이트
 
-    // 부모 컴포넌트로부터 전달된 함수 호출하여 서버에 좋아요 추가 요청
     try {
-      // 서버에 좋아요 증가 요청
-      await axios.post(
-        `http://localhost:3002/api/items/${productId}/increaseFavorite`,
+      // 서버에 좋아요 증감 요청
+      const response = await axios.post(
+        `http://localhost:3002/api/items/${productId}/${
+          clicked ? "decreaseFavorite" : "increaseFavorite"
+        }`,
         {}
       );
 
-      // onFavoriteToggle을 통해 부모 컴포넌트에서 상태 업데이트
-      onFavoriteToggle(productId, newCount);
+      // 서버에서 변경된 좋아요 수로 업데이트된 데이터 반환
+      if (response.status === 200) {
+        // 부모 컴포넌트로부터 전달된 함수 호출하여 서버에 좋아요 추가 요청
+        onFavoriteToggle(productId, response.data.favoriteCount);
+      }
     } catch (error) {
       console.error("좋아요 업데이트 오류", error);
       // 실패 시 클릭 상태 및 카운트 초기화

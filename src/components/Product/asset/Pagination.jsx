@@ -1,13 +1,14 @@
 import React from "react";
 
 const Pagination = ({ page, setPage, hasNext, totalPages }) => {
-  // 페이지 번호 범위 계산 (현재 페이지를 기준으로 5개 버튼)
+  // 페이지 번호 범위 계산 (현재 페이지를 기준으로 앞뒤 2개씩 총 5개 버튼)
   const getPageNumbers = () => {
-    const startPage = Math.max(1, page); // 시작 페이지 (현재 페이지로 시작)
-    const endPage = Math.min(totalPages, page + 4); // 끝 페이지 (현재 페이지에서 +4까지)
+    const range = 2; // 앞뒤로 표시할 페이지 수
+    const startPage = Math.max(1, page - range); // 시작 페이지 (현재 페이지 기준으로 앞쪽 2개까지)
+    const endPage = Math.min(totalPages, page + range); // 끝 페이지 (현재 페이지 기준으로 뒤쪽 2개까지)
 
     let pageNumbers = [];
-    for (let i = startPage + 1; i <= endPage; i++) {
+    for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
     return pageNumbers;
@@ -20,28 +21,37 @@ const Pagination = ({ page, setPage, hasNext, totalPages }) => {
         className="before-Btn"
         onClick={() => setPage(page - 1)}
         disabled={page <= 1}
+        style={{
+          backgroundColor: page <= 1 ? "var(--color-btn)" : "transparent",
+        }} // 비활성화 상태에서만 배경색 적용
       >
         &lt;
       </button>
 
-      {/* 현재 페이지 표시 */}
-      <button className="current-page" disabled>
-        {page}
-      </button>
-
-      {/* 나머지 페이지 번호 버튼들 */}
+      {/* 페이지 번호 버튼들 */}
       {getPageNumbers().map((pageNum) => (
         <button
           key={pageNum}
           onClick={() => setPage(pageNum)}
           className={pageNum === page ? "active" : ""}
+          style={{
+            backgroundColor:
+              pageNum === page ? "var(--color-btn)" : "transparent", // 현재 페이지에만 배경색 적용
+          }}
         >
           {pageNum}
         </button>
       ))}
 
       {/* 다음 버튼 */}
-      <button onClick={() => setPage(page + 1)} disabled={page >= totalPages}>
+      <button
+        onClick={() => setPage(page + 1)}
+        disabled={page >= totalPages}
+        style={{
+          backgroundColor:
+            page >= totalPages ? "var(--color-btn)" : "transparent",
+        }} // 비활성화 상태에서만 배경색 적용
+      >
         &gt;
       </button>
     </div>

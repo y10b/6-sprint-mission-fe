@@ -45,25 +45,16 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
     }
   };
 
-  // 화면 크기에 따라 페이지당 표시될 상품 개수를 설정
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-
-      if (width >= 1200) {
-        setPageSize(10); // 기본 화면에서는 10개
-      } else if (width >= 744) {
-        setPageSize(6); // 태블릿 화면에서는 6개
-      } else {
-        setPageSize(4); // 모바일 화면에서는 4개
-      }
-    };
-
-    handleResize(); // 초기 로드 시 화면 크기 설정
-    window.addEventListener("resize", handleResize); // 화면 크기 변경 시마다 실행
-
-    return () => window.removeEventListener("resize", handleResize); // 컴포넌트가 언마운트될 때 이벤트 제거
-  }, []);
+  // 좋아요 상태 업데이트 함수
+  const handleFavoriteToggle = (productId, newFavoriteCount) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === productId
+          ? { ...item, favoriteCount: newFavoriteCount }
+          : item
+      )
+    );
+  };
 
   useEffect(() => {
     setItems([]); // 새로 검색되었을 때 상품 목록 초기화
@@ -115,6 +106,7 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
                 <FavoriteButton
                   productId={item.id}
                   initialCount={item.favoriteCount || 0}
+                  onFavoriteToggle={handleFavoriteToggle} // 좋아요 상태 업데이트 함수 전달
                 />
               </div>
             </li>
