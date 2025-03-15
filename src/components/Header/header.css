@@ -1,9 +1,3 @@
-:root {
-  --color-blue: #3692ff;
-  --color-loginText: #f3f4f6;
-  --color-headerText: #4b5563;
-}
-
 header {
   width: 100%;
   align-items: center;
@@ -17,41 +11,44 @@ header {
   z-index: 1;
 }
 
-.header-logo {
+.headerLogo {
   margin-left: 12.5rem;
 }
-.header-logo img {
+
+.headerLogo img {
   height: 3.1875rem;
 }
 
-.header-board,
-.header-market {
+.headerBoard,
+.headerMarket {
   text-decoration: none;
-  color: var(--color-headerText);
+  color: var(--colorHeaderText);
   font-weight: 700;
   line-height: 26px;
   font-size: 18px;
 }
 
-.header-board {
+.headerBoard {
   margin-left: 39px;
 }
 
-.header-market {
+.headerMarket {
   margin-left: 30px;
 }
 
-.header-market.active {
-  color: #3692ff;
+.headerMarket.active {
+  color: var(--colorBtn);
 }
+
 nav {
   margin-left: auto;
 }
-.header-button {
-  background-color: var(--color-blue);
+
+.headerButton {
+  background-color: var(--colorBtn);
   border: none;
   border-radius: 0.5rem;
-  color: var(--color-loginText);
+  color: var(--colorInput);
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
@@ -63,16 +60,18 @@ nav {
   font-family: "Pretendard";
 }
 
-.header-button:hover,
-.header-board:hover,
-.header-market:hover {
-  transform: scale(1.01);
+.headerButton:hover {
+  background-color: var(--colorBtnHover);
+}
+
+.headerBoard:hover,
+.headerMarket:hover {
   opacity: 0.7;
 }
 
 /* 화면의 너비가 1920px 보다 작을 때 */
 @media (max-width: 120rem) {
-  .header-logo {
+  .headerLogo {
     margin-left: calc(12.5rem - (120rem - 100vw) * 0.1);
   }
 
@@ -80,7 +79,7 @@ nav {
     display: block;
   }
 
-  .header-button {
+  .headerButton {
     margin-right: calc(12.5rem - (120rem - 100vw) * 0.1);
   }
 }
@@ -92,7 +91,7 @@ nav {
     height: 70px;
   }
 
-  .header-logo {
+  .headerLogo {
     margin-left: 24px;
   }
 
@@ -101,7 +100,7 @@ nav {
     height: 51px;
   }
 
-  .header-button {
+  .headerButton {
     margin-right: 24px;
     width: 128px;
     height: 48px;
@@ -114,37 +113,33 @@ nav {
 
 /* Mobile (375px ~ 743px) */
 @media (min-width: 375px) and (max-width: 743px) {
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   header {
-    width: 100%;
+    width: 100vw;
     height: 70px;
-  }
-  .header-board,
-  .header-market {
-    font-size: 14px;
-  }
-  .header-board {
-    margin-left: min(10px);
-  }
-  .header-market {
-    margin-left: 10px;
-  }
-  .responsive_logo {
-    margin-left: 8px;
+    position: relative;
   }
 
-  .responsive_logo {
+  .headerBoard,
+  .headerMarket {
+    font-size: 12px;
+    z-index: 2;
+    padding-left: 1px;
+  }
+
+  .responsiveLogo {
     content: url("/public/img/mobile_logo.png");
+    position: absolute;
+    top: 10%;
+    left: 10px;
   }
 
-  header img {
-    height: 51px;
-    object-fit: cover;
-    margin-bottom: 9px;
-    margin-top: 10px;
-  }
-
-  .header-button {
-    margin-right: 8px;
-    width: 100px;
+  .headerButton {
+    margin-right: 3px;
+    width: 90px;
   }
 }

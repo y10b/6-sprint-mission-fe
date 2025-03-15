@@ -1,0 +1,15 @@
+:root {
+  --colorTitle: #111827;
+  --colorName: #1f2937;
+  --colorHeaderText: #4b5563;
+  --colorInputText: #9ca3af;
+  --colorInput: #f3f4f6;
+  --colorBtn: #3692ff;
+  --colorBtnHover: #0056b3;
+  --colorBanner: #cfe5ff;
+  --colorBtnText: #f9fafb;
+  --colorContents: #fcfcfc;
+  --colorBannerText: #374151;
+  --colorQa: #e5e7eb;
+  --colorError: #f74747;
+}

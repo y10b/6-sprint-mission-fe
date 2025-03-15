@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // 빈 하트 아이콘 추가
 import axios from "axios";
+import "./css/FavoriteButton.css";
 
 const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
-  const [clicked, setClicked] = useState(initialCount > 0); // 초기 상태를 `initialCount > 0`에 맞춰 설정
+  const [isClicked, setIsClicked] = useState(initialCount > 0); // 초기 상태를 `initialCount > 0`에 맞춰 설정
   const [count, setCount] = useState(initialCount);
 
   useEffect(() => {
-    setClicked(initialCount > 0); // 부모 컴포넌트에서 `initialCount`가 변경될 때 `clicked` 상태도 갱신
+    setIsClicked(initialCount > 0); // 부모 컴포넌트에서 `initialCount`가 변경될 때 `isClicked` 상태도 갱신
     setCount(initialCount); // `count` 값도 초기화
   }, [initialCount]);
 
@@ -15,7 +16,7 @@ const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
     let newCount;
 
     // 클릭할 때마다 좋아요 수를 증가시키거나 감소시킨다
-    if (clicked) {
+    if (isClicked) {
       // 이미 클릭되었으면 좋아요 수를 감소시킨다
       newCount = count - 1;
     } else {
@@ -24,14 +25,14 @@ const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
     }
 
     // UI 상태 업데이트
-    setClicked(!clicked); // 클릭 상태 반전
+    setIsClicked(!isClicked); // 클릭 상태 반전
     setCount(newCount); // 새로운 `count` 값으로 업데이트
 
     try {
       // 서버에 좋아요 증감 요청
       const response = await axios.post(
         `http://localhost:3002/api/items/${productId}/${
-          clicked ? "decreaseFavorite" : "increaseFavorite"
+          isClicked ? "decreaseFavorite" : "increaseFavorite"
         }`,
         {}
       );
@@ -44,14 +45,14 @@ const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
     } catch (error) {
       console.error("좋아요 업데이트 오류", error);
       // 실패 시 클릭 상태 및 카운트 초기화
-      setClicked(!clicked);
+      setIsClicked(!isClicked);
       setCount(count); // 원래 상태로 복원
     }
   };
 
   return (
     <span className="favoriteCount">
-      {clicked ? (
+      {isClicked ? (
         <FaHeart
           className="favorite-icon"
           color="red" // 클릭 시 빨간색

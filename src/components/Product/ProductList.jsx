@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../Header/Header.js";
-import Footer from "../Footer/Footer.js";
+import Header from "../Header/Header.jsx";
+import Footer from "../Footer/Footer.jsx";
 import Search from "./asset/Search.jsx"; // Search 컴포넌트 임포트
 import Filters from "./asset/Filters"; // Filters 컴포넌트 임포트
 import Pagination from "./asset/Pagination"; // Pagination 컴포넌트 임포트
@@ -70,15 +70,15 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
   return (
     <>
       <Header />
-      <div className="ProductListForm">
-        <div className="productList-header">
-          <h1 className="productList-text">판매 중인 상품</h1>
-          <div className="productList-header-asset">
+      <div className="productListForm">
+        <div className="productListHeader">
+          <h1 className="productListText">판매 중인 상품</h1>
+          <div className="productListHeaderAsset">
             <form onSubmit={handleSearch}>
               <Search keyword={keyword} setKeyword={setKeyword} />
             </form>
             <button
-              className="productList-Btn"
+              className="productListBtn"
               onClick={() => navigate("/registration")} // navigate 사용하여 이동
             >
               상품 등록하기
@@ -88,21 +88,21 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
         </div>
         {error && <p>{error}</p>}
         {isLoading && <p>로딩 중...</p>}
-        <ul className="productList-grid">
+        <ul className="productListGrid">
           {items.map((item) => (
-            <li key={item.id} className="product-item">
+            <li key={item.id} className="productItem">
               <img
                 src={
                   item.images && item.images.length > 0
                     ? item.images[0]
-                    : "/img/making.png" // 기본 이미지 경로 수정
-                }
+                    : "/img/making.png"
+                } // 기본 이미지 경로 수정
                 alt={item.name}
-                className="productsList-img" // 이미지 스타일 추가
+                className="productListImg" // 이미지 스타일 추가
               />
-              <div className="product-details">
-                <h3 className="product-name">{item.name}</h3>
-                <p className="product-price">{formatNumber(item.price)}원</p>
+              <div className="productDetails">
+                <h3 className="productName">{item.name}</h3>
+                <p className="productPrice">{formatNumber(item.price)}원</p>
                 <FavoriteButton
                   productId={item.id}
                   initialCount={item.favoriteCount || 0}

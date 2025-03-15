@@ -102,3 +102,12 @@
 
 - 내용이 없는 페이지 404 처리
 - productForm CSS 추가
+
+## 6. MongoDB 연동
+
+요구사항에 맞게 제작
+
+변경 사항
+
+- homepage header footer 모두 component로 만들어 사용
+- MongoDB 연동에 따라 API 재구축

@@ -4,8 +4,8 @@ import HomePage from "./components/HomePage/HomePage.jsx";
 import ProductList from "./components/Product/ProductList.jsx";
 import CreateProduct from "./components/Product/CreateProduct.jsx"; // CreateProduct 임포트
 
-import "./JSstyle.css";
-import NotFound from "./components/NotFound/NotFound.js";
+import "./color.css";
+import NotFound from "./components/NotFound/NotFound.jsx";
 
 const App = () => {
   const [orderBy, setOrderBy] = useState("recent");

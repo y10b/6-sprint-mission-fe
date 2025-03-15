@@ -1,0 +1,32 @@
+:root {
+  --colorBtnWhite: #f9fafb;
+  --colorBtn: #3692ff;
+}
+
+/* pagination */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 40px;
+}
+
+.paginationContainer button {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 26px;
+  background-color: var(--colorBtnWhite);
+  cursor: pointer;
+  font-family: "pretendard";
+}
+
+.paginationContainer button.active {
+  background-color: var(--colorBtn);
+  color: var(--colorBtnWhite);
+}

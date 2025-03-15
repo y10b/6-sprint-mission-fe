@@ -1,0 +1,28 @@
+/* filter */
+.filtersSelect {
+  /* 클래스 이름을 카멜케이스로 변경 */
+  width: 130px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+  color: var(--color-Name);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  padding-left: 20px;
+  text-align: left;
+  font-family: "pretendard";
+}
+
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  /* Filters 셀렉트 요소 */
+  .filtersSelect {
+    /* 클래스 이름을 카멜케이스로 변경 */
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 85px;
+  }
+}

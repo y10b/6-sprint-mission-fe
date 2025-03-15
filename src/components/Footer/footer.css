@@ -1,17 +1,12 @@
-/* 기본설정 */
-:root {
-  --color-QA: #e5e7eb;
-  --color-footer: #111827;
-}
-
-.footer-decoration {
-  background: var(--color-contents);
+.footerDecoration {
+  background: var(--colorContents);
   height: 3.125rem;
+  margin-top: 30px;
 }
 
-.footer_license {
+.footerLicense {
   align-items: flex-start;
-  background: var(--color-footer);
+  background: var(--colorTitle);
   display: flex;
   height: 10rem;
   justify-content: space-between;
@@ -27,17 +22,17 @@
 }
 
 .copy p {
-  color: var(--color-gray);
+  color: var(--colorInputText);
   font-weight: 400;
 }
 
-.QA {
+.qa {
   display: flex;
   gap: 1.875rem;
 }
 
-.QA a {
-  color: var(--color-QA);
+.qa a {
+  color: var(--colorQa);
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
@@ -45,23 +40,23 @@
   line-height: 1.193125rem;
 }
 
-.QA a:hover {
+.qa a:hover {
   opacity: 0.5;
 }
 
-.SNS {
+.sns {
   display: flex;
   gap: 0.8125rem;
   margin-right: 12.5rem;
 }
 
-.SNS img {
+.sns img {
   cursor: pointer;
   height: 1.5rem;
   width: 1.5rem;
 }
 
-.SNS img:hover {
+.sns img:hover {
   opacity: 0.5;
   transform: scale(1.05);
 }
@@ -76,7 +71,7 @@
     display: block;
   }
 
-  .SNS {
+  .sns {
     margin-right: calc(12.5rem - (120rem - 100vw) * 0.1);
   }
 
@@ -94,7 +89,7 @@
     margin-top: 150px;
   }
 
-  .footer_license {
+  .footerLicense {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -103,7 +98,7 @@
     padding: 32px 24px 108px;
   }
 
-  .QA {
+  .qa {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -117,7 +112,7 @@
     margin-top: 60px;
   }
 
-  .footer_license {
+  .footerLicense {
     position: relative;
     padding-top: 42px;
     display: flex;
@@ -131,12 +126,12 @@
     margin-left: 45px;
   }
 
-  .SNS {
+  .sns {
     margin-right: 16px;
     gap: calc(8px + 0.5vw);
   }
 
-  .QA {
+  .qa {
     margin-left: 16px;
     gap: calc(12px + 1.5vw);
   }

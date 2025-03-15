@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 import "./style.css"; // 메인 스타일 시트
-import Header from "../Header/Header.js";
-import Footer from "../Footer/Footer.js";
+import Header from "../Header/Header.jsx";
+import Footer from "../Footer/Footer.jsx";
+
 const HomePage = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
@@ -11,8 +12,8 @@ const HomePage = () => {
       <Header />
       <div>
         <article className="banner">
-          <section className="banner_inner">
-            <div className="banner_text">
+          <section className="bannerInner">
+            <div className="bannerText">
               <p>
                 일상의 모든 물건을 <br />
                 거래해 보세요
@@ -22,7 +23,7 @@ const HomePage = () => {
               </button>{" "}
               {/* 버튼 클릭 시 /items로 이동 */}
             </div>
-            <div className="banner_img">
+            <div className="bannerImg">
               <img src="/img/home_top.png" alt="배너 이미지" />
             </div>
           </section>
@@ -33,16 +34,16 @@ const HomePage = () => {
           {/* 첫 번째 섹션 */}
           <div className="first">
             <section>
-              <div className="first_img">
+              <div className="firstImg">
                 <img src="/img/Img_home_01.png" alt="Hot item 이미지" />
               </div>
-              <div className="first_text">
-                <p className="p_title">Hot item</p>
-                <p className="p_highlight">
+              <div className="firstText">
+                <p className="pTitle">Hot item</p>
+                <p className="pHighlight">
                   인기 상품을 <br />
                   확인해 보세요
                 </p>
-                <p className="p_explain">
+                <p className="pExplain">
                   가장 HOT한 중고거래 물품을 <br /> 판다 마켓에서 확인해 보세요
                 </p>
               </div>
@@ -52,17 +53,17 @@ const HomePage = () => {
           {/* 두 번째 섹션 */}
           <div className="second">
             <section>
-              <div className="second_text">
-                <p className="p_title">Search</p>
-                <p className="p_highlight">
+              <div className="secondText">
+                <p className="pTitle">Search</p>
+                <p className="pHighlight">
                   구매를 원하는 <br />
                   상품을 검색하세요
                 </p>
-                <p className="p_explain">
+                <p className="pExplain">
                   구매하고 싶은 물품은 검색해서 <br /> 쉽게 찾아보세요
                 </p>
               </div>
-              <div className="second_img">
+              <div className="secondImg">
                 <img src="/img/Img_home_02.png" alt="Search 이미지" />
               </div>
             </section>
@@ -71,15 +72,15 @@ const HomePage = () => {
           {/* 세 번째 섹션 */}
           <div className="third">
             <section>
-              <div className="third_img">
+              <div className="thirdImg">
                 <img src="/img/Img_home_03.png" alt="Register 이미지" />
               </div>
-              <div className="third_text">
-                <p className="p_title">Register</p>
-                <p className="p_highlight">
+              <div className="thirdText">
+                <p className="pTitle">Register</p>
+                <p className="pHighlight">
                   판매를 원하는 <br /> 상품을 등록하세요
                 </p>
-                <p className="p_explain">
+                <p className="pExplain">
                   어떤 물건이든 판매하고 싶은 상품을 <br /> 쉽게 등록하세요
                 </p>
               </div>

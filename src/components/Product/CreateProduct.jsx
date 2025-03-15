@@ -102,22 +102,22 @@ const CreateProduct = () => {
   return (
     <>
       <Header />
-      <div className="create-product-form">
-        <div className="create-header">
-          <h2 className="create-text">상품 등록하기</h2>
+      <div className="createProductForm">
+        <div className="createHeader">
+          <h2 className="createText">상품 등록하기</h2>
           <button
             type="submit"
-            className="create-btn"
+            className="createBtn"
             disabled={!isFormValid()} // 버튼 비활성화 조건
           >
             등록
           </button>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="create-name">상품명</label>
+          <div className="formGroup">
+            <label className="createName">상품명</label>
             <input
-              className={`create-name-input ${nameError ? "error" : ""}`}
+              className={`createNameInput ${nameError ? "error" : ""}`}
               type="text"
               placeholder="상품명을 입력해주세요"
               value={name}
@@ -126,13 +126,13 @@ const CreateProduct = () => {
                 validateName(e.target.value);
               }}
             />
-            {nameError && <p className="error-message">{nameError}</p>}
+            {nameError && <p className="errorMessage">{nameError}</p>}
           </div>
 
-          <div className="form-group">
-            <label className="create-description">상품 소개</label>
+          <div className="formGroup">
+            <label className="createDescription">상품 소개</label>
             <textarea
-              className={`create-description-textarea ${
+              className={`createDescriptionTextarea ${
                 descriptionError ? "error" : ""
               }`}
               value={description}
@@ -143,14 +143,14 @@ const CreateProduct = () => {
               }}
             />
             {descriptionError && (
-              <p className="error-message">{descriptionError}</p>
+              <p className="errorMessage">{descriptionError}</p>
             )}
           </div>
 
-          <div className="form-group">
-            <label className="create-price">판매 가격</label>
+          <div className="formGroup">
+            <label className="createPrice">판매 가격</label>
             <input
-              className={`create-price-input ${priceError ? "error" : ""}`}
+              className={`createPriceInput ${priceError ? "error" : ""}`}
               placeholder="판매가격을 입력해주세요"
               type="number"
               value={price}
@@ -159,27 +159,27 @@ const CreateProduct = () => {
                 validatePrice(e.target.value); // Validate on change
               }}
             />
-            {priceError && <p className="error-message">{priceError}</p>}
+            {priceError && <p className="errorMessage">{priceError}</p>}
           </div>
 
-          <div className="form-group">
-            <label className="create-tag">태그</label>
-            <div className="tag-input-container">
+          <div className="formGroup">
+            <label className="createTag">태그</label>
+            <div className="tagInputContainer">
               <input
-                className={`create-tag-input ${tagsError ? "error" : ""}`}
+                className={`createTagInput ${tagsError ? "error" : ""}`}
                 placeholder="태그를 입력해주세요"
                 type="text"
                 value={inputTag}
                 onChange={handleTagInput}
                 onKeyDown={handleTagKeyPress}
               />
-              <div className="create-tag-list">
+              <div className="createTagList">
                 {tags.map((tag, index) => (
-                  <div key={index} className="create-tag-item">
+                  <div key={index} className="createTagItem">
                     {tag}
                     <button
                       type="button"
-                      className="remove-tag-btn"
+                      className="removeTagBtn"
                       onClick={() => handleTagRemove(tag)}
                     >
                       X
@@ -188,7 +188,7 @@ const CreateProduct = () => {
                 ))}
               </div>
             </div>
-            {tagsError && <p className="error-message">{tagsError}</p>}
+            {tagsError && <p className="errorMessage">{tagsError}</p>}
           </div>
         </form>
       </div>
