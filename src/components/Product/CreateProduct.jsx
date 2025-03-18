@@ -1,31 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useFormValidation from "../Product/asset/useFormValidation";
+import { validateProduct } from "../Product/asset/ValidationMiddleware";
 import "./css/CreateProduct.css";
 
 const CreateProduct = () => {
-  const [name, setName] = useState(""); // 상품명
-  const [description, setDescription] = useState(""); // 상품 설명
-  const [price, setPrice] = useState(""); // 가격
-  const [tags, setTags] = useState([]); // 태그 배열로 상태 관리
-  const [inputTag, setInputTag] = useState(""); // 태그 입력값
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [tags, setTags] = useState([]);
+  const [inputTag, setInputTag] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [priceError, setPriceError] = useState("");
+  const [tagsError, setTagsError] = useState("");
+  const [formValid, setFormValid] = useState(false);
   const navigate = useNavigate();
 
-  // Use custom hook for validation
-  const {
+  // 모든 유효성 검사 상태 업데이트
+  const updateValidationErrors = () => {
+    const validationErrors = validateProduct(name, description, price, tags);
+    setNameError(validationErrors.nameError);
+    setDescriptionError(validationErrors.descriptionError);
+    setPriceError(validationErrors.priceError);
+    setTagsError(validationErrors.tagsError);
+  };
+
+  // 모든 유효성 검사 통과 여부 확인
+  const isFormValid = () => {
+    return (
+      nameError === "" &&
+      descriptionError === "" &&
+      priceError === "" &&
+      tagsError === "" &&
+      name.trim() !== "" &&
+      description.trim() !== "" &&
+      price > 0 &&
+      tags.length > 0
+    );
+  };
+
+  // 유효성 검사 상태 업데이트
+  useEffect(() => {
+    updateValidationErrors();
+    setFormValid(isFormValid());
+  }, [
+    name,
+    description,
+    price,
+    tags,
     nameError,
     descriptionError,
     priceError,
     tagsError,
-    validateName,
-    validateDescription,
-    validatePrice,
-    validateTags,
-    isFormValid,
-  } = useFormValidation();
+  ]);
 
   // 태그 입력 처리 및 중복 제거
   const handleTagInput = (e) => {
@@ -37,13 +67,12 @@ const CreateProduct = () => {
       e.preventDefault();
       const newTag = `#${inputTag.trim()}`;
       setTags((prevTags) => {
-        // 중복 제거: 새로운 태그가 이미 존재하지 않으면 추가
         if (!prevTags.includes(newTag)) {
           return [...prevTags, newTag];
         }
         return prevTags;
       });
-      validateTags([...tags, newTag]); // Validate tags after adding
+      updateValidationErrors(); // 태그 추가 후 유효성 검사
       setInputTag(""); // 입력 필드 초기화
     }
   };
@@ -52,7 +81,7 @@ const CreateProduct = () => {
   const handleTagRemove = (tagToRemove) => {
     setTags((prevTags) => {
       const updatedTags = prevTags.filter((tag) => tag !== tagToRemove);
-      validateTags(updatedTags); // Re-validate tags after removing
+      updateValidationErrors(); // 태그 삭제 후 유효성 검사
       return updatedTags;
     });
   };
@@ -61,22 +90,29 @@ const CreateProduct = () => {
     e.preventDefault();
 
     // 각 필드의 유효성 검사
-    const validName = validateName(name);
-    const validDescription = validateDescription(description);
-    const validPrice = validatePrice(price);
-    const validTags = validateTags(tags);
+    updateValidationErrors();
 
     // 유효하지 않으면 등록을 진행하지 않음
-    if (!validName || !validDescription || !validPrice || !validTags) {
+    if (!isFormValid()) {
+      console.log("유효성 검사 실패");
+      return;
+    }
+
+    // price가 NaN이 아니도록 처리
+    const parsedPrice = parseInt(price, 10);
+    if (isNaN(parsedPrice)) {
+      setPriceError("가격은 유효한 숫자여야 합니다.");
       return;
     }
 
     const newProduct = {
       name,
       description,
-      price: parseInt(price),
-      tags, // 이미 배열로 저장된 태그들
+      price: parsedPrice,
+      tags,
     };
+
+    console.log("입력한 상품은:", newProduct);
 
     try {
       // 상품 등록 API 호출
@@ -89,9 +125,7 @@ const CreateProduct = () => {
           },
         }
       );
-
-      // 성공적인 등록 후 알림 표시
-      alert(response.data.message); // 성공 메시지
+      console.log(response.data);
       navigate("/items"); // 상품 목록 페이지로 이동
     } catch (error) {
       console.error("상품 등록 실패", error);
@@ -103,17 +137,18 @@ const CreateProduct = () => {
     <>
       <Header />
       <div className="createProductForm">
-        <div className="createHeader">
-          <h2 className="createText">상품 등록하기</h2>
-          <button
-            type="submit"
-            className="createBtn"
-            disabled={!isFormValid()} // 버튼 비활성화 조건
-          >
-            등록
-          </button>
-        </div>
         <form onSubmit={handleSubmit}>
+          <div className="createHeader">
+            <h2 className="createText">상품 등록하기</h2>
+            <button
+              type="submit"
+              className="createBtn"
+              disabled={!formValid} // 버튼 비활성화 조건
+            >
+              등록
+            </button>
+          </div>
+
           <div className="formGroup">
             <label className="createName">상품명</label>
             <input
@@ -123,7 +158,7 @@ const CreateProduct = () => {
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
-                validateName(e.target.value);
+                updateValidationErrors(); // 상품명 유효성 검사
               }}
             />
             {nameError && <p className="errorMessage">{nameError}</p>}
@@ -139,7 +174,7 @@ const CreateProduct = () => {
               placeholder="상품소개를 입력해주세요"
               onChange={(e) => {
                 setDescription(e.target.value);
-                validateDescription(e.target.value);
+                updateValidationErrors(); // 상품 소개 유효성 검사
               }}
             />
             {descriptionError && (
@@ -155,8 +190,8 @@ const CreateProduct = () => {
               type="number"
               value={price}
               onChange={(e) => {
-                setPrice(e.target.value);
-                validatePrice(e.target.value); // Validate on change
+                setPrice(e.target.value); // 숫자로 변환하도록 수정
+                updateValidationErrors(); // 가격 유효성 검사
               }}
             />
             {priceError && <p className="errorMessage">{priceError}</p>}
@@ -171,7 +206,7 @@ const CreateProduct = () => {
                 type="text"
                 value={inputTag}
                 onChange={handleTagInput}
-                onKeyDown={handleTagKeyPress}
+                onKeyDown={handleTagKeyPress} // Enter 키로 태그 추가
               />
               <div className="createTagList">
                 {tags.map((tag, index) => (
@@ -180,7 +215,7 @@ const CreateProduct = () => {
                     <button
                       type="button"
                       className="removeTagBtn"
-                      onClick={() => handleTagRemove(tag)}
+                      onClick={() => handleTagRemove(tag)} // 태그 삭제
                     >
                       X
                     </button>

@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
-import "./style.css"; // 메인 스타일 시트
+import { Link, useNavigate } from "react-router-dom";
+import "./style.css";
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer.jsx";
 
 const HomePage = () => {
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   return (
     <>
@@ -18,10 +18,9 @@ const HomePage = () => {
                 일상의 모든 물건을 <br />
                 거래해 보세요
               </p>
-              <button type="button" onClick={() => navigate("/items")}>
-                구경하러 가기
-              </button>{" "}
-              {/* 버튼 클릭 시 /items로 이동 */}
+              <Link to="/items">
+                <button type="button">구경하러 가기</button>
+              </Link>
             </div>
             <div className="bannerImg">
               <img src="/img/home_top.png" alt="배너 이미지" />

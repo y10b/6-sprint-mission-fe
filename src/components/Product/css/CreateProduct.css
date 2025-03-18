@@ -29,16 +29,12 @@
   border-radius: 8px;
   cursor: pointer;
   color: var(--colorInput);
-  background-color: var(--colorInputText);
+  background-color: var(--colorBtn);
 }
 
 .createBtn:disabled {
-  background-color: var(--colorBtn);
+  background-color: var(--colorInputText);
   cursor: not-allowed;
-}
-
-.createBtn:hover {
-  opacity: 0.7;
 }
 
 .createName,

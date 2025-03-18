@@ -1,0 +1,76 @@
+.BoardGeneralForm {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.bestPosts h1 {
+  margin: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 100%;
+  color: var(--colorTitle);
+}
+
+.postList {
+  margin-top: 40px;
+}
+
+.postheader {
+  display: flex;
+  justify-content: space-between;
+}
+.postheader h1 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--colorName);
+}
+.postheader button {
+  width: 88px;
+  height: 42px;
+  border-radius: 8px;
+  border: none;
+  padding: 12px 23px;
+  gap: 10px;
+  background-color: var(--colorBtn);
+  color: var(--colorBtnText);
+  font-family: "pretendard";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+}
+
+.postheader2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.postheader2 .searchInput {
+  width: 1050px;
+}
+.postheader2 select {
+  width: 100px;
+}
+/* tablet */
+@media (min-width: 744px) and (max-width: 1199px) {
+  .BoardGeneralForm {
+    width: 700px;
+  }
+  .postheader2 .searchInput {
+    width: 560px;
+  }
+}
+
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  .BoardGeneralForm {
+    width: 350px;
+  }
+  .postheader2 .searchInput {
+    width: 240px;
+  }
+  .postheader2 .fitersSelect {
+    width: 100%;
+  }
+}

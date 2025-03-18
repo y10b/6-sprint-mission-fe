@@ -1,3 +1,4 @@
 export const formatNumber = (number) => {
-  return number.toLocaleString(); // 숫자 3자리마다 , 추가
+  if (typeof number === 'number') { return number.toLocaleString(); }
+  return number
 };

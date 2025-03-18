@@ -38,28 +38,34 @@ router.get('/items', asyncHandler(async (req, res) => {
 
 // 상품 추가
 router.post('/items', asyncHandler(async (req, res) => {
+
+    console.log(req.body)
+
     const { name, description, price, tags } = req.body;
 
-    // 필수 입력값 확인
     if (!name || !description || !price || !tags) {
         return res.status(400).json({ message: '모든 필드를 입력해주세요.' });
     }
 
-    // 새로운 상품 생성
-    const newProduct = new Product({
-        name,
-        description,
-        price,
-        tags,
-        favoriteCount: 0, // 기본값으로 좋아요 수 0
-        createdAt: new Date(),
-    });
+    try {
+        const newProduct = new Product({
+            name,
+            description,
+            price,
+            tags,
+            favoriteCount: 0,
+        });
 
-    // 상품 저장
-    await newProduct.save();
+        await newProduct.save();
 
-    // 성공적인 응답
-    res.status(201).json({ message: '상품이 성공적으로 등록되었습니다.', product: newProduct });
+        res.status(201).json({
+            message: '상품이 성공적으로 등록되었습니다.',
+            product: newProduct,
+        });
+    } catch (error) {
+        console.error("상품 등록 실패", error);
+        res.status(500).json({ message: "상품 등록에 실패했습니다.", error: error.message });
+    }
 }));
 
 // 좋아요 증가

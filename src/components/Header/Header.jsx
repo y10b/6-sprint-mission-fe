@@ -10,17 +10,16 @@ function Header() {
 
   return (
     <header>
-      <a className="headerLogo" href="/">
+      <Link to="/" className="headerLogo">
         <img
           src="img/logo.png"
           alt="판다마켓_logo"
           className="responsiveLogo"
         />
-      </a>
-      <a className="headerBoard" href="/">
+      </Link>
+      <Link to="/boardGeneral" className={`headerBoard`}>
         자유게시판
-      </a>
-
+      </Link>
       <Link
         to="/items"
         className={`headerMarket ${isActiveMarket ? "active" : ""}`}
@@ -29,13 +28,11 @@ function Header() {
       </Link>
 
       <nav>
-        <button
-          className="headerButton"
-          type="button"
-          onClick={() => (window.location.href = "/")}
-        >
-          로그인
-        </button>
+        <a href="/">
+          <button className="headerButton" type="button">
+            로그인
+          </button>
+        </a>
       </nav>
     </header>
   );

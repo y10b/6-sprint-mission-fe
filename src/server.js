@@ -16,8 +16,8 @@ const corsOptions = {
     credentials: true,  // 쿠키를 포함한 요청 허용
 };
 
-// CORS 미들웨어 적용 (가장 상단에 배치)
-App.use(cors(corsOptions));  // CORS 미들웨어는 반드시 가장 상단에 설정
+// CORS 미들웨어 적용
+App.use(cors(corsOptions));
 
 App.use(express.json());
 

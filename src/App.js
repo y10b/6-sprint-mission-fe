@@ -6,6 +6,8 @@ import CreateProduct from "./components/Product/CreateProduct.jsx"; // CreatePro
 
 import "./color.css";
 import NotFound from "./components/NotFound/NotFound.jsx";
+import BoardGeneral from "./components/board/BoradGeneral.jsx";
+import BoardCreateForm from "./components/board/BoardCreateForm.jsx";
 
 const App = () => {
   const [orderBy, setOrderBy] = useState("recent");
@@ -33,11 +35,14 @@ const App = () => {
 
         {/* 상품 등록 페이지 */}
         <Route path="/registration" element={<CreateProduct />} />
-
+        {/* 자유게시판 */}
+        <Route path="/boardGeneral" element={<BoardGeneral />} />
+        {/* 게시글 생성 */}
+        <Route path="/boardCreate" element={<BoardCreateForm />} />
         {/* 404 페이지 */}
         <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+      </Routes >
+    </div >
   );
 };
 

@@ -1,0 +1,94 @@
+.boardForm {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.boardHeader {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.boardHeader h2 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
+  color: var(--colorTitle);
+}
+.boardHeader button {
+  width: 75px;
+  height: 42px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--colorInputText);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--colorInput);
+  font-family: "pretendard";
+}
+
+.formGroup,
+.formGroupImg {
+  margin-top: 26px;
+}
+.boardTitle,
+.boardDescription,
+.boardImg {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  color: var(--colorName);
+}
+.boardTitleInput {
+  width: 100%;
+  background-color: var(--colorInput);
+  border: none;
+  height: 56px;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--colorInputText);
+  font-family: "pretendard";
+  margin-top: 12px;
+}
+.boardDescriptionTextara {
+  width: 100%;
+  height: 280px;
+  background-color: var(--colorInput);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--colorInputText);
+  font-family: "pretendard";
+  margin-top: 12px;
+}
+
+.formGroupImg {
+  display: flex;
+  flex-direction: column;
+}
+
+.boardImgInput {
+  width: 282px;
+  height: 282px;
+  border-radius: 12px;
+  background-color: var(--colorInput);
+}
+
+/* tablet */
+@media (min-width: 744px) and (max-width: 1199px) {
+  .boardForm {
+    width: 700px;
+  }
+}
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  .boardForm {
+    width: 350px;
+  }
+}

@@ -43,6 +43,7 @@
   height: 3.5rem;
   padding: 1rem 7rem;
   width: 22.3125rem;
+  text-decoration: none;
 }
 
 .bannerText button:hover {

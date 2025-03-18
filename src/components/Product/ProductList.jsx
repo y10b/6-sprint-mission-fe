@@ -96,9 +96,9 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
                   item.images && item.images.length > 0
                     ? item.images[0]
                     : "/img/making.png"
-                } // 기본 이미지 경로 수정
+                }
                 alt={item.name}
-                className="productListImg" // 이미지 스타일 추가
+                className="productListImg"
               />
               <div className="productDetails">
                 <h3 className="productName">{item.name}</h3>
