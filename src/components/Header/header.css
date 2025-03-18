@@ -37,7 +37,10 @@ header {
 }
 
 .headerMarket.active {
-  color: var(--colorBtn);
+  text-decoration: underline solid;
+}
+.headerBoard.active {
+  text-decoration: underline solid;
 }
 
 nav {

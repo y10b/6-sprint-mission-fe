@@ -2,10 +2,10 @@ import express from 'express';
 import { Product } from '../models/Productmodel.js';
 import { asyncHandler } from '../components/Product/asset/asyncHandler.js';  // 예외 처리 미들웨어
 
-const router = express.Router();
+const itemsRoute = express.Router();
 
 // 모든 아이템 조회 (Pagination과 검색 지원)
-router.get('/items', asyncHandler(async (req, res) => {
+itemsRoute.get('/', asyncHandler(async (req, res) => {
     const { offset = 0, pageSize = 10, sort = 'recent', search } = req.query;
 
     const filter = {};
@@ -37,7 +37,7 @@ router.get('/items', asyncHandler(async (req, res) => {
 }));
 
 // 상품 추가
-router.post('/items', asyncHandler(async (req, res) => {
+itemsRoute.post('/', asyncHandler(async (req, res) => {
 
     console.log(req.body)
 
@@ -69,7 +69,7 @@ router.post('/items', asyncHandler(async (req, res) => {
 }));
 
 // 좋아요 증가
-router.post('/items/:id/increaseFavorite', asyncHandler(async (req, res) => {
+itemsRoute.post('/:id/increaseFavorite', asyncHandler(async (req, res) => {
     const itemId = req.params.id;
 
     // 상품 아이템 찾기
@@ -90,7 +90,7 @@ router.post('/items/:id/increaseFavorite', asyncHandler(async (req, res) => {
 }));
 
 // 좋아요 감소
-router.post('/items/:id/decreaseFavorite', asyncHandler(async (req, res) => {
+itemsRoute.post('/:id/decreaseFavorite', asyncHandler(async (req, res) => {
     const itemId = req.params.id;
 
     const item = await Product.findOne({ id: itemId });
@@ -106,4 +106,4 @@ router.post('/items/:id/decreaseFavorite', asyncHandler(async (req, res) => {
     res.status(200).send(item);
 }));
 
-export default router;
+export default itemsRoute;

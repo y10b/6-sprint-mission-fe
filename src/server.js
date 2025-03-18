@@ -3,7 +3,11 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import itemsRoutes from './routes/itemsRoutes.js';  // 라우터 불러오기
+import postsRouter from './routes/postsRoutes.js';
+
 import { DATABASE_URL } from '../env.js';
+
+
 
 dotenv.config();
 
@@ -27,7 +31,10 @@ mongoose.connect(DATABASE_URL)
     .catch(err => console.error('MongoDB 연결 실패:', err));
 
 // API 엔드포인트 라우터 등록
-App.use('/api', itemsRoutes);  // '/api' 경로로 시작하는 모든 요청을 itemsRoutes로 처리
+App.use('/api/items', itemsRoutes);
+App.use('/api/posts', postsRouter);
+
+
 
 App.listen(PORT, () => {
     console.log(`서버가 동작 중입니다. 포트: ${PORT}`);

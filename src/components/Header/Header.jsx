@@ -5,8 +5,9 @@ import "./header.css";
 function Header() {
   const location = useLocation(); // 현재 경로 가져오기
 
-  // 경로가 '/items'일 때 "중고마켓" 버튼 색상을 변경하기 위한 조건
+  /* 해당 경로에 표시 */
   const isActiveMarket = location.pathname === "/items";
+  const isActiveBoard = location.pathname === "/BoardGeneral";
 
   return (
     <header>
@@ -17,7 +18,10 @@ function Header() {
           className="responsiveLogo"
         />
       </Link>
-      <Link to="/boardGeneral" className={`headerBoard`}>
+      <Link
+        to="/BoardGeneral"
+        className={`headerBoard ${isActiveBoard ? "active" : ""}`}
+      >
         자유게시판
       </Link>
       <Link

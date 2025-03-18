@@ -1,6 +1,6 @@
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
-import "./BoardCreateForm.css";
+import "./css/BoardCreateForm.css";
 
 const BoardCreateForm = () => {
   return (

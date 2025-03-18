@@ -111,3 +111,7 @@
 
 - homepage header footer 모두 component로 만들어 사용
 - MongoDB 연동에 따라 API 재구축
+
+## 7. 게시판 만들기
+
+요구사항에 맞게 제작
