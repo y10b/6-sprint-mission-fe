@@ -8,12 +8,14 @@
   display: flex;
   justify-content: space-between;
 }
+
 .boardHeader h2 {
   font-weight: 700;
   font-size: 20px;
   line-height: 32px;
   color: var(--colorTitle);
 }
+
 .boardHeader button {
   width: 75px;
   height: 42px;
@@ -31,6 +33,7 @@
 .formGroupImg {
   margin-top: 26px;
 }
+
 .boardTitle,
 .boardDescription,
 .boardImg {
@@ -39,6 +42,7 @@
   line-height: 26px;
   color: var(--colorName);
 }
+
 .boardTitleInput {
   width: 100%;
   background-color: var(--colorInput);
@@ -53,6 +57,7 @@
   font-family: "pretendard";
   margin-top: 12px;
 }
+
 .boardDescriptionTextara {
   width: 100%;
   height: 280px;
@@ -68,16 +73,62 @@
   margin-top: 12px;
 }
 
-.formGroupImg {
+/* 이미지 미리보기 컨테이너 */
+.imagePreviewContainer {
   display: flex;
-  flex-direction: column;
+  gap: 10px;
+}
+
+.imagePreviewWrapper {
+  flex-wrap: wrap;
+  position: relative;
+  justify-content: flex-start;
+  overflow: hidden;
+  max-width: 100%;
+  width: 150px;
+  height: 140px;
+}
+
+.representativeTag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
 }
 
 .boardImgInput {
+  display: none;
+}
+
+.boardImgLabel {
   width: 282px;
   height: 282px;
   border-radius: 12px;
   background-color: var(--colorInput);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--colorInputText);
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: bold;
 }
 
 /* tablet */
@@ -85,10 +136,32 @@
   .boardForm {
     width: 700px;
   }
+  .boardImgLabel {
+    width: 150px;
+    height: 150px;
+  }
+  .imagePreview {
+    width: 70%;
+    height: 50%;
+    top: 5px;
+    left: 5px;
+  }
+  .representativeTag {
+    font-size: 10px;
+  }
 }
+
 /* Mobile (375px ~ 743px) */
 @media (min-width: 375px) and (max-width: 743px) {
   .boardForm {
     width: 350px;
+  }
+  .boardImgLabel {
+    width: 150px;
+    height: 150px;
+  }
+  .imagePreview {
+    width: 50%;
+    height: 50%;
   }
 }

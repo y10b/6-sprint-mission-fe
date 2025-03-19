@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa"; // 빈 하트 아이콘 추가
+import { FaHeart, FaRegHeart } from "react-icons/fa"; // 빈 하트 아이콘과 채워진 하트 아이콘
 import axios from "axios";
 import "./css/FavoriteButton.css";
 
 const FavoriteButton = ({ productId, initialCount, onFavoriteToggle }) => {
-  const [isClicked, setIsClicked] = useState(initialCount > 0); // 초기 상태를 `initialCount > 0`에 맞춰 설정
-  const [count, setCount] = useState(initialCount);
+  const [isClicked, setIsClicked] = useState(false); // 기본값을 false로 설정
+  const [count, setCount] = useState(initialCount); // 좋아요 수
 
   useEffect(() => {
-    setIsClicked(initialCount > 0); // 부모 컴포넌트에서 `initialCount`가 변경될 때 `isClicked` 상태도 갱신
-    setCount(initialCount); // `count` 값도 초기화
+    setCount(initialCount); // 부모 컴포넌트에서 전달된 초기 좋아요 수로 초기화
   }, [initialCount]);
 
   const toggleClick = async () => {

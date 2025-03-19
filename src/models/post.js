@@ -5,7 +5,7 @@ const PostSchema = new mongoose.Schema({
         type: Number,
         unique: true,  // id가 고유해야 하므로 unique 설정
     },
-    name: {
+    title: {
         type: String,
         required: true,
     },

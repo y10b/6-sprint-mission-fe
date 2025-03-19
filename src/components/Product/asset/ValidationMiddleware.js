@@ -28,6 +28,7 @@ const validateTags = (tags) => {
     return "";
 };
 
+
 export const validateProduct = (name, description, price, tags) => {
     return {
         nameError: validateName(name),
@@ -36,3 +37,6 @@ export const validateProduct = (name, description, price, tags) => {
         tagsError: validateTags(tags),
     };
 };
+
+// 새로운 함수들 내보내기
+export { validateName, validateDescription, validatePrice, validateTags };

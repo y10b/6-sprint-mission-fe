@@ -11,7 +11,7 @@ postsRouter.get('/', asyncHandler(async (req, res) => {
     const filter = {};
     if (search) {
         filter.$or = [
-            { name: { $regex: search, $options: 'i' } },  // name에 search가 포함된 글
+            { title: { $regex: search, $options: 'i' } },  // title에 search가 포함된 글
             { description: { $regex: search, $options: 'i' } }  // description에 search가 포함된 글
         ];
     }
@@ -22,7 +22,7 @@ postsRouter.get('/', asyncHandler(async (req, res) => {
 
     const [posts, totalCount] = await Promise.all([
         Post.find(filter)
-            .select('id name description createdAt favoriteCount')  // 필요한 필드만 선택
+            .select('id title description createdAt favoriteCount')  // 필요한 필드만 선택
             .sort(sortOption)
             .skip(Number(offset))  // 페이징 처리
             .limit(Number(pageSize))  // 페이지 당 게시글 수
@@ -38,15 +38,15 @@ postsRouter.get('/', asyncHandler(async (req, res) => {
 
 // 게시글 추가
 postsRouter.post('/', asyncHandler(async (req, res) => {
-    const { name, description, ownerId, favoriteCount } = req.body;
+    const { title, description, ownerId, favoriteCount } = req.body;
 
-    if (!name || !description || !ownerId) {
+    if (!title || !description || !ownerId) {
         return res.status(400).json({ message: '모든 필드를 입력해주세요.' });
     }
 
     try {
         const newPost = new Post({
-            name,
+            title,
             description,
             ownerId,
             favoriteCount: favoriteCount || 0,  // 기본값 0
@@ -119,7 +119,7 @@ postsRouter.get('/:id', asyncHandler(async (req, res) => {
 // 게시글 수정
 postsRouter.put('/:id', asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { name, description, favoriteCount } = req.body;
+    const { title, description, favoriteCount } = req.body;
 
     const post = await Post.findOne({ id });
 
@@ -128,7 +128,7 @@ postsRouter.put('/:id', asyncHandler(async (req, res) => {
     }
 
     // 수정할 필드가 있으면 업데이트
-    if (name) post.name = name;
+    if (title) post.title = title;
     if (description) post.description = description;
     if (favoriteCount !== undefined) post.favoriteCount = favoriteCount;  // favoriteCount는 0일 수 있기 때문에 undefined 체크
 

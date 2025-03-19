@@ -106,7 +106,7 @@ const ProductList = ({ keyword, setKeyword, orderBy, setOrderBy }) => {
                 <FavoriteButton
                   productId={item.id}
                   initialCount={item.favoriteCount || 0}
-                  onFavoriteToggle={handleFavoriteToggle} // 좋아요 상태 업데이트 함수 전달
+                  onFavoriteToggle={handleFavoriteToggle}
                 />
               </div>
             </li>

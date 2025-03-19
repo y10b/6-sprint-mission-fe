@@ -3,7 +3,13 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { validateProduct } from "../Product/asset/ValidationMiddleware";
+import {
+  validateProduct,
+  validateName,
+  validateDescription,
+  validatePrice,
+  validateTags,
+} from "../Product/asset/ValidationMiddleware"; // 여기 추가
 import "./css/CreateProduct.css";
 
 const CreateProduct = () => {
@@ -19,7 +25,7 @@ const CreateProduct = () => {
   const [formValid, setFormValid] = useState(false);
   const navigate = useNavigate();
 
-  // 모든 유효성 검사 상태 업데이트
+  // 유효성 검사 상태 업데이트
   const updateValidationErrors = () => {
     const validationErrors = validateProduct(name, description, price, tags);
     setNameError(validationErrors.nameError);
@@ -28,7 +34,7 @@ const CreateProduct = () => {
     setTagsError(validationErrors.tagsError);
   };
 
-  // 모든 유효성 검사 통과 여부 확인
+  // 유효성 검사 통과 여부 확인
   const isFormValid = () => {
     return (
       nameError === "" &&
@@ -42,20 +48,13 @@ const CreateProduct = () => {
     );
   };
 
-  // 유효성 검사 상태 업데이트
+  // 유효성 검사 상태 업데이트 (입력 값이 변경될 때만 검사)
   useEffect(() => {
-    updateValidationErrors();
-    setFormValid(isFormValid());
-  }, [
-    name,
-    description,
-    price,
-    tags,
-    nameError,
-    descriptionError,
-    priceError,
-    tagsError,
-  ]);
+    if (name || description || price || tags.length > 0) {
+      updateValidationErrors();
+      setFormValid(isFormValid());
+    }
+  }, [name, description, price, tags]);
 
   // 태그 입력 처리 및 중복 제거
   const handleTagInput = (e) => {
@@ -158,7 +157,8 @@ const CreateProduct = () => {
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
-                updateValidationErrors(); // 상품명 유효성 검사
+                setNameError(validateName(e.target.value)); // 상품명 유효성 검사
+                setFormValid(isFormValid());
               }}
             />
             {nameError && <p className="errorMessage">{nameError}</p>}
@@ -174,7 +174,8 @@ const CreateProduct = () => {
               placeholder="상품소개를 입력해주세요"
               onChange={(e) => {
                 setDescription(e.target.value);
-                updateValidationErrors(); // 상품 소개 유효성 검사
+                setDescriptionError(validateDescription(e.target.value)); // 상품 소개 유효성 검사
+                setFormValid(isFormValid());
               }}
             />
             {descriptionError && (
@@ -191,7 +192,8 @@ const CreateProduct = () => {
               value={price}
               onChange={(e) => {
                 setPrice(e.target.value); // 숫자로 변환하도록 수정
-                updateValidationErrors(); // 가격 유효성 검사
+                setPriceError(validatePrice(e.target.value)); // 가격 유효성 검사
+                setFormValid(isFormValid());
               }}
             />
             {priceError && <p className="errorMessage">{priceError}</p>}
