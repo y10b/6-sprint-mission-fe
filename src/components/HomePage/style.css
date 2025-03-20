@@ -1,3 +1,8 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 /* Banner */
 .banner {
   align-items: flex-end;

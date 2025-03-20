@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .footerDecoration {
   background: var(--colorContents);
   height: 3.125rem;

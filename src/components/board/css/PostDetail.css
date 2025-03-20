@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .postDetail {
   width: 1200px;
   margin: 0 auto;
@@ -35,17 +39,7 @@
   font-weight: 200;
   color: var(--colorQa);
 }
-.like {
-  margin-top: 16px;
-}
-.like button {
-  width: 77px;
-  height: 25px;
-  border-radius: 35px;
-  border: 1px solid var(--colorQa);
-  background-color: #fff;
-  cursor: pointer;
-}
+
 hr {
   margin-top: 16px;
   color: var(--colorQa);
@@ -60,9 +54,7 @@ hr {
   font-family: "pretendard";
   margin-bottom: 32px;
 }
-.commentsArticle {
-  position: relative;
-}
+
 .commentTitle {
   font-weight: 600;
   font-size: 16px;
@@ -83,26 +75,77 @@ hr {
   color: var(--colorInputText);
   font-family: "pretendard";
 }
-
+.commentPostBrn {
+  text-align: right;
+  margin-top: 16px;
+}
 .commentButton {
-  position: absolute;
-  bottom: -55px;
-  right: 0;
-  width: 75px;
-  height: 45px;
+  width: 74px;
+  height: 42px;
+  font-family: "pretendard";
   border-radius: 8px;
   border: none;
-  padding: 12px 23px;
-  gap: 10px;
   background-color: var(--colorInputText);
-  cursor: pointer;
+  color: var(--colorInput);
   font-weight: 600;
   font-size: 16px;
   line-height: 26px;
-  font-family: "pretendard";
-  color: var(--colorInput);
 }
 
+.commentsList {
+  width: 100%;
+  margin-top: 40px;
+}
+.commentItem {
+  height: 100px;
+  border-bottom: 1px;
+  background-color: var(--colorContents);
+  font-family: "pretendard";
+  font-weight: 400;
+}
+.commentContent {
+  font-size: 14px;
+  line-height: 24px;
+  padding: 10px;
+  color: var(--colorName);
+}
+.commentCreated {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--colorHeaderText);
+}
+.homeBtn {
+  text-align: center;
+  margin-top: 60px;
+}
+.homeBtn button {
+  width: 240px;
+  height: 50px;
+  border-radius: 40px;
+  border: none;
+  padding: 12px 8px;
+  background-color: var(--colorBtn);
+  font-family: "pretendard";
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  color: var(--colorInput);
+  cursor: pointer;
+}
+.commentNone {
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--colorInputText);
+  font-family: "pretendard";
+}
+.homeBtn button:hover {
+  background-color: var(--colorBtnHover);
+}
 /* tablet */
 @media (min-width: 744px) and (max-width: 1199px) {
   .postDetail {

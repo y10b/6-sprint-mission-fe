@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .productListForm {
   width: 1200px;
   margin: 0 auto;

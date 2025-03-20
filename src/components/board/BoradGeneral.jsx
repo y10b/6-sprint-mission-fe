@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Link 컴포넌트를 추가
+import { Link } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Search from "../Product/asset/Search";
 import Filters from "../Product/asset/Filters";
-import FavoriteButton from "../Product/asset/FavoriteButton";
+import FavoriteButtonBoard from "./asset/Favorite";
 import Pagination from "../Product/asset/Pagination";
 import "./css/BoardGeneral.css";
+import { baseURL } from "../../env";
 
 const BoardGeneral = () => {
   const [bestPosts, setBestPosts] = useState([]);
@@ -22,16 +23,20 @@ const BoardGeneral = () => {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const response = await fetch("/api/posts"); // 모든 게시글 API 호출
+        const response = await fetch(`${baseURL}/articles`); // 모든 게시글 API 호출
         const data = await response.json();
 
-        const sortedPosts = data.posts.sort(
-          (a, b) => b.favoriteCount - a.favoriteCount
-        ); // 내림차순 정렬
+        // 정렬: 좋아요 수로 내림차순 정렬
+        const sortedPosts = data.sort(
+          (a, b) =>
+            (b.likes ? b.likes.length : 0) - (a.likes ? a.likes.length : 0) // 좋아요 수 기준으로 내림차순 정렬
+        );
+
+        // 상위 3개 베스트 게시글 추출
         const topBestPosts = sortedPosts.slice(0, 3);
 
         setBestPosts(topBestPosts);
-        setAllPosts(data.posts);
+        setAllPosts(sortedPosts);
       } catch (error) {
         console.error("모든 게시글 가져오기 실패:", error);
       }
@@ -81,7 +86,7 @@ const BoardGeneral = () => {
                     <div className="bestPostContent">
                       <h3>{post.title}</h3>
                       <img
-                        src={post.image || defaultImage}
+                        src={post.images || defaultImage} // 이미지 필드가 images로 수정됨
                         alt={post.title}
                         className="postImage"
                       />
@@ -89,15 +94,15 @@ const BoardGeneral = () => {
                   </Link>
                   <div className="bestPostInfo">
                     <div className="bestPostInfoUser">
-                      <p> {post.ownerId}</p>
-                      <FavoriteButton
-                        productId={post.id} // 각 게시글의 ID
-                        initialCount={post.favoriteCount} // 게시글의 초기 좋아요 수
+                      <p>{post.author ? post.author : "게스트"}</p>
+                      <FavoriteButtonBoard
+                        articleId={post.id} // 각 게시글의 ID
+                        initialCount={(post.likes || []).length} // 좋아요 수 (likes가 없을 경우 빈 배열을 사용)
                         onFavoriteToggle={(id, newCount) => {
                           setAllPosts((prevPosts) =>
                             prevPosts.map((post) =>
                               post.id === id
-                                ? { ...post, favoriteCount: newCount }
+                                ? { ...post, likes: new Array(newCount) }
                                 : post
                             )
                           );
@@ -136,7 +141,7 @@ const BoardGeneral = () => {
                       <div className="postItemContent">
                         <h3>{post.title}</h3>
                         <img
-                          src={post.image || defaultImage}
+                          src={post.images || defaultImage} // 이미지 필드가 images로 수정됨
                           alt={post.title}
                           className="postImage"
                         />
@@ -144,18 +149,18 @@ const BoardGeneral = () => {
                     </Link>
                     <div className="postItemInfo">
                       <div className="postItemUser">
-                        <p>{post.ownerId}</p>
+                        <p>{post.author ? post.author : "게스트"}</p>
                         <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                       </div>
                       <div className="postItemLike">
-                        <FavoriteButton
-                          productId={post.id} // 각 게시글의 ID
-                          initialCount={post.favoriteCount} // 게시글의 초기 좋아요 수
+                        <FavoriteButtonBoard
+                          articleId={post.id} // 각 게시글의 ID
+                          initialCount={(post.likes || []).length} // 좋아요 수 (likes가 없을 경우 빈 배열을 사용)
                           onFavoriteToggle={(id, newCount) => {
                             setAllPosts((prevPosts) =>
                               prevPosts.map((post) =>
                                 post.id === id
-                                  ? { ...post, favoriteCount: newCount }
+                                  ? { ...post, likes: new Array(newCount) }
                                   : post
                               )
                             );
