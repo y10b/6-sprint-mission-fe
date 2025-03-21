@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa"; // 빈 하트 아이콘과 채워진 하트 아이콘
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 import { baseURL } from "../../../env";
 
-const FavoriteButtonBoard = ({ articleId, initialCount, onFavoriteToggle }) => {
-  const [isClicked, setIsClicked] = useState(false); // 기본값을 false로 설정
+const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const [count, setCount] = useState(initialCount || 0); // 좋아요 수, 초기값을 0으로 설정
 
   useEffect(() => {
     const fetchLikeCount = async () => {
       try {
         const response = await axios.get(`${baseURL}/articles/${articleId}`);
-
-        const likes = Array.isArray(response.data.likes)
-          ? response.data.likes
-          : [];
-        setCount(likes.length);
+        const likesCount = response.data.likesCount || 0; // likesCount가 아닌 경우 0으로 처리
+        setCount(likesCount);
       } catch (error) {
         console.error("좋아요 수를 가져오는 데 오류 발생", error);
       }
     };
 
     fetchLikeCount();
-  }, [articleId]); // `articleId`가 변경될 때마다 좋아요 수를 다시 가져옴
+  }, [articleId]);
 
   const toggleClick = async () => {
     let newCount;
@@ -39,19 +36,18 @@ const FavoriteButtonBoard = ({ articleId, initialCount, onFavoriteToggle }) => {
     setCount(newCount); // 새로운 `count` 값으로 업데이트
 
     try {
-      // 서버에 좋아요 증감 요청 (like API 사용)
+      // `userId` 없이 좋아요 증감 요청
       const response = await axios.post(
-        `${baseURL}/articles/${articleId}/like`,
-        {
-          // 요청 본문에 필요한 데이터 추가 (예: 사용자 ID나 토큰 등)
-          userId: "사용자ID", // 예시로 사용자 ID를 보낼 경우
-        }
+        `${baseURL}/articles/${articleId}/like`
       );
 
       if (response.status === 200) {
         // 서버에서 변경된 좋아요 수로 업데이트된 데이터 반환
-        setCount(response.data.favoriteCount); // 서버에서 반환된 좋아요 수로 업데이트
-        onFavoriteToggle(articleId, response.data.favoriteCount);
+        const updatedCount = response.data.likesCount || newCount; // 서버에서 반환된 좋아요 수로 업데이트
+        setCount(updatedCount); // 서버에서 반환된 좋아요 수로 업데이트
+        if (onLikeToggle) {
+          onLikeToggle(articleId, updatedCount); // `onLikeToggle`이 정의되어 있으면 호출
+        }
       }
     } catch (error) {
       console.error("좋아요 업데이트 오류", error);
@@ -62,26 +58,25 @@ const FavoriteButtonBoard = ({ articleId, initialCount, onFavoriteToggle }) => {
   };
 
   return (
-    <span className="favoriteCount">
+    <span className="likeCount">
       {isClicked ? (
         <FaHeart
-          className="favorite-icon"
-          color="red" // 클릭 시 빨간색
+          className="like-icon"
+          color="red"
           onClick={toggleClick}
           style={{ cursor: "pointer" }}
         />
       ) : (
         <FaRegHeart
-          className="favorite-icon"
-          color="gray" // 기본 상태에서 빈 하트
+          className="like-icon"
+          color="gray"
           onClick={toggleClick}
           style={{ cursor: "pointer" }}
         />
       )}
-      {count >= 0 ? count.toLocaleString() : 0}{" "}
-      {/* 숫자 포맷 적용, count가 0 이상이면 표시, 아니면 0 */}
+      {count >= 0 ? count.toLocaleString() : 0}
     </span>
   );
 };
 
-export default FavoriteButtonBoard;
+export default LikeToArticle;

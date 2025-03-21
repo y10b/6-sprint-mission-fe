@@ -4,7 +4,7 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import Search from "../Product/asset/Search";
 import Filters from "../Product/asset/Filters";
-import FavoriteButtonBoard from "./asset/Favorite";
+import LikeToArticle from "./asset/LikeToArticle";
 import Pagination from "../Product/asset/Pagination";
 import "./css/BoardGeneral.css";
 import { baseURL } from "../../env";
@@ -44,22 +44,26 @@ const BoardGeneral = () => {
     fetchAllPosts();
   }, []);
 
-  // 필터링 및 검색 적용
-  const filteredPosts = allPosts.filter((post) => {
-    const matchesKeyword = post.title
-      .toLowerCase()
-      .includes(keyword.toLowerCase());
-    return matchesKeyword;
-  });
+  // 필터링 처리 (검색어에 맞는 게시글만 필터링)
+  const filteredPosts = allPosts.filter((post) =>
+    post.title.toLowerCase().includes(keyword.toLowerCase())
+  );
 
-  // 정렬 처리
-  const sortedPosts = filteredPosts.sort((a, b) => {
+  // 정렬 처리 (orderBy에 따른 정렬)
+  const sortedPosts = [...filteredPosts];
+
+  // 정렬 처리 (orderBy에 따른 정렬)
+  useEffect(() => {
     if (orderBy === "favorite") {
-      return b.favoriteCount - a.favoriteCount; // 좋아요 순 정렬
+      sortedPosts.sort(
+        (a, b) =>
+          (b.likes ? b.likes.length : 0) - (a.likes ? a.likes.length : 0)
+      );
     } else {
-      return new Date(b.createdAt) - new Date(a.createdAt); // 최신 순 정렬
+      sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
-  });
+    setAllPosts(sortedPosts);
+  }, [orderBy, filteredPosts]); // orderBy와 filteredPosts가 변경될 때마다 실행
 
   // 현재 페이지에 맞는 게시글 가져오기
   const indexOfLastPost = currentPage * postsPerPage;
@@ -95,9 +99,9 @@ const BoardGeneral = () => {
                   <div className="bestPostInfo">
                     <div className="bestPostInfoUser">
                       <p>{post.author ? post.author : "게스트"}</p>
-                      <FavoriteButtonBoard
+                      <LikeToArticle
                         articleId={post.id} // 각 게시글의 ID
-                        initialCount={(post.likes || []).length} // 좋아요 수 (likes가 없을 경우 빈 배열을 사용)
+                        initialCount={post.likes ? post.likes.length : 0} // 좋아요 수 (likes가 없을 경우 빈 배열을 사용)
                         onFavoriteToggle={(id, newCount) => {
                           setAllPosts((prevPosts) =>
                             prevPosts.map((post) =>
@@ -153,9 +157,9 @@ const BoardGeneral = () => {
                         <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                       </div>
                       <div className="postItemLike">
-                        <FavoriteButtonBoard
+                        <LikeToArticle
                           articleId={post.id} // 각 게시글의 ID
-                          initialCount={(post.likes || []).length} // 좋아요 수 (likes가 없을 경우 빈 배열을 사용)
+                          initialCount={post.likes ? post.likes.length : 0}
                           onFavoriteToggle={(id, newCount) => {
                             setAllPosts((prevPosts) =>
                               prevPosts.map((post) =>

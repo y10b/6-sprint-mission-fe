@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
-import FavoriteButtonBoard from "./asset/Favorite";
+import LikeToArticle from "./asset/LikeToArticle";
 import "./css/PostDetail.css";
 import { baseURL } from "../../env";
 
@@ -87,7 +87,7 @@ const PostDetail = () => {
             </p>
             <p className="OR">|</p>
             <div className="like">
-              <FavoriteButtonBoard
+              <LikeToArticle
                 articleId={post.id} // 게시글 ID 전달
                 initialCount={post.likes ? post.likes.length : 0} // 좋아요 수
                 onFavoriteToggle={(id, newCount) => {

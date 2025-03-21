@@ -13,7 +13,7 @@ function Header() {
     <header>
       <Link to="/" className="headerLogo">
         <img
-          src="img/logo.png"
+          src="/img/logo.png"
           alt="판다마켓_logo"
           className="responsiveLogo"
         />

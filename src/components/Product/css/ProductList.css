@@ -50,7 +50,7 @@ body {
 .productListGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px; /* 항목 사이 간격 */
+  gap: 20px;
 }
 
 .productItem {

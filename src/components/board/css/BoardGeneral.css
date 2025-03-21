@@ -84,7 +84,9 @@ body {
   line-height: 24px;
   color: var(--colorInputText);
 }
-
+.like-icon {
+  margin-right: 3px;
+}
 /* postItem */
 .postList {
   margin-top: 40px;
