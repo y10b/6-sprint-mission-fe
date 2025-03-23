@@ -7,7 +7,7 @@ import Filters from "../Product/asset/Filters";
 import LikeToArticle from "./asset/LikeToArticle";
 import Pagination from "../Product/asset/Pagination";
 import "./css/BoardGeneral.css";
-import { baseURL } from "../../env";
+import { baseURL } from "../../env.js";
 
 const BoardGeneral = () => {
   const [bestPosts, setBestPosts] = useState([]);
@@ -44,34 +44,34 @@ const BoardGeneral = () => {
     fetchAllPosts();
   }, []);
 
+  // 정렬 처리 (orderBy에 따른 정렬)
+  useEffect(() => {
+    const sorted = [...allPosts]; // allPosts를 복사하여 정렬합니다.
+
+    if (orderBy === "favorite") {
+      sorted.sort(
+        (a, b) =>
+          (b.likes ? b.likes.length : 0) - (a.likes ? a.likes.length : 0)
+      );
+    } else {
+      sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    setAllPosts(sorted); // 정렬된 데이터를 상태로 업데이트
+  }, [orderBy]); // orderBy만 의존성으로 두기
+
   // 필터링 처리 (검색어에 맞는 게시글만 필터링)
   const filteredPosts = allPosts.filter((post) =>
     post.title.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  // 정렬 처리 (orderBy에 따른 정렬)
-  const sortedPosts = [...filteredPosts];
-
-  // 정렬 처리 (orderBy에 따른 정렬)
-  useEffect(() => {
-    if (orderBy === "favorite") {
-      sortedPosts.sort(
-        (a, b) =>
-          (b.likes ? b.likes.length : 0) - (a.likes ? a.likes.length : 0)
-      );
-    } else {
-      sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
-    setAllPosts(sortedPosts);
-  }, [orderBy, filteredPosts]); // orderBy와 filteredPosts가 변경될 때마다 실행
-
   // 현재 페이지에 맞는 게시글 가져오기
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   // 총 페이지 수 계산
-  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   return (
     <>

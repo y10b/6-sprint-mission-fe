@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
-import { baseURL } from "../../../env";
+import { baseURL } from "../../../env.js";
 
 const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
   const [isClicked, setIsClicked] = useState(false);
