@@ -1,0 +1,25 @@
+/* filter */
+.filtersSelect {
+  width: 130px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+  color: var(--color-Name);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  padding-left: 20px;
+  text-align: left;
+  font-family: "Pretendard", sans-serif;
+}
+
+/* Mobile (375px ~ 743px) */
+@media (min-width: 375px) and (max-width: 743px) {
+  .filtersSelect {
+    position: absolute;
+    top: 415px;
+    right: 0px;
+    width: 105px;
+  }
+}
