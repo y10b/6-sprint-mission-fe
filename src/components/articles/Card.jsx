@@ -2,20 +2,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
-import { getDefaultImg } from "@/utils/imagePath";
-
-const BEST_BADGE_IMAGE = "img/best_badge.png";
+import { getBestBadge, getDefaultImg } from "@/utils/imagePath";
 
 const Card = ({ article }) => {
   return (
-    <div className="bg-gray-50 rounded-lg p-3 w-[384px] h-[169px] md:w-[340px] md:h-[198px] sm:w-[343px] sm:h-[198px] relative">
+    <div className="bg-gray-50 px-6 pt-[46px] pb-4 rounded-lg  relative">
       <Link href={`/articles/${article.id}`} className="block">
         <div className="flex gap-1 absolute top-0 left-5 bg-blue-500 text-white text-lg font-semibold py-1 px-4 rounded-b-2xl">
-          <img
-            src={BEST_BADGE_IMAGE}
-            alt="best"
-            className="w-[12.39px] h-[14.91px] mt-1.5"
-          />
+          <div className="relative w-[12.39px] h-[14.91px] mt-1.5">
+            <Image src={getBestBadge()} alt="best" fill />
+          </div>
           Best
         </div>
         <div className="flex justify-between items-center pt-[20px] px-2">
@@ -32,7 +28,7 @@ const Card = ({ article }) => {
           </div>
         </div>
       </Link>
-      <div className="flex justify-between mt-4 text-sm text-secondary-600">
+      <div className="flex justify-between mt-15 text-sm text-secondary-600">
         <div className="flex gap-2">
           <p>{article.author || "게스트"}</p>
           <LikeToArticle

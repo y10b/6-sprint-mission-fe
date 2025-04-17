@@ -18,8 +18,8 @@
 @media (min-width: 375px) and (max-width: 743px) {
   .filtersSelect {
     position: absolute;
-    top: 415px;
-    right: 0px;
+    top: 480px;
+    right: 15px;
     width: 105px;
   }
 }

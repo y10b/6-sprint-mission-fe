@@ -1,12 +1,10 @@
-
-"use client"
+"use client";
 
 import Link from "next/link";
+import Image from "next/image"; // Image 컴포넌트 import
 import styles from "./HomePage.module.css"; // CSS module import
 
 const HomePage = () => {
-
-
   return (
     <div>
       {/* Banner Section */}
@@ -22,7 +20,13 @@ const HomePage = () => {
             </Link>
           </div>
           <div className={styles.bannerImg}>
-            <img src="/img/home_top.png" alt="배너 이미지" />
+            <Image
+              src="/img/home_top.png"
+              alt="배너 이미지"
+              width={500}
+              height={300}
+              priority
+            />
           </div>
         </section>
       </article>
@@ -33,7 +37,12 @@ const HomePage = () => {
         <div className={styles.first}>
           <section>
             <div className={styles.firstImg}>
-              <img src="/img/Img_home_01.png" alt="Hot item 이미지" />
+              <Image
+                src="/img/Img_home_01.png"
+                alt="Hot item 이미지"
+                width={300}
+                height={300}
+              />
             </div>
             <div className={styles.firstText}>
               <p className={styles.pTitle}>Hot item</p>
@@ -62,7 +71,12 @@ const HomePage = () => {
               </p>
             </div>
             <div className={styles.secondImg}>
-              <img src="/img/Img_home_02.png" alt="Search 이미지" />
+              <Image
+                src="/img/Img_home_02.png"
+                alt="Search 이미지"
+                width={300}
+                height={300}
+              />
             </div>
           </section>
         </div>
@@ -71,7 +85,12 @@ const HomePage = () => {
         <div className={styles.third}>
           <section>
             <div className={styles.thirdImg}>
-              <img src="/img/Img_home_03.png" alt="Register 이미지" />
+              <Image
+                src="/img/Img_home_03.png"
+                alt="Register 이미지"
+                width={300}
+                height={300}
+              />
             </div>
             <div className={styles.thirdText}>
               <p className={styles.pTitle}>Register</p>

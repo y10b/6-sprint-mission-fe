@@ -32,14 +32,14 @@ const Articles = ({
     <div className="article-list mt-10">
       <div className="article-header flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">게시글</h1>
-        <Link href="/articles/editor">
+        <Link href="/articles/createArticle">
           <button className="bg-blue-500 text-white px-6 py-2 rounded-lg text-lg cursor-pointer">
             글쓰기
           </button>
         </Link>
       </div>
 
-      <div className="search-filters flex justify-between items-center mt-6">
+      <div className="search-filters flex justify-between items-center  mt-6">
         <Search keyword={keyword} setKeyword={setKeyword} variant="long" />
         <Filters orderBy={orderBy} setOrderBy={setOrderBy} />
       </div>

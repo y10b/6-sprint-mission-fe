@@ -7,10 +7,10 @@ export default function Footer() {
     <footer className="overflow-x-hidden overflow-y-auto mt-[100px]">
       <article className="foot">
         {/* Footer Decoration */}
-        <div className="footerDecoration bg-gray-200 h-12 mt-7"></div>
+        <div className=" bg-gray-200 h-12 mt-7"></div>
 
         {/* Footer License Section */}
-        <section className="footerLicense flex  gap-3 items-start bg-secondary-900 justify-between pt-8 font-pretendard h-40">
+        <section className=" flex  gap-3 items-start bg-secondary-900 justify-between pt-8 px-4 h-40">
           {/* Copy Section */}
           <div className="copy flex items-center md:ml-[12.5rem]">
             <p className="text-secondary-400 font-normal leading-6 whitespace-nowrap">

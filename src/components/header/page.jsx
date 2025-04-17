@@ -7,12 +7,12 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  const isActiveMarket = pathname === "/items";
-  const isActiveArticle = pathname === "/articles";
+  const isActiveMarket = pathname.startsWith("/items");
+  const isActiveArticle = pathname.startsWith("/articles");
 
   return (
     <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-10 h-[4.375rem] px-8">
-      <Link href="/" className="md:ml-[12.5rem] sm:ml-0">
+      <Link href="/" className="ml-0">
         <div className="block sm:hidden w-[61px] h-[27px] relative">
           <Image src="/img/mobile_logo.png" alt="모바일 로고" fill />
         </div>
@@ -26,7 +26,7 @@ export default function Header() {
       {/* 자유게시판 링크 */}
       <Link
         href="/articles"
-        className={`sm:text-lg font-semibold ml-10 ${
+        className={`ml-2 text-base sm:text-lg font-semibold sm:ml-10 ${
           isActiveArticle ? "text-primary-100" : "text-secondary-600"
         }`}
       >
@@ -36,7 +36,7 @@ export default function Header() {
       {/* 중고마켓 링크 */}
       <Link
         href="/items"
-        className={`sm:text-lg font-semibold ml-10  ${
+        className={`ml-2 text-base sm:text-lg font-semibold sm:ml-10  ${
           isActiveMarket ? "text-primary-100" : "text-secondary-600"
         }`}
       >

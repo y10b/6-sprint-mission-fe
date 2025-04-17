@@ -1,7 +1,7 @@
 "use client";
 
 import Dropdown from "@/components/DropDown";
-import { getDefaultImg } from "@/utils/imagePath";
+import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
 
@@ -37,20 +37,20 @@ const CommentSection = ({
 
   return (
     <div className="mt-8">
-      <label className="block text-lg font-semibold text-gray-900">
+      <label className="text-base leading-[26px] font-semibold text-gray-900">
         댓글달기
       </label>
       <textarea
-        className="w-full h-[104px] text-secondary-400 text-[16px] font-[400] mt-2 p-4 text-lg rounded-lg bg-gray-100 resize-none"
+        className="w-full h-[104px] text-secondary-400 text-base font-[400] mt-2 p-4 rounded-lg bg-gray-100 resize-none"
         placeholder="댓글을 입력해 주세요."
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
       />
       <div className="mt-4 text-right">
         <button
-          className={`px-6 py-2 rounded-md text-white ${
+          className={`w-[74px] h-[42px] rounded-[8px] text-white ${
             newComment.trim()
-              ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+              ? "bg-primary-100 hover:bg-primary-300 cursor-pointer"
               : "bg-gray-400 cursor-not-allowed"
           }`}
           onClick={handleCommentSubmit}
@@ -60,15 +60,17 @@ const CommentSection = ({
         </button>
       </div>
 
-      <div className="mt-8 space-y-4">
+      <div className="mt-8 space-y-8">
         {comments.length > 0 ? (
           comments.map((comment) => (
             <div
               key={comment.id}
-              className="h-[100px] rounded-b-sm p-4 bg-gray-50 border-b border-secondary-200"
+              className="h-24 rounded-b-sm px-4 pb-3 bg-gray-50 border-b border-secondary-200"
             >
               <div className="flex justify-between">
-                <p className="text-lg">{comment.content}</p>
+                <p className="font-[400] text-sm leading-6 text-secondary-800">
+                  {comment.content}
+                </p>
                 <Dropdown
                   articleId={articleId}
                   commentId={comment.id}
@@ -80,27 +82,37 @@ const CommentSection = ({
                   }}
                 />
               </div>
-              <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
-                <div className="flex items-center gap-2">
-                  <img
-                    src={comment.authorImage || getDefaultImg()}
-                    alt="작성자 이미지"
-                    className="w-10 h-10 rounded-3xl object-cover "
+
+              <div className="flex items-center mt-6">
+                <div className="relative w-8 h-8 mb-2 mr-2 rounded-3xl overflow-hidden">
+                  <Image
+                    src={comment.authorImage || getProfileImg()}
+                    alt={comment.authorImage || "작성자 이미지"}
+                    fill
+                    className="object-cover rounded-3xl"
                   />
-                  <p>{comment.author || "게스트"}</p>
                 </div>
-                <p>{new Date(comment.createdAt).toLocaleDateString()}</p>
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium">
+                    {comment.author || "똑똑한판다"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(comment.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <div className=" mx-auto">
+          <div className="mx-auto text-center">
             <Image
               src={ENTRY_IMAGE}
               alt="말풍선"
-              className="w-[140px] h-[140px] mx-auto"
+              width={140}
+              height={140}
+              className="mx-auto"
             />
-            <p className="text-center text-gray-500">
+            <p className="text-gray-500">
               아직 댓글이 없어요,
               <br /> 지금 댓글을 달아보세요!
             </p>

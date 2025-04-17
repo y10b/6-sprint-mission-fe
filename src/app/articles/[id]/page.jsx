@@ -20,7 +20,6 @@ const Article = () => {
       const fetchData = async () => {
         try {
           const res = await axios.get(`http://localhost:5000/articles/${id}`);
-          console.log("🚀 게시글 데이터:", res.data);
           setPost(res.data);
 
           const commentRes = await axios.get(
@@ -55,7 +54,7 @@ const Article = () => {
         setNewComment={setNewComment}
       />
 
-      <div className="mt-12 text-center">
+      <div className="mt-16 text-center">
         <Link href="/articles">
           <button className="mx-auto flex gap-2 w-[240px] px-12 py-3 bg-primary-100 text-[18px] text-gray-100 font-[600] rounded-[40px] hover:bg-primary-300 cursor-pointer relative">
             목록으로 돌아가기

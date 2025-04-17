@@ -95,7 +95,7 @@ const CreateArticle = () => {
     <div className="max-w-7xl mx-auto mt-8 px-4">
       <form onSubmit={handleSubmit}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-primary">게시글 쓰기</h2>
+          <h2 className="text-2xl font-semibold text-primary">게시글 등록</h2>
           <button
             type="submit"
             className={`cursor-pointer p-2 rounded-lg text-gray-100 text-lg font-semibold w-[74px] ${
@@ -108,7 +108,7 @@ const CreateArticle = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-xl font-semibold text-gray-800">
+          <label className="block text-xl mb-3 font-semibold text-gray-800">
             *제목
           </label>
           <input
@@ -125,7 +125,7 @@ const CreateArticle = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-xl font-semibold text-gray-800">
+          <label className="block mb-3 text-xl font-semibold text-gray-800">
             *내용
           </label>
           <textarea

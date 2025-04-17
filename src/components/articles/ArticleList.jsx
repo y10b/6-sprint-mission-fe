@@ -1,13 +1,12 @@
-// components/articles/ArticleList.jsx
 "use client";
 import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
-import { getDefaultImg } from "@/utils/imagePath";
+import { getDefaultImg, getProfileImg } from "@/utils/imagePath";
 
 const ArticleList = ({ articles }) => {
   return (
-    <div className="article-items mt-6 space-y-6">
+    <div className="article-items mt-10 space-y-6">
       {articles.length > 0 ? (
         articles.map((article) => (
           <div
@@ -19,7 +18,7 @@ const ArticleList = ({ articles }) => {
                 <h3 className="text-xl font-semibold text-gray-800">
                   {article.title}
                 </h3>
-                <div className="relative w-[72px] h-[72px]">
+                <div className="relative  w-[72px] h-[72px]">
                   <Image
                     src={article.images || getDefaultImg()}
                     alt={article.title}
@@ -29,13 +28,15 @@ const ArticleList = ({ articles }) => {
                 </div>
               </div>
             </Link>
-            <div className="article-info flex justify-between mt-4 text-sm text-gray-600 mb-6">
-              <div className="author-info flex gap-2">
-                <img
-                  src={article.authorImage || getDefaultImg()}
-                  alt="작성자"
-                  className="w-6 h-6 rounded-xl border-gray-400"
-                />
+            <div className="flex justify-between mt-4 text-sm text-gray-600 mb-6">
+              <div className="flex gap-2">
+                <div className="relative w-6 h-6 rounded-xl border-gray-400">
+                  <Image
+                    src={article.authorImage || getProfileImg()}
+                    alt={article.authorImage || "작성자 이미지"}
+                    fill
+                  />
+                </div>
                 <p>{article.author || "게스트"}</p>
                 <p className="text-gray-400">
                   {new Date(article.createdAt).toLocaleDateString()}

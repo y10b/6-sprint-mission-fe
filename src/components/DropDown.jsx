@@ -26,7 +26,7 @@ const Dropdown = ({ articleId, commentId, baseUrl, onDelete }) => {
   // 수정하기
   const handleEdit = async () => {
     if (!commentId) {
-      router.push("/createArticle");
+      router.push(`/articles/${articleId}/edit`);
       return;
     }
 
@@ -41,7 +41,6 @@ const Dropdown = ({ articleId, commentId, baseUrl, onDelete }) => {
         `${baseUrl}/${articleId}/${commentId || ""}`,
         { content }
       );
-      console.log("서버 응답:", response.data);
       alert(response.data.message || "수정 성공!");
       setIsOpen(false);
     } catch (error) {
@@ -77,7 +76,7 @@ const Dropdown = ({ articleId, commentId, baseUrl, onDelete }) => {
       <MdMoreVert onClick={toggleDropdown} className="cursor-pointer" />
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute right-0 mt-2 w-[102px] sm:w-[139px] bg-white border border-gray-300 rounded-md shadow-lg">
           <ul className="py-1">
             <li
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer"

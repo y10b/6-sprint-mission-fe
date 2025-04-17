@@ -49,7 +49,7 @@ const ArticlePage = () => {
   }, [orderBy]);
 
   return (
-    <div className="max-w-6xl mx-auto overflow-x-hidden overflow-y-auto">
+    <div className="max-w-6xl mx-auto px-4 overflow-x-hidden overflow-y-auto">
       <BestArticles articles={bestArticles} />
       <Articles
         articles={allArticles}
