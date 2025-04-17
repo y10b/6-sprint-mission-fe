@@ -4,12 +4,16 @@ import LikeToProduct from "@/components/LikeToProduct";
 import Dropdown from "@/components/DropDown";
 import { getDefaultImg } from "@/utils/imagePath";
 
-const PostDetail = ({ post, onLikeToggle }) => {
+const ArticleDetail = ({ post, onLikeToggle }) => {
   return (
     <>
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold text-primary">{post.title}</h1>
-        <Dropdown />
+        <h1 className="text-2xl font-bold text-black">{post.title}</h1>
+        <Dropdown
+          articleId={post.id}
+          baseUrl="http://localhost:5000/articles"
+          onDelete={() => {}}
+        />
       </div>
       <div className="flex items-center gap-2 mt-4 text-sm text-secondary-600">
         <img
@@ -36,4 +40,4 @@ const PostDetail = ({ post, onLikeToggle }) => {
   );
 };
 
-export default PostDetail;
+export default ArticleDetail;

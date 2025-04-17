@@ -8,7 +8,7 @@ const BEST_BADGE_IMAGE = "img/best_badge.png";
 
 const Card = ({ article }) => {
   return (
-    <div className="bg-gray-50 rounded-lg p-3 lg:w-[384px] lg:h-[169px] md:w-[340px] md:h-[198px] sm:w-[343px] sm:h-[198px] relative">
+    <div className="bg-gray-50 rounded-lg p-3 w-[384px] h-[169px] md:w-[340px] md:h-[198px] sm:w-[343px] sm:h-[198px] relative">
       <Link href={`/articles/${article.id}`} className="block">
         <div className="flex gap-1 absolute top-0 left-5 bg-blue-500 text-white text-lg font-semibold py-1 px-4 rounded-b-2xl">
           <img

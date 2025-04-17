@@ -69,7 +69,16 @@ const CommentSection = ({
             >
               <div className="flex justify-between">
                 <p className="text-lg">{comment.content}</p>
-                <Dropdown articleId={articleId} commentId={comment.id} />
+                <Dropdown
+                  articleId={articleId}
+                  commentId={comment.id}
+                  baseUrl="http://localhost:5000/comments/articles"
+                  onDelete={() => {
+                    setComments((prev) =>
+                      prev.filter((c) => c.id !== comment.id)
+                    );
+                  }}
+                />
               </div>
               <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
                 <div className="flex items-center gap-2">

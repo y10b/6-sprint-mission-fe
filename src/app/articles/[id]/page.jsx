@@ -20,6 +20,7 @@ const Article = () => {
       const fetchData = async () => {
         try {
           const res = await axios.get(`http://localhost:5000/articles/${id}`);
+          console.log("🚀 게시글 데이터:", res.data);
           setPost(res.data);
 
           const commentRes = await axios.get(
