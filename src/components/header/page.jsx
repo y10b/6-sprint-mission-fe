@@ -1,6 +1,5 @@
-"use client"; // 클라이언트 사이드 코드에서만 작동하도록 지정
+"use client";
 
-import Image from "next/image"; // next/image 컴포넌트를 사용
 import Link from "next/link"; // next/link로 라우팅
 import { usePathname } from "next/navigation"; // 현재 경로를 가져오는 훅
 

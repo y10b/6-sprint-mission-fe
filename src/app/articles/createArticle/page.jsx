@@ -98,12 +98,12 @@ const CreateArticle = () => {
           <h2 className="text-2xl font-semibold text-primary">게시글 쓰기</h2>
           <button
             type="submit"
-            className={`p-2 rounded-lg text-gray-100 text-lg font-semibold w-[74px] ${
+            className={`cursor-pointer p-2 rounded-lg text-gray-100 text-lg font-semibold w-[74px] ${
               isFormValid ? "bg-blue-500" : "bg-gray-400"
             }`}
-            disabled={!isFormValid || isSubmitting}
+            disabled={!isFormValid}
           >
-            {isSubmitting ? "등록 중..." : "등록"}
+            등록
           </button>
         </div>
 

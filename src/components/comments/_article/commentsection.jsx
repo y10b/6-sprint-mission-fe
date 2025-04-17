@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Dropdown from "@/components/DropDown";
 import { getDefaultImg } from "@/utils/imagePath";
+import Image from "next/image";
+import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
 
 const CommentSection = ({
   comments,
@@ -84,9 +85,17 @@ const CommentSection = ({
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500">
-            아직 댓글이 없어요, 지금 댓글을 달아보세요!
-          </p>
+          <div className=" mx-auto">
+            <Image
+              src={ENTRY_IMAGE}
+              alt="말풍선"
+              className="w-[140px] h-[140px] mx-auto"
+            />
+            <p className="text-center text-gray-500">
+              아직 댓글이 없어요,
+              <br /> 지금 댓글을 달아보세요!
+            </p>
+          </div>
         )}
       </div>
     </div>
