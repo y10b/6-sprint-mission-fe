@@ -45,7 +45,7 @@ export default function Header() {
 
       {/* 로그인 버튼 */}
       <nav className="ml-auto">
-        <Link href="/">
+        <Link href="/login">
           <button className=" bg-primary-100 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition">
             로그인
           </button>
