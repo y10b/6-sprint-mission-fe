@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  const isActiveMarket = pathname.startsWith("/items");
+  const isActiveMarket = pathname.startsWith("/products");
   const isActiveArticle = pathname.startsWith("/articles");
 
   return (
@@ -35,7 +35,7 @@ export default function Header() {
 
       {/* 중고마켓 링크 */}
       <Link
-        href="/items"
+        href="/products"
         className={`ml-2 text-base sm:text-lg font-semibold sm:ml-10  ${
           isActiveMarket ? "text-primary-100" : "text-secondary-600"
         }`}
@@ -45,7 +45,7 @@ export default function Header() {
 
       {/* 로그인 버튼 */}
       <nav className="ml-auto">
-        <Link href="/login">
+        <Link href="/signin">
           <button className=" bg-primary-100 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition">
             로그인
           </button>

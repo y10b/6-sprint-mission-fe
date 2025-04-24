@@ -1,6 +1,7 @@
+import QueryProvider from "@/app/QueryProvider";
 import Footer from "@/components/footer/page";
-import "./globals.css";
 import Header from "@/components/header/page";
+import "./globals.css";
 
 export const metadata = {
   title: "판다마켓",
@@ -11,11 +12,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className="font-pretendard">
-        <Header />
-        <main>
-          {children}
-        </main>
-        <Footer />
+        <QueryProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
