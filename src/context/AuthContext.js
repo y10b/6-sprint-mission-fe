@@ -12,17 +12,21 @@ export const AuthProvider = ({ children }) => {
     // 앱 시작 시 유저 정보 확인
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
+        console.log("[AuthProvider] accessToken:", token);
         if (token) {
             getCurrentUser()
                 .then((userData) => {
+                    console.log("[AuthProvider] userData 받아옴:", userData);
                     setUser(userData);
                     setIsInitialized(true);
                 })
                 .catch(() => {
+                    console.error("[AuthProvider] getCurrentUser 에러:", err);
                     setUser(null);
                     setIsInitialized(true);
                 });
         } else {
+            console.log("[AuthProvider] 토큰 없음");
             setIsInitialized(true);
         }
     }, []);

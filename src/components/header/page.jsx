@@ -19,7 +19,7 @@ export default function Header() {
     setUser(null);
     router.push("/"); // 클라이언트 사이드에서 router 사용
   };
-
+  console.log("[Header] 현재 user:", user);
   return (
     <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-10 h-[4.375rem] px-8">
       <Link href="/" className="ml-0">
