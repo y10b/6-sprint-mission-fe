@@ -35,3 +35,17 @@ export async function login({ email, password }) {
 
     return res.json();
 }
+
+
+export async function getCurrentUser() {
+    const token = localStorage.getItem("accessToken");
+
+    const res = await fetch(`${BASE_URL}/users/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!res.ok) return null;
+    return res.json();
+}

@@ -2,8 +2,21 @@ post https://panda-market-api.vercel.app/Auth/SignUp
 Content-Type: application/json
 
 {
-  "email": "exampoea@example.com",
-  "nickname": "홍길동동이",
+  "email": "exampaea@example.com",
+  "nickname": "홍동동이",
   "password": "yourpassword123",
   "passwordConfirmation": "yourpassword123"
 }
+
+###
+post https://panda-market-api.vercel.app/Auth/SignIn
+Content-Type: application/json
+
+{
+  "email": "exampaea@example.com",
+  "password": "yourpassword123"
+}
+
+
+###
+get https://panda-market-api.vercel.app/users/me

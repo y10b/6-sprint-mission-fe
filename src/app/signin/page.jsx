@@ -18,7 +18,8 @@ function Signin() {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter(); // 라우터를 사용하여 페이지 전환 처리
+
+  const router = useRouter();
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -46,14 +47,9 @@ function Signin() {
     if (!isFormValid) return;
 
     try {
-      // 로그인 API 호출
       const result = await login(form);
-
-      // 로그인 성공 시 토큰 저장
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("refreshToken", result.refreshToken);
-
-      // 로그인 후 홈으로 리다이렉트
       router.push("/products");
     } catch (err) {
       console.error("로그인 실패:", err.message);
@@ -98,7 +94,7 @@ function Signin() {
         disabled={!isFormValid}
         className={`mt-4 mx-auto w-full h-14 rounded-[40px] font-[600] text-xl leading-8 text-gray-100 ${
           isFormValid
-            ? "bg-blue-500 cursor-pointer"
+            ? "bg-blue-500 cursor-pointer hover:bg-blue-600"
             : "bg-gray-400 cursor-not-allowed"
         }`}
       >
