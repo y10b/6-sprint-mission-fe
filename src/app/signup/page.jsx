@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signup } from "@/app/api/CUD/api";
+import { signup } from "@/app/api/CUD/productApi";
 import FormInput from "@/components/FormInput";
 import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/AuthModal";

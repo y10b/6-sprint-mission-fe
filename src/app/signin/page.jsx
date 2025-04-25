@@ -6,8 +6,9 @@ import Link from "next/link";
 import FormInput from "@/components/FormInput";
 import SnsSign from "@/components/SnsSign";
 import { validateEmail, validatePassword } from "@/utils/validation";
-import { login } from "@/app/api/CUD/api"; // 로그인 API import
+import { login as loginApi } from "@/app/api/CUD/productApi"; // 로그인 API
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // ✅ 추가된 부분
 
 function Signin() {
   const [form, setForm] = useState({
@@ -20,6 +21,7 @@ function Signin() {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+  const { login } = useAuth(); // ✅ 컨텍스트에서 로그인 함수 사용
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -47,10 +49,14 @@ function Signin() {
     if (!isFormValid) return;
 
     try {
-      const result = await login(form);
-      localStorage.setItem("accessToken", result.accessToken);
-      localStorage.setItem("refreshToken", result.refreshToken);
-      router.push("/products");
+      // ✅ 1. 로그인 API 호출
+      const result = await loginApi(form); // accessToken, refreshToken만 포함되어 있음
+
+      // ✅ 2. 전역 상태 및 유저정보 세팅
+      await login(result); // 내부에서 getCurrentUser() 호출 후 setUser()
+
+      // ✅ 3. 리다이렉트
+      router.replace("/products");
     } catch (err) {
       console.error("로그인 실패:", err.message);
       setErrors((prev) => ({ ...prev, email: err.message || "로그인 실패" }));
@@ -79,7 +85,7 @@ function Signin() {
 
       <FormInput
         label="비밀번호"
-        type="password"
+        type={showPassword ? "text" : "password"}
         value={form.password}
         onChange={handleChange("password")}
         placeholder="비밀번호를 입력해주세요"

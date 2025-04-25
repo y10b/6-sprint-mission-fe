@@ -1,7 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser } from "@/app/api/CUD/api";
+import { usePathname, useRouter } from "next/navigation";
+import { getCurrentUser } from "@/app/api/CUD/AuthApi";
+
 
 const AuthContext = createContext();
 
@@ -9,33 +11,48 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    // 앱 시작 시 유저 정보 확인
+    const router = useRouter();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        console.log("✅ AuthProvider mounted");
+    }, []);
+
+
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
-        console.log("[AuthProvider] accessToken:", token);
         if (token) {
             getCurrentUser()
                 .then((userData) => {
-                    console.log("[AuthProvider] userData 받아옴:", userData);
                     setUser(userData);
                     setIsInitialized(true);
                 })
-                .catch(() => {
+                .catch((err) => {
                     console.error("[AuthProvider] getCurrentUser 에러:", err);
                     setUser(null);
                     setIsInitialized(true);
                 });
         } else {
-            console.log("[AuthProvider] 토큰 없음");
             setIsInitialized(true);
         }
     }, []);
 
-    const login = (userData) => {
-        localStorage.setItem("accessToken", userData.accessToken);
-        localStorage.setItem("refreshToken", userData.refreshToken);
-        setUser(userData.user);
+    // 로그인한 상태에서 특정 페이지로 진입하면 /products로 리다이렉트
+    useEffect(() => {
+        const redirectPaths = ["/", "/login", "/logout"];
+        if (isInitialized && user && redirectPaths.includes(pathname)) {
+            router.replace("/products");
+        }
+    }, [isInitialized, user, pathname]);
+
+    const login = async (res) => {
+        localStorage.setItem("accessToken", res.accessToken);
+        localStorage.setItem("refreshToken", res.refreshToken);
+
+        const user = await getCurrentUser(); // 정확한 정보 fetch
+        setUser(user);
     };
+
 
     const logout = () => {
         localStorage.removeItem("accessToken");

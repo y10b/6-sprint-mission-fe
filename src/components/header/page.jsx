@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext"; // AuthContext에서 user와 setUser 가져오기
 
 export default function Header() {
-  const { user, setUser } = useAuth(); // AuthContext에서 user와 setUser 가져오기
+  const { user, logout } = useAuth(); // AuthContext에서 user와 setUser 가져오기
   const pathname = usePathname();
   const router = useRouter();
 
@@ -14,12 +14,10 @@ export default function Header() {
   const isActiveArticle = pathname.startsWith("/articles");
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setUser(null);
-    router.push("/"); // 클라이언트 사이드에서 router 사용
+    logout()
+    router.push("/"); 
   };
-  console.log("[Header] 현재 user:", user);
+
   return (
     <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-10 h-[4.375rem] px-8">
       <Link href="/" className="ml-0">
