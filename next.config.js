@@ -8,6 +8,15 @@ module.exports = {
         ];
     },
     images: {
-        domains: ['search.pstatic.net', 'encrypted-tbn0.gstatic.com', 'health.chosun.com', 'via.placeholder.com', 'cdn.choicenews.co.kr', 'example.com'], // 외부 이미지 도메인 추가
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+            },
+            {
+                protocol: 'http',
+                hostname: '**',
+            }
+        ]
     },
 }

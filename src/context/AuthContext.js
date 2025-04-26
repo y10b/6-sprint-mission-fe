@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { getCurrentUser } from "@/app/api/CUD/AuthApi";
+import { getCurrentUser } from "@/app/api/CUD/userApi";
 
 
 const AuthContext = createContext();

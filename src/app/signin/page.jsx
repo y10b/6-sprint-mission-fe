@@ -6,7 +6,7 @@ import Link from "next/link";
 import FormInput from "@/components/FormInput";
 import SnsSign from "@/components/SnsSign";
 import { validateEmail, validatePassword } from "@/utils/validation";
-import { login as loginApi } from "@/app/api/CUD/productApi"; // 로그인 API
+import { login as loginApi } from "@/app/api/CUD/authApi"; // 로그인 API
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext"; // ✅ 추가된 부분
 

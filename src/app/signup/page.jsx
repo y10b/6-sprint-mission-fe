@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signup } from "@/app/api/CUD/productApi";
+import { signup } from "@/app/api/CUD/authApi";
 import FormInput from "@/components/FormInput";
 import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/AuthModal";
@@ -13,6 +13,7 @@ import {
 } from "@/utils/validation";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 function Signup() {
   const [form, setForm] = useState({
@@ -28,6 +29,7 @@ function Signup() {
     passwordConfirmation: false,
   });
   const [errorModal, setErrorModal] = useState(false);
+  const { login } = useAuth();
   const router = useRouter();
 
   const handleChange = (field) => (e) =>
@@ -60,9 +62,10 @@ function Signup() {
     e.preventDefault();
     try {
       const result = await signup(form);
-      localStorage.setItem("accessToken", result.accessToken);
-      localStorage.setItem("refreshToken", result.refreshToken);
-      router.push("/products");
+
+      await login(result);
+
+      router.replace("/products");
     } catch (err) {
       console.error("회원가입 실패:", err.message);
       const errorMessage = err?.response?.data?.message || err.message;
