@@ -83,7 +83,7 @@ const ProductPage = () => {
             <span className="text-base font-semibold leading-[26px] mb-2 text-secondary-800">
               {product.name}
             </span>
-            <Dropdown />
+            <Dropdown productId={product.id} />
           </div>
 
           <p className="text-2xl font-semibold leading-8 mb-4 text-secondary-800">

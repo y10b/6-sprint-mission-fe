@@ -27,3 +27,13 @@ get https://panda-market-api.vercel.app/products/10/comments?limit=4
 
 ###
 get https://panda-market-api.vercel.app/products
+
+
+### 
+PATCH https://panda-market-api.vercel.app/comments/2051
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTA0OSwic2NvcGUiOiJhY2Nlc3MiLCJpYXQiOjE3NDU4MjA4OTgsImV4cCI6MTc0NTgyMjY5OCwiaXNzIjoic3AtcGFuZGEtbWFya2V0In0.dRaBp6E4XhzHu2I703j_vrIlf6GlQ-vaQ_qEx658axA
+
+{
+  "content": "strt"
+}

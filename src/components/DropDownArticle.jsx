@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { MdMoreVert } from "react-icons/md";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const BASE_URL = "https://panda-market-api.vercel.app";
-
-const Dropdown = ({ productId }) => {
+const Dropdown = ({ articleId, commentId, baseUrl, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
@@ -25,39 +23,60 @@ const Dropdown = ({ productId }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 수정하기 버튼
-  const handleEdit = () => {
-    if (!productId) {
-      alert("상품 ID가 없습니다.");
+  // 수정하기
+  const handleEdit = async () => {
+    if (!commentId) {
+      router.push(`/articles/${articleId}/edit`);
       return;
     }
-    router.push(`/products/${productId}/edit`);
-  };
 
-  // 삭제하기 버튼
-  const handleDelete = async () => {
-    if (!window.confirm("정말 이 상품을 삭제하시겠습니까?")) return;
+    const content = prompt("수정할 내용을 입력해주세요");
+    if (!content) {
+      alert("내용이 비어있습니다!");
+      return;
+    }
 
     try {
-      await axios.delete(`${BASE_URL}/products/${productId}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      alert("상품이 삭제되었습니다.");
-      router.push("/products");
+      const response = await axios.patch(
+        `${baseUrl}/${articleId}/${commentId || ""}`,
+        { content }
+      );
+      alert(response.data.message || "수정 성공!");
+      setIsOpen(false);
     } catch (error) {
-      console.error("상품 삭제 실패:", error);
-      alert("상품 삭제에 실패했습니다.");
+      console.error("수정 실패:", error);
+      alert("수정에 실패했습니다.");
+    }
+  };
+
+  // 삭제하기
+  const handleDelete = async () => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      const url = commentId
+        ? `${baseUrl}/${articleId}/${commentId}`
+        : `${baseUrl}/${articleId}`;
+
+      const response = await axios.delete(url);
+      alert(response.data.message || "삭제 완료");
+      setIsOpen(false);
+      if (onDelete) onDelete();
+      if (!commentId) {
+        router.push("/articles");
+      }
+    } catch (error) {
+      console.error("삭제 실패:", error);
+      alert("삭제에 실패했습니다.");
     }
   };
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative inline-block text-left mt-2" ref={dropdownRef}>
       <MdMoreVert onClick={toggleDropdown} className="cursor-pointer" />
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[120px] bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute right-0 mt-2 w-[102px] sm:w-[139px] bg-white border border-gray-300 rounded-md shadow-lg">
           <ul className="py-1">
             <li
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer"

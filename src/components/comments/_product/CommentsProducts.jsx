@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getCommentsByProductId } from "@/app/api/products/router";
-import { postProductComment } from "@/app/api/CUD/commentsApi"; // ✅ 수정된 부분
-import Dropdown from "@/components/DropDown";
+import { postProductComment } from "@/app/api/CUD/commentsApi";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
+import DropdownComment from "@/components/DropDownComment";
 
 const CommentsProducts = ({ productId }) => {
   const [comments, setComments] = useState([]);
@@ -14,7 +14,6 @@ const CommentsProducts = ({ productId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
 
-  // 댓글 불러오기 함수
   const fetchComments = async () => {
     if (!productId) {
       setError("상품 ID가 없습니다.");
@@ -37,12 +36,11 @@ const CommentsProducts = ({ productId }) => {
     }
   };
 
-  // 댓글 작성 함수
   const handleSubmit = async () => {
     if (!newComment.trim()) return;
 
     try {
-      const newCommentData = await postProductComment(productId, newComment); // ✅ 수정된 부분
+      const newCommentData = await postProductComment(productId, newComment);
       setComments((prev) => [newCommentData, ...prev]);
       setNewComment("");
     } catch (err) {
@@ -104,7 +102,11 @@ const CommentsProducts = ({ productId }) => {
                 <p className="font-[400] text-[14px] leading-6 text-secondary-800">
                   {comment.content}
                 </p>
-                <Dropdown />
+                <DropdownComment
+                  productId={productId}
+                  commentId={comment.id}
+                  onDelete={fetchComments}
+                />
               </div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="relative w-8 h-8">
