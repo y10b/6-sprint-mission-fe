@@ -1,25 +1,35 @@
-export async function getProducts({ page, pageSize, orderBy, keyword }) {
+const BASE_URL = "https://panda-market-api.vercel.app";
+export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent", keyword = "" }) => {
     const params = new URLSearchParams({
-        offset: (page - 1) * pageSize,
-        limit: pageSize,
-        sort: orderBy,
-        search: keyword,
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        orderBy,
+        keyword,
     });
 
-    const response = await fetch(`/api/products?${params.toString()}`);
+    console.log("Requesting products with params:", params.toString());
+
+    const response = await fetch(`${BASE_URL}/products?${params.toString()}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
     if (!response.ok) {
-        throw new Error("데이터 요청 실패");
+        throw new Error(`Failed to fetch products: ${response.statusText}`);
     }
 
     const data = await response.json();
 
+    console.log("Response data:", data);
+
     return {
-        products: Array.isArray(data.list) ? data.list : [],
-        totalCount: typeof data.totalCount === "number" ? data.totalCount : 0,
+        products: data.list,
+        total: data.totalCount,
     };
-}
-// 바꾸기
+};
+
 
 
 export const getProductById = async (id) => {

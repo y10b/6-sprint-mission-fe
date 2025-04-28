@@ -1,9 +1,7 @@
-"use client"; // 클라이언트 측에서만 렌더링
+"use client";
 
 import React from "react";
-import { MdArrowBackIosNew } from "react-icons/md";
-import { MdArrowForwardIos } from "react-icons/md";
-import styles from "./css/pagination.module.css";
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
 const Pagination = ({ page, setPage, hasNext, totalPages }) => {
   const getPageNumbers = () => {
@@ -17,34 +15,39 @@ const Pagination = ({ page, setPage, hasNext, totalPages }) => {
     }
     return pageNumbers;
   };
+  const handlePageChange = (newPage) => {
+    console.log("Page changed to:", newPage); // 페이지 변경 로그
+    setPage(newPage); // 페이지 변경
+  };
 
   return (
-    <div className={styles.paginationContainer}>
-      {/* Previous button */}
+    <div className="flex justify-center items-center gap-1 mt-10">
       <button
-        className={styles.beforeBtn}
         onClick={() => setPage(page - 1)}
         disabled={page <= 1}
+        className="cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-gray-500 font-semibold text-base bg-gray-50 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <MdArrowBackIosNew />
       </button>
 
-      {/* Page number buttons */}
       {getPageNumbers().map((pageNum) => (
         <button
           key={pageNum}
           onClick={() => setPage(pageNum)}
-          className={pageNum === page ? styles.active : ""}
+          className={` cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-base font-semibold flex items-center justify-center ${
+            pageNum === page
+              ? "bg-blue-500 text-gray-50"
+              : "bg-gray-50 text-gray-500"
+          }`}
         >
           {pageNum}
         </button>
       ))}
 
-      {/* Next button */}
       <button
-        className={styles.nextBtn}
         onClick={() => setPage(page + 1)}
         disabled={!hasNext}
+        className="cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-gray-500 font-semibold text-base bg-gray-50 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <MdArrowForwardIos />
       </button>
