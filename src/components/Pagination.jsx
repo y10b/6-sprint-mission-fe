@@ -1,42 +1,45 @@
 "use client";
 
-import React from "react";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
-const Pagination = ({ page, setPage, hasNext, totalPages }) => {
-  const getPageNumbers = () => {
-    const range = 2;
-    const startPage = Math.max(1, page - range);
-    const endPage = Math.min(totalPages, page + range);
+export default function Pagination({ page, setPage, hasNext, totalPages }) {
+  const range = 2;
 
-    let pageNumbers = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-    return pageNumbers;
+  const getPageNumbers = () => {
+    const start = Math.max(1, page - range);
+    const end = Math.min(totalPages, page + range);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
+
   const handlePageChange = (newPage) => {
-    console.log("Page changed to:", newPage); // 페이지 변경 로그
-    setPage(newPage); // 페이지 변경
+    if (newPage !== page && newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
+
+  const buttonClass =
+    "w-10 h-10 rounded-full border border-gray-300 text-base font-semibold flex items-center justify-center";
+  const disabledClass = "disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
     <div className="flex justify-center items-center gap-1 mt-10">
+      {/* 이전 버튼 */}
       <button
-        onClick={() => setPage(page - 1)}
+        onClick={() => handlePageChange(page - 1)}
         disabled={page <= 1}
-        className="cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-gray-500 font-semibold text-base bg-gray-50 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        className={`${buttonClass} text-gray-500 bg-gray-50 cursor-pointer ${disabledClass}`}
       >
         <MdArrowBackIosNew />
       </button>
 
+      {/* 페이지 번호 */}
       {getPageNumbers().map((pageNum) => (
         <button
           key={pageNum}
-          onClick={() => setPage(pageNum)}
-          className={` cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-base font-semibold flex items-center justify-center ${
+          onClick={() => handlePageChange(pageNum)}
+          className={`${buttonClass} cursor-pointer ${
             pageNum === page
-              ? "bg-blue-500 text-gray-50"
+              ? "bg-blue-500 text-white"
               : "bg-gray-50 text-gray-500"
           }`}
         >
@@ -44,15 +47,14 @@ const Pagination = ({ page, setPage, hasNext, totalPages }) => {
         </button>
       ))}
 
+      {/* 다음 버튼 */}
       <button
-        onClick={() => setPage(page + 1)}
+        onClick={() => handlePageChange(page + 1)}
         disabled={!hasNext}
-        className="cursor-pointer w-10 h-10 rounded-full border border-gray-300 text-gray-500 font-semibold text-base bg-gray-50 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        className={`${buttonClass} text-gray-500 bg-gray-50 cursor-pointer ${disabledClass}`}
       >
         <MdArrowForwardIos />
       </button>
     </div>
   );
-};
-
-export default Pagination;
+}
