@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signup } from "@/features/auth/services/authApi";
 import { useAuth } from "@/context/AuthContext";
@@ -11,135 +11,123 @@ import {
 } from "@/utils/authValidation";
 import Image from "next/image";
 import Link from "next/link";
-import FormInput from "@/components/FormInput";
+import FormField from "@/components/Auth/AuthField";
 import SnsSign from "@/components/SnsSign";
-import Modal from "@/components/AuthModal";
+import Modal from "@/components/Auth/AuthModal";
+import { useState } from "react";
 
 export default function Signup() {
-  const [form, setForm] = useState({
-    email: "",
-    nickname: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-
+  const { login } = useAuth();
+  const router = useRouter();
+  const [errorModal, setErrorModal] = useState(false);
   const [show, setShow] = useState({
     password: false,
     passwordConfirmation: false,
   });
 
-  const [errorModal, setErrorModal] = useState(false);
-  const router = useRouter();
-  const { login } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+  });
 
-  const { email, nickname, password, passwordConfirmation } = form;
-  const isFormValid =
-    email &&
-    nickname &&
-    password &&
-    passwordConfirmation &&
-    !errors.email &&
-    !errors.password &&
-    !errors.passwordConfirmation;
-
-  useEffect(() => {
-    setErrors({
-      email: email && !validateEmail(email) ? "잘못된 이메일입니다." : "",
-      password:
-        password && !validatePassword(password) ? "8자 이상 입력해주세요" : "",
-      passwordConfirmation:
-        passwordConfirmation &&
-        !validatePasswordMatch(password, passwordConfirmation)
-          ? "비밀번호가 일치하지 않습니다"
-          : "",
-    });
-  }, [email, password, passwordConfirmation]);
-
-  const handleChange = (field) => (e) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const toggleShowPassword = (field) => {
+  const toggleShow = (field) => {
     setShow((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
-
+  const onSubmit = async (data) => {
     try {
-      const result = await signup(form);
+      const result = await signup(data);
       await login(result);
       router.replace("/products");
     } catch (err) {
       const errorMessage =
         err?.response?.data?.message || err.message || "회원가입 실패";
       if (errorMessage.includes("이메일")) {
-        setErrors((prev) => ({ ...prev, email: errorMessage }));
+        setError("email", { type: "manual", message: errorMessage });
       } else {
         setErrorModal(true);
       }
     }
   };
 
-  const inputFields = [
-    { label: "이메일", type: "email", field: "email", error: errors.email },
-    { label: "닉네임", type: "text", field: "nickname" },
-    {
-      label: "비밀번호",
-      type: show.password ? "text" : "password",
-      field: "password",
-      error: errors.password,
-      showToggle: true,
-      onToggle: () => toggleShowPassword("password"),
-    },
-    {
-      label: "비밀번호 확인",
-      type: show.passwordConfirmation ? "text" : "password",
-      field: "passwordConfirmation",
-      error: errors.passwordConfirmation,
-      showToggle: true,
-      onToggle: () => toggleShowPassword("passwordConfirmation"),
-    },
-  ];
-
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-[343px] sm:w-160 mx-auto mt-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-[343px] sm:w-160 mx-auto mt-6"
+      >
         <div className="relative w-50 sm:w-99 h-[66px] sm:h-33 mx-auto mb-8">
           <Link href="/">
             <Image src="/img/logo.png" alt="logo" fill />
           </Link>
         </div>
 
-        {inputFields.map(
-          ({ label, type, field, error, showToggle, onToggle }, idx) => (
-            <FormInput
-              key={idx}
-              label={label}
-              type={type}
-              value={form[field]}
-              onChange={handleChange(field)}
-              placeholder={`${label}을(를) 입력해주세요`}
-              error={error}
-              showToggle={showToggle}
-              showPassword={undefined}
-              onToggle={onToggle}
-            />
-          )
-        )}
+        <FormField
+          label="이메일"
+          id="email"
+          type="email"
+          placeholder="이메일을 입력해주세요"
+          error={errors.email?.message}
+          register={register("email", {
+            required: "이메일을 입력해주세요.",
+            validate: (value) => validateEmail(value) || "잘못된 이메일입니다.",
+          })}
+        />
+
+        <FormField
+          label="닉네임"
+          id="nickname"
+          type="text"
+          placeholder="닉네임을 입력해주세요"
+          error={errors.nickname?.message}
+          register={register("nickname", {
+            required: "닉네임을 입력해주세요.",
+          })}
+        />
+
+        <FormField
+          label="비밀번호"
+          id="password"
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          error={errors.password?.message}
+          toggleType
+          onToggle={() => toggleShow("password")}
+          show={show.password}
+          register={register("password", {
+            required: "비밀번호를 입력해주세요.",
+            validate: (value) =>
+              validatePassword(value) || "8자 이상 입력해주세요",
+          })}
+        />
+
+        <FormField
+          label="비밀번호 확인"
+          id="passwordConfirmation"
+          type="password"
+          placeholder="비밀번호를 다시 입력해주세요"
+          error={errors.passwordConfirmation?.message}
+          toggleType
+          onToggle={() => toggleShow("passwordConfirmation")}
+          show={show.passwordConfirmation}
+          register={register("passwordConfirmation", {
+            required: "비밀번호를 확인해주세요.",
+            validate: (value) =>
+              validatePasswordMatch(value, watch("password")) ||
+              "비밀번호가 일치하지 않습니다",
+          })}
+        />
 
         <button
           type="submit"
-          disabled={!isFormValid}
-          className={`mt-4 w-full h-14 rounded-[40px] font-semibold text-xl leading-6 text-white ${
-            isFormValid
+          disabled={!isValid}
+          className={`cursor-pointer mt-4 w-full h-14 rounded-[40px] font-semibold text-xl text-white ${
+            isValid
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-gray-400 cursor-not-allowed"
           }`}

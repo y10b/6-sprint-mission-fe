@@ -14,19 +14,21 @@ import DropdownMenu from "@/components/Dropdownmenu";
 const ProductPage = () => {
   const router = useRouter();
   const { id } = useParams();
+
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchProduct = async () => {
       const token = localStorage.getItem("accessToken");
       if (!token) {
         alert("로그인이 필요한 페이지입니다.");
-        return router.push("/signin");
+        router.push("/signin");
+        return;
       }
-
-      if (!id) return;
 
       try {
         const data = await getProductById(id);
@@ -55,38 +57,29 @@ const ProductPage = () => {
     ownerNickname,
     updatedAt,
     favoriteCount,
+    isFavorite,
   } = product;
+
+  const handleLikeToggle = (id, count) => {
+    setProduct((prev) => ({ ...prev, favoriteCount: count }));
+  };
 
   return (
     <div className="w-full max-w-4xl p-4 mt-6 mx-auto">
-      {/* 이미지 + 상품 정보 */}
       <div className="sm:flex sm:gap-8">
-        {/* 이미지 영역 */}
         <div className="sm:w-1/2">
-          {images.length > 0 ? (
-            images.map((img, idx) => (
-              <div key={idx} className="relative h-[343px] sm:h-[400px] mb-4">
-                <Image
-                  src={img}
-                  alt={name}
-                  fill
-                  className="rounded-xl object-cover"
-                />
-              </div>
-            ))
-          ) : (
-            <div className="relative h-[343px] sm:h-[400px] mb-4">
+          {(images.length ? images : ["/img/making.png"]).map((img, idx) => (
+            <div key={idx} className="relative h-[343px] sm:h-[400px] mb-4">
               <Image
-                src="/img/making.png"
-                alt="no-image"
+                src={img}
+                alt={name}
                 fill
                 className="rounded-xl object-cover"
               />
             </div>
-          )}
+          ))}
         </div>
 
-        {/* 상품 정보 영역 */}
         <div className="sm:w-1/2 mt-4 sm:mt-0">
           <div className="flex justify-between items-start">
             <h1 className="text-base font-semibold text-secondary-800">
@@ -126,7 +119,6 @@ const ProductPage = () => {
             </div>
           </section>
 
-          {/* 유저 정보 + 좋아요 */}
           <div className="mt-10 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="relative w-10 h-10">
@@ -153,13 +145,9 @@ const ProductPage = () => {
                 <LikeToProduct
                   productId={productId}
                   initialCount={favoriteCount}
-                  initialIsFavorite={product.isFavorite}
-                  onLikeToggle={(id, count) =>
-                    setProduct((prev) => ({ ...prev, favoriteCount: count }))
-                  }
-                  onLikeRemove={(id, count) =>
-                    setProduct((prev) => ({ ...prev, favoriteCount: count }))
-                  }
+                  initialIsFavorite={isFavorite}
+                  onLikeToggle={handleLikeToggle}
+                  onLikeRemove={handleLikeToggle}
                 />
               </div>
             </div>
@@ -169,10 +157,8 @@ const ProductPage = () => {
 
       <hr className="border-gray-200 mt-8" />
 
-      {/* 댓글 */}
       <CommentsProducts productId={productId} />
 
-      {/* 돌아가기 버튼 */}
       <div className="mt-16 text-center">
         <Link href="/products">
           <button className="mx-auto flex items-center justify-center gap-2 w-[280px] px-12 py-3 bg-primary-100 text-lg text-gray-100 font-semibold rounded-full hover:bg-primary-300">

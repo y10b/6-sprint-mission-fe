@@ -1,84 +1,90 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login as loginApi } from "@/features/auth/services/authApi";
-import FormInput from "@/components/FormInput";
-import SnsSign from "@/components/SnsSign";
 import { validateEmail, validatePassword } from "@/utils/authValidation";
+import Image from "next/image";
+import Link from "next/link";
+import SnsSign from "@/components/SnsSign";
+import { useState } from "react";
+import FormField from "@/components/Auth/AuthField"; // 새로 만든 컴포넌트
 
 export default function Signin() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const { login } = useAuth();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter();
-  const { login } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    setError,
+  } = useForm({
+    mode: "onChange",
+  });
 
-  const isFormValid = email && password && !errors.email && !errors.password;
-
-  useEffect(() => {
-    setErrors({
-      email: email && !validateEmail(email) ? "잘못된 이메일 형식입니다." : "",
-      password:
-        password && !validatePassword(password) ? "8자 이상 입력해주세요." : "",
-    });
-  }, [email, password]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
-
+  const onSubmit = async (data) => {
     try {
-      const result = await loginApi({ email, password });
+      const result = await loginApi(data);
       await login(result);
       router.replace("/products");
     } catch (err) {
-      setErrors((prev) => ({ ...prev, email: err.message || "로그인 실패" }));
+      setError("email", {
+        type: "manual",
+        message: err.message || "로그인 실패",
+      });
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="mx-auto sm:w-[640px] w-[343px] mt-20"
     >
-      <div className="relative w-[200px] h-[66px] mx-auto mb-8">
+      <div className="relative w-50 sm:w-99 h-[66px] sm:h-33 mx-auto mb-8">
         <Link href="/">
           <Image src="/img/logo.png" alt="logo" fill />
         </Link>
       </div>
 
-      <FormInput
+      {/* 이메일 입력 */}
+      <FormField
+        id="email"
         label="이메일"
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
         placeholder="이메일을 입력해주세요"
-        error={errors.email}
+        error={errors.email?.message}
+        register={register("email", {
+          required: "이메일을 입력해주세요.",
+          validate: (value) =>
+            validateEmail(value) || "잘못된 이메일 형식입니다.",
+        })}
       />
 
-      <FormInput
+      {/* 비밀번호 입력 */}
+      <FormField
+        id="password"
         label="비밀번호"
-        type={showPassword ? "text" : "password"}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호를 입력해주세요"
-        showToggle
-        showPassword={showPassword}
+        toggleType
+        show={showPassword}
         onToggle={() => setShowPassword((prev) => !prev)}
-        error={errors.password}
+        error={errors.password?.message}
+        register={register("password", {
+          required: "비밀번호를 입력해주세요.",
+          validate: (value) =>
+            validatePassword(value) || "8자 이상 입력해주세요.",
+        })}
       />
 
+      {/* 로그인 버튼 */}
       <button
         type="submit"
-        disabled={!isFormValid}
-        className={`mt-4 w-full h-14 rounded-[40px] font-semibold text-xl text-white ${
-          isFormValid
+        disabled={!isValid}
+        className={`cursor-pointer mt-4 w-full h-14 rounded-[40px] font-semibold text-xl text-white ${
+          isValid
             ? "bg-blue-500 hover:bg-blue-600"
             : "bg-gray-400 cursor-not-allowed"
         }`}

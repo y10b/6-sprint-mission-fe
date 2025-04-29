@@ -23,12 +23,13 @@ export default function EditProductPage() {
     tags: [],
     images: [],
   });
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
 
-    (async () => {
+    const fetchProduct = async () => {
       try {
         const data = await getProductById(id);
         setProduct({
@@ -43,32 +44,28 @@ export default function EditProductPage() {
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    fetchProduct();
   }, [id]);
 
   const handleChange = (field) => (e) => {
     const value = field === "price" ? Number(e.target.value) : e.target.value;
-
     setProduct((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
-
     if (!files.length) return;
 
     try {
       const uploadedImages = await Promise.all(
-        files.map(async (file) => {
-          const url = await uploadImage(file);
-          return { url };
-        })
+        files.map(async (file) => ({ url: await uploadImage(file) }))
       );
 
-      // 기존 이미지에 새 이미지 추가
       setProduct((prev) => ({
         ...prev,
-        images: [...prev.images, ...uploadedImages].slice(0, 3), // 최대 3개 제한
+        images: [...prev.images, ...uploadedImages].slice(0, 3),
       }));
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
@@ -80,16 +77,12 @@ export default function EditProductPage() {
     setProduct((prev) => {
       const updatedImages = [...prev.images];
       updatedImages.splice(index, 1);
-      return {
-        ...prev,
-        images: updatedImages,
-      };
+      return { ...prev, images: updatedImages };
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await updateProduct(id, product);
       alert("상품이 수정되었습니다!");

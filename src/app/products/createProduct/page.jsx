@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   validateProductName,
@@ -18,19 +18,14 @@ import { createProduct } from "@/features/products/services/productsApi";
 export default function CreateProduct() {
   const router = useRouter();
 
-  // 입력 상태
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
-
-  // 에러 상태
   const [errors, setErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 상태
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 이미지 업로드 핸들러
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -51,73 +46,41 @@ export default function CreateProduct() {
     setErrors((prev) => ({ ...prev, images: "" }));
   };
 
-  // 이미지 삭제 핸들러
   const handleImageDelete = (index) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // 유효성 검사 함수
   const validateForm = () => {
     const newErrors = {};
 
-    if (!validateProductName(name)) {
-      newErrors.name = "상품명은 2자 이상 15자 이하로 입력해 주세요.";
-    }
-
-    if (!validateDescription(description)) {
-      newErrors.description = "설명은 10자 이상 100자 이하로 입력해 주세요.";
-    }
-
-    if (!validatePrice(price)) {
-      newErrors.price = "가격은 0보다 큰 숫자여야 합니다.";
-    }
-
-    if (!validateTags(tags)) {
-      newErrors.tags = "태그를 1개 이상 입력해 주세요.";
-    }
-
-    if (images.length === 0) {
-      newErrors.images = "이미지를 1장 이상 등록해 주세요.";
-    } else if (images.length > 3) {
-      newErrors.images = "최대 3장까지 업로드 가능합니다.";
-    }
-
-    setErrors(newErrors);
-  };
-
-  // errors 변경 시 유효성 상태 업데이트
-  useEffect(() => {
-    setIsFormValid(Object.keys(errors).length === 0);
-  }, [errors]);
-
-  // 제출 핸들러
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    validateForm();
-
-    // setErrors 이후 곧바로 isFormValid를 믿을 수 없으니 검증 반복
-    const newErrors = {};
     if (!validateProductName(name))
       newErrors.name = "상품명은 2자 이상 15자 이하로 입력해 주세요.";
+
     if (!validateDescription(description))
       newErrors.description = "설명은 10자 이상 100자 이하로 입력해 주세요.";
+
     if (!validatePrice(price))
       newErrors.price = "가격은 0보다 큰 숫자여야 합니다.";
+
     if (!validateTags(tags)) newErrors.tags = "태그를 1개 이상 입력해 주세요.";
+
     if (images.length === 0)
       newErrors.images = "이미지를 1장 이상 등록해 주세요.";
     else if (images.length > 3)
       newErrors.images = "최대 3장까지 업로드 가능합니다.";
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      // 이미지 업로드 후 URL 수집
       const uploadedUrls = await Promise.all(
         images.map((img) => uploadImage(img.file))
       );
@@ -137,7 +100,7 @@ export default function CreateProduct() {
       } else {
         alert(`상품 등록 실패: ${result.error}`);
       }
-    } catch (error) {
+    } catch {
       alert("상품 등록 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
