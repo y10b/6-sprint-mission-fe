@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
     // 초기 mount 로깅
     useEffect(() => {
-        console.log("✅ AuthProvider mounted");
+        console.log("✅ auth ");
     }, []);
 
     // 토큰 존재 시 사용자 정보 가져오기

@@ -17,7 +17,7 @@ const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
         const likesCount = response.data.likesCount || 0;
         setCount(likesCount);
       } catch (error) {
-        console.error("좋아요 수를 가져오는 데 오류 발생", error);
+        console.error(error);
       }
     };
 
@@ -43,7 +43,7 @@ const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
         }
       }
     } catch (error) {
-      console.error("좋아요 업데이트 오류", error);
+      console.error(error);
       setIsClicked(!isClicked);
       setCount(count); // 되돌리기
     }

@@ -77,7 +77,6 @@ const CreateArticle = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("게시글 작성 완료:", data);
           router.push("/articles");
         })
         .catch((error) => {

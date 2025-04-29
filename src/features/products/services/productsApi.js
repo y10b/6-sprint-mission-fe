@@ -1,5 +1,3 @@
-// src/api/productsApi.js
-
 const BASE_URL = "https://panda-market-api.vercel.app";
 
 // 유효성 검사 함수
@@ -135,3 +133,36 @@ export async function deleteProduct(productId) {
 
     return await res.json();
 }
+
+//상품 수정
+export const updateProduct = async (productId, updatedData) => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+        console.error('Authorization token is missing. Please log in.');
+        throw new Error("Authorization token missing.");
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/products/${productId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(updatedData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Product update failed', data.message);
+            throw new Error(data.message || "Failed to update product.");
+        }
+
+        console.log('Product updated successfully', data);
+        return data;
+    } catch (error) {
+        console.error('Error updating product', error);
+        throw error;
+    }
+};

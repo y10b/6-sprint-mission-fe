@@ -38,7 +38,6 @@ export default function EditArticlePage() {
       alert("게시글이 수정되었습니다!");
       router.push(`/articles/${id}`); // 수정 후 해당 게시글로 이동
     } catch (err) {
-      console.error("수정 실패:", err);
       alert("수정에 실패했습니다.");
     }
   };

@@ -59,7 +59,6 @@ const DropdownMenu = ({ type, itemId, parentId, baseUrl, onDelete }) => {
         }
         setIsOpen(false);
       } catch (error) {
-        console.error("수정 실패:", error);
         alert(error.message || "수정에 실패했습니다.");
       }
     }

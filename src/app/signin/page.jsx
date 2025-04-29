@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { login as loginApi } from "@/features/auth/services/authApi";
 import FormInput from "@/components/FormInput";
 import SnsSign from "@/components/SnsSign";
-import { validateEmail, validatePassword } from "@/utils/validation";
+import { validateEmail, validatePassword } from "@/utils/authValidation";
 
 export default function Signin() {
   const [email, setEmail] = useState("");

@@ -48,9 +48,7 @@ export async function getCommentsByProductId({ productId, limit = 4, cursor = nu
     }
 
     const data = await res.json();
-    console.log("🚀 댓글 조회 응답 데이터:", data);
 
-    // 여기 수정
     return {
         comments: data.list || [],
         nextCursor: data.nextCursor || null,

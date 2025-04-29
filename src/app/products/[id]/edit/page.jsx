@@ -2,10 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getProductById } from "@/features/products/services/productsApi";
-import axios from "axios";
-
-const BASE_URL = "https://panda-market-api.vercel.app";
+import {
+  getProductById,
+  updateProduct,
+} from "@/features/products/services/productsApi";
+import { uploadImage } from "@/features/images/imageUpload";
+import FormInput from "@/components/FormInput";
+import FormTextarea from "@/components/FormTextarea";
+import TagInput from "@/components/TagInput";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -42,31 +47,55 @@ export default function EditProductPage() {
   }, [id]);
 
   const handleChange = (field) => (e) => {
-    const value =
-      field === "tags"
-        ? e.target.value.split(",").map((tag) => tag.trim())
-        : field === "price"
-        ? Number(e.target.value)
-        : e.target.value;
+    const value = field === "price" ? Number(e.target.value) : e.target.value;
 
     setProduct((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("accessToken");
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+
+    if (!files.length) return;
 
     try {
-      await axios.patch(`${BASE_URL}/products/${id}`, product, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const uploadedImages = await Promise.all(
+        files.map(async (file) => {
+          const url = await uploadImage(file);
+          return { url };
+        })
+      );
+
+      // 기존 이미지에 새 이미지 추가
+      setProduct((prev) => ({
+        ...prev,
+        images: [...prev.images, ...uploadedImages].slice(0, 3), // 최대 3개 제한
+      }));
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      alert("이미지 업로드에 실패했습니다.");
+    }
+  };
+
+  const handleImageDelete = (index) => {
+    setProduct((prev) => {
+      const updatedImages = [...prev.images];
+      updatedImages.splice(index, 1);
+      return {
+        ...prev,
+        images: updatedImages,
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await updateProduct(id, product);
       alert("상품이 수정되었습니다!");
       router.push(`/products/${id}`);
     } catch (err) {
-      console.error("상품 수정 실패:", err);
+      console.error("상품 수정 에러:", err);
       alert("상품 수정에 실패했습니다.");
     }
   };
@@ -86,36 +115,43 @@ export default function EditProductPage() {
           </button>
         </div>
 
-        {[
-          { label: "*상품명", field: "name", type: "text" },
-          { label: "*가격", field: "price", type: "number" },
-          { label: "*설명", field: "description", type: "textarea" },
-          { label: "태그 (쉼표로 구분)", field: "tags", type: "text" },
-        ].map(({ label, field, type }) => (
-          <div key={field} className="mb-4">
-            <label className="text-lg font-bold text-secondary-800">
-              {label}
-            </label>
-            {type === "textarea" ? (
-              <textarea
-                className="w-full h-[282px] resize-none py-4 px-6 my-3 bg-gray-100 rounded-xl text-secondary-400"
-                value={product[field]}
-                onChange={handleChange(field)}
-              />
-            ) : (
-              <input
-                type={type}
-                className="w-full py-4 px-6 my-3 bg-gray-100 rounded-xl text-secondary-400"
-                value={
-                  field === "tags" ? product.tags.join(", ") : product[field]
-                }
-                onChange={handleChange(field)}
-              />
-            )}
-          </div>
-        ))}
+        <ImageUploader
+          images={product.images}
+          handleImageChange={handleImageChange}
+          handleImageDelete={handleImageDelete}
+          error={product.images.length > 3}
+        />
 
-        {/* 이미지 수정은 추후 추가 */}
+        <FormInput
+          label="*상품명"
+          value={product.name}
+          onChange={handleChange("name")}
+          placeholder="상품명을 입력하세요"
+        />
+
+        <FormInput
+          label="*가격"
+          type="number"
+          value={product.price}
+          onChange={handleChange("price")}
+          placeholder="가격을 입력하세요"
+        />
+
+        <FormTextarea
+          label="*설명"
+          value={product.description}
+          onChange={handleChange("description")}
+          placeholder="상품 설명을 입력하세요"
+        />
+
+        <TagInput
+          label="*태그"
+          tags={product.tags}
+          setTags={(newTags) =>
+            setProduct((prev) => ({ ...prev, tags: newTags }))
+          }
+          placeholder="예: 전자제품, 세일, 인기상품"
+        />
       </form>
     </div>
   );

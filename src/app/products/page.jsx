@@ -91,7 +91,7 @@ export default function ProductList() {
                   <LikeToProduct
                     productId={id}
                     initialCount={favoriteCount || 0}
-                    initialIsFavorite={isFavorite || false} // ✅ 추가
+                    initialIsFavorite={isFavorite || false}
                     onFavoriteToggle={() => {}}
                   />
                 </div>

@@ -8,7 +8,7 @@ import {
   validateEmail,
   validatePassword,
   validatePasswordMatch,
-} from "@/utils/validation";
+} from "@/utils/authValidation";
 import Image from "next/image";
 import Link from "next/link";
 import FormInput from "@/components/FormInput";
