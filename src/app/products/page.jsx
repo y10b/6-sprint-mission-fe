@@ -24,7 +24,6 @@ export default function ProductList() {
 
   const products = data?.products || [],
     totalPages = Math.ceil((data?.total || 0) / pageSize);
-  console.log(products);
   const setResponsivePageSize = useCallback(() => {
     const w = window.innerWidth;
     setPageSize(w <= 742 ? 4 : w <= 1198 ? 6 : 10);

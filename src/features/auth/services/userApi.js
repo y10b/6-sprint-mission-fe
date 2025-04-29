@@ -24,7 +24,6 @@ export async function getCurrentUser() {
         }
 
         const userData = await res.json();
-        console.log("[getCurrentUser] 유저 데이터:", userData);
         return userData;
     } catch (error) {
         console.error("[getCurrentUser] 네트워크 에러:", error);

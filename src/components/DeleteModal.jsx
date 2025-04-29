@@ -16,13 +16,13 @@ function DeleteModal({ isOpen, onClose, onConfirm }) {
         <div className="flex justify-center gap-4">
           <button
             onClick={onClose}
-            className="w-22 h-12 rounded-xl px-3 bg-gray-50 border-1 border-red-500 font-semibold text-base leading-[26px] text-red-500"
+            className="cursor-pointer w-22 h-12 rounded-xl px-3 bg-gray-50 border-1 border-red-500 font-semibold text-base leading-[26px] text-red-500"
           >
             취소
           </button>
           <button
             onClick={onConfirm}
-            className="w-22 h-12 rounded-xl px-3 bg-red-500 font-semibold text-base leading-[26px] text-gray-100 "
+            className="cursor-pointer w-22 h-12 rounded-xl px-3 bg-red-500 font-semibold text-base leading-[26px] text-gray-100 "
           >
             네
           </button>

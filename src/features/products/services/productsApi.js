@@ -62,8 +62,6 @@ export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent",
             keyword,
         });
 
-        console.log("Requesting products with params:", params.toString());
-
         const response = await fetch(`${BASE_URL}/products?${params.toString()}`, {
             method: "GET",
             headers: {
@@ -76,8 +74,6 @@ export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent",
         }
 
         const data = await response.json();
-
-        console.log("Response data:", data);
 
         return {
             products: data.list,

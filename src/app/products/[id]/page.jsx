@@ -153,6 +153,7 @@ const ProductPage = () => {
                 <LikeToProduct
                   productId={productId}
                   initialCount={favoriteCount}
+                  initialIsFavorite={product.isFavorite}
                   onLikeToggle={(id, count) =>
                     setProduct((prev) => ({ ...prev, favoriteCount: count }))
                   }
