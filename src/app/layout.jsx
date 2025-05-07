@@ -1,6 +1,8 @@
+import QueryProvider from "@/app/QueryProvider";
 import Footer from "@/components/footer/page";
-import "./globals.css";
 import Header from "@/components/header/page";
+import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "판다마켓",
@@ -11,11 +13,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className="font-pretendard">
-        <Header />
-        <main>
-          {children}
-        </main>
-        <Footer />
+        <QueryProvider>
+          <AuthProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

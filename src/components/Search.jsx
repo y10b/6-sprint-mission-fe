@@ -1,38 +1,52 @@
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import styles from "./css/search.module.css";
 
 /**
  * @param {string} keyword - 현재 입력 값
  * @param {function} setKeyword - 입력값 변경 핸들러
- * @param {string} variant - 스타일 버전 (예: 'default', 'compact')
+ * @param {function} onSearch - 검색 실행 핸들러
+ * @param {string} variant - 스타일 버전 (long, short)
  */
-const Search = ({ keyword, setKeyword, variant = "long" }) => {
-  const handleInputChange = (e) => {
-    if (setKeyword) {
-      setKeyword(e.target.value);
-    } else {
-      console.error("setKeyword 함수가 전달되지 않았습니다.");
+export default function Search({
+  keyword,
+  setKeyword,
+  onSearch,
+  variant = "long",
+}) {
+  const [localKeyword, setLocalKeyword] = useState(keyword);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setKeyword(localKeyword), 300);
+    return () => clearTimeout(handler);
+  }, [localKeyword]);
+
+  const widthClasses = {
+    long: "w-[288px] sm:w-[560px] md:w-[1054px]",
+    short: "w-[288px] sm:w-[242px] md:w-[325px]",
+  };
+
+  const handleChange = (e) => setLocalKeyword(e.target.value);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSearch();
     }
   };
 
-  const inputClass =
-    variant === "short" ? styles.searchInput_short : styles.searchInput_long;
-
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
+    <div className="relative transition-all duration-300">
+      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
       <input
-        className={inputClass}
         type="text"
+        value={localKeyword}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
         placeholder="검색할 상품을 입력해주세요"
-        value={keyword}
-        onChange={handleInputChange}
+        className={`pl-12 pr-4 py-2 h-[44px] rounded-xl bg-gray-100 text-gray-600 placeholder-gray-400 text-sm md:text-base font-normal outline-none font-['Pretendard'] transition-all duration-300 ${widthClasses[variant]}`}
       />
-      <FaSearch className={styles.searchIcon} />
     </div>
   );
-};
-
-export default Search;
+}

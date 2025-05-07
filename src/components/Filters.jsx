@@ -1,27 +1,46 @@
 "use client";
-import React from "react";
-import styles from "./css/filters.module.css"; // CSS 모듈 import
 
-const Filters = ({ orderBy, setOrderBy }) => {
-  // Function to handle select change
-  const handleSelectChange = (e) => {
-    setOrderBy(e.target.value); // Update the orderBy state
-  };
+import { useMemo } from "react";
+import { Listbox } from "@headlessui/react";
+import { FaChevronDown } from "react-icons/fa";
+
+const options = [
+  { value: "recent", label: "최신 순" },
+  { value: "favorite", label: "좋아요 순" },
+];
+
+export default function Filters({ orderBy, setOrderBy }) {
+  const selectedOption = useMemo(
+    () => options.find((option) => option.value === orderBy),
+    [orderBy]
+  );
 
   return (
-    <div>
-      <div>
-        <select
-          className={styles.filtersSelect} // CSS 모듈을 사용한 클래스 적용
-          value={orderBy}
-          onChange={handleSelectChange} // Correct onChange handler
-        >
-          <option value="recent">최신 순</option>
-          <option value="favorite">좋아요 순</option>
-        </select>
-      </div>
+    <div className="w-[130px]">
+      <Listbox value={orderBy} onChange={setOrderBy}>
+        <div className="relative">
+          <Listbox.Button className="relative w-full h-[42px] pl-5 pr-10 text-left text-[16px] leading-[26px] text-gray-700 font-normal font-['Pretendard'] bg-white border border-gray-200 rounded-xl focus:outline-none transition">
+            <span>{selectedOption ? selectedOption.label : "정렬"}</span>
+            <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
+          </Listbox.Button>
+
+          <Listbox.Options className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-10">
+            {options.map(({ value, label }) => (
+              <Listbox.Option
+                key={value}
+                value={value}
+                className={({ active }) =>
+                  `cursor-pointer select-none px-4 py-2 rounded-xl ${
+                    active ? "bg-gray-100" : ""
+                  }`
+                }
+              >
+                {label}
+              </Listbox.Option>
+            ))}
+          </Listbox.Options>
+        </div>
+      </Listbox>
     </div>
   );
-};
-
-export default Filters;
+}

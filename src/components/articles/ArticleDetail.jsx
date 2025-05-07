@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import LikeToProduct from "@/components/LikeToProduct";
-import Dropdown from "@/components/DropDown";
+import Dropdown from "@/components/DropDownProducts";
 import { getProfileImg } from "@/utils/imagePath";
 
 const ArticleDetail = ({ post, onLikeToggle }) => {

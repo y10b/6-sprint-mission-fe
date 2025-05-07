@@ -15,7 +15,7 @@ const HomePage = () => {
               일상의 모든 물건을 <br />
               거래해 보세요
             </p>
-            <Link href="/items">
+            <Link href="/products">
               <button type="button">구경하러 가기</button>
             </Link>
           </div>

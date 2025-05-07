@@ -1,6 +1,6 @@
 "use client";
 
-import Dropdown from "@/components/DropDown";
+import Dropdown from "@/components/DropDownProducts";
 import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
