@@ -5,8 +5,8 @@ import { Listbox } from "@headlessui/react";
 import { FaChevronDown } from "react-icons/fa";
 
 const options = [
-  { value: "recent", label: "최신 순" },
-  { value: "favorite", label: "좋아요 순" },
+  { value: "latest", label: "최신 순" },
+  { value: "likes", label: "좋아요 순" },
 ];
 
 export default function Filters({ orderBy, setOrderBy }) {

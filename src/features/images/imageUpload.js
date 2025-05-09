@@ -1,4 +1,4 @@
-const BASE_URL = "https://panda-market-api.vercel.app";
+const BASE_URL = "http://localhost:5000/api";
 
 export const uploadImage = async (file) => {
     const formData = new FormData();

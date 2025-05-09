@@ -1,6 +1,6 @@
 "use server";
 
-const BASE_URL = "https://panda-market-api.vercel.app";
+const BASE_URL = "http://localhost:5000/api";
 
 export async function signup({ email, nickname, password, passwordConfirmation }) {
     const res = await fetch(`${BASE_URL}/Auth/SignUp`, {

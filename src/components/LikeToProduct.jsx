@@ -40,7 +40,6 @@ export default function LikeToProduct({
     } catch (error) {
       const message = error?.message || "";
 
-      // 중복 찜 처리 메시지 대응 (원하는 메시지로 교체 가능)
       if (message.includes("이미 찜한 상품")) {
         console.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
         try {

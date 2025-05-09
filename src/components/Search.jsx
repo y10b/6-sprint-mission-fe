@@ -17,23 +17,26 @@ export default function Search({
 }) {
   const [localKeyword, setLocalKeyword] = useState(keyword);
 
+  // 입력값 변경시, 300ms 후에 부모 컴포넌트로 전달
   useEffect(() => {
     const handler = setTimeout(() => setKeyword(localKeyword), 300);
     return () => clearTimeout(handler);
   }, [localKeyword]);
 
-  const widthClasses = {
-    long: "w-[288px] sm:w-[560px] md:w-[1054px]",
-    short: "w-[288px] sm:w-[242px] md:w-[325px]",
-  };
-
-  const handleChange = (e) => setLocalKeyword(e.target.value);
-
+  // Enter 키로 검색
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onSearch();
+      onSearch(); // 부모 컴포넌트의 검색 실행 함수 호출
     }
+  };
+
+  // 검색어 변경
+  const handleChange = (e) => setLocalKeyword(e.target.value);
+
+  const widthClasses = {
+    long: "w-[288px] sm:w-[560px] md:w-[1054px]",
+    short: "w-[288px] sm:w-[242px] md:w-[325px]",
   };
 
   return (

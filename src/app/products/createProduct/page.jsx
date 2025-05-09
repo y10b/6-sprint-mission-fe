@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   validateProductName,
@@ -25,6 +25,19 @@ export default function CreateProduct() {
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("로그인이 필요한 페이지입니다.");
+        router.push("/signin");
+        return;
+      }
+    };
+
+    fetchProduct();
+  });
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);

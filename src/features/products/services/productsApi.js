@@ -1,4 +1,4 @@
-const BASE_URL = "https://panda-market-api.vercel.app";
+const BASE_URL = "http://localhost:5000/api";
 
 // 유효성 검사 함수
 const validateProductData = (productData) => {
@@ -28,6 +28,8 @@ export const createProduct = async (productData) => {
             return { success: false, error: "Authorization token missing." };
         }
 
+        console.log("Sending product data:", productData); // 디버깅용 로그
+
         const response = await fetch(`${BASE_URL}/products`, {
             method: 'POST',
             headers: {
@@ -37,20 +39,34 @@ export const createProduct = async (productData) => {
             body: JSON.stringify(productData),
         });
 
-        const data = await response.json();
+        let data;
+        try {
+            data = await response.json();
+        } catch (e) {
+            const text = await response.text();
+            console.error("Failed to parse JSON. Raw response:", text);
+            return {
+                success: false,
+                error: text || "Failed to parse response.",
+            };
+        }
 
         if (response.ok) {
             console.log('Product created successfully', data);
             return { success: true, data };
         } else {
-            console.error('Product creation failed', data.message, data.details);
-            return { success: false, error: data.message || "Failed to create product." };
+            return {
+                success: false,
+                error: data.message || data.error || "Failed to create product.",
+            };
         }
+
     } catch (error) {
         console.error('Error creating product', error);
-        return { success: false, error: error.message };
+        return { success: false, error: error.message || "Unknown error" };
     }
 };
+
 
 // 상품 목록 가져오기
 export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent", keyword = "" }) => {
@@ -58,7 +74,7 @@ export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent",
         const params = new URLSearchParams({
             page: page.toString(),
             pageSize: pageSize.toString(),
-            orderBy,
+            sort: orderBy,
             keyword,
         });
 
