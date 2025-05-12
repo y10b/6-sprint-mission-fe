@@ -10,30 +10,33 @@ import CommentsProducts from "@/components/comments/_product/CommentsProducts";
 import Link from "next/link";
 import { TfiBackLeft } from "react-icons/tfi";
 import DropdownMenu from "@/components/Dropdownmenu";
+import { useAuth } from "@/context/AuthContext"; // ✅ 전역 인증 훅 가져오기
 
 const ProductPage = () => {
   const router = useRouter();
   const { id } = useParams();
 
+  const { user, isInitialized } = useAuth(); // ✅ 전역 상태에서 로그인 여부 확인
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !isInitialized) return;
+
+    // 로그인 안 된 경우
+    if (!user) {
+      alert("로그인이 필요한 페이지입니다.");
+      router.push("/signin");
+      return;
+    }
 
     const fetchProduct = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("로그인이 필요한 페이지입니다.");
-        router.push("/signin");
-        return;
-      }
-
       try {
         const data = await getProductById(id);
         setProduct(data);
-      } catch {
+      } catch (err) {
+        console.error("상품 불러오기 실패:", err);
         setError("상품을 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
@@ -41,43 +44,41 @@ const ProductPage = () => {
     };
 
     fetchProduct();
-  }, [id, router]);
+  }, [id, isInitialized, user, router]);
 
   if (isLoading) return <p>로딩 중...</p>;
   if (error) return <p>{error}</p>;
   if (!product) return <p>상품 정보를 불러올 수 없습니다.</p>;
 
   const {
-    images = [],
+    imageUrl,
     name,
     price,
     description,
     tags = [],
     id: productId,
-    ownerNickname,
+    sellerNickname, // sellerNickname을 받아옴
     updatedAt,
     favoriteCount,
-    isFavorite,
+    isLiked,
   } = product;
 
   const handleLikeToggle = (id, count) => {
-    setProduct((prev) => ({ ...prev, favoriteCount: count }));
+    product.favoriteCount = count;
   };
 
   return (
     <div className="w-full max-w-4xl p-4 mt-6 mx-auto">
       <div className="sm:flex sm:gap-8">
         <div className="sm:w-1/2">
-          {(images.length ? images : ["/img/making.png"]).map((img, idx) => (
-            <div key={idx} className="relative h-[343px] sm:h-[400px] mb-4">
-              <Image
-                src={img}
-                alt={name}
-                fill
-                className="rounded-xl object-cover"
-              />
-            </div>
-          ))}
+          <div className="relative h-[343px] sm:h-[400px] mb-4">
+            <Image
+              src={imageUrl || "/img/making.png"}
+              alt={name}
+              fill
+              className="rounded-xl object-cover"
+            />
+          </div>
         </div>
 
         <div className="sm:w-1/2 mt-4 sm:mt-0">
@@ -130,8 +131,9 @@ const ProductPage = () => {
                 />
               </div>
               <div className="flex flex-col">
+                {/* sellerId 대신 sellerNickname 사용 */}
                 <p className="font-medium text-sm text-secondary-600">
-                  {ownerNickname}
+                  {sellerNickname} {/* 여기에 닉네임을 표시 */}
                 </p>
                 <p className="text-xs text-gray-500">
                   {new Date(updatedAt).toLocaleDateString()}
@@ -145,7 +147,7 @@ const ProductPage = () => {
                 <LikeToProduct
                   productId={productId}
                   initialCount={favoriteCount}
-                  initialIsFavorite={isFavorite}
+                  initialIsFavorite={isLiked}
                   onLikeToggle={handleLikeToggle}
                   onLikeRemove={handleLikeToggle}
                 />

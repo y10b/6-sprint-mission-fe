@@ -33,24 +33,20 @@ function BestProducts() {
         const response = await getProducts({
           page: 1,
           pageSize: 1000,
-          sort: "likes", // 좋아요 수 기준으로 정렬
+          orderBy: "likes",
         });
 
         const { products } = response;
         if (Array.isArray(products)) {
-          // 상품에 대해 좋아요 수 (favoriteCount)와 좋아요 여부 (isLiked) 추가
           const topLiked = products
             .map((product) => ({
               ...product,
-              favoriteCount: product.likes ? product.likes.length : 0, // likes 배열의 길이로 좋아요 수 계산
-              isLiked: product.likes && product.likes.length > 0, // 좋아요가 있으면 true
+              favoriteCount: product.favoriteCount ?? 0, // 백엔드에서 _count.likes로 옴
+              isLiked: product.isLiked ?? false,
             }))
-            .slice(0, 4); // 상위 4개 상품만 표시
+            .slice(0, 4);
 
-          console.log("Top Liked 상품:", topLiked);
-          setBestProducts(topLiked); // 상태 업데이트
-        } else {
-          console.error("상품 데이터가 잘못되었습니다.");
+          setBestProducts(topLiked);
         }
       } catch (error) {
         console.error("베스트 상품을 불러오는 데 실패했습니다.", error);

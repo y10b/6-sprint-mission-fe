@@ -37,9 +37,9 @@ export default function ProductList() {
     return () => window.removeEventListener("resize", setResponsivePageSize);
   }, [setResponsivePageSize]);
 
-  const onSearch = (e) => {
-    e?.preventDefault();
-    setKeyword(searchText);
+  const onSearch = (text) => {
+    console.log("🔍 검색어 적용됨:", text);
+    setKeyword(text);
     setPage(1);
   };
   return (

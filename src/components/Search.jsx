@@ -27,7 +27,8 @@ export default function Search({
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onSearch(); // 부모 컴포넌트의 검색 실행 함수 호출
+      console.log("🔍 검색 실행됨:", localKeyword);
+      onSearch(localKeyword); // 부모 컴포넌트의 검색 실행 함수 호출
     }
   };
 

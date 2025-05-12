@@ -1,5 +1,6 @@
 const BASE_URL = "http://localhost:5000/api";
 
+
 // 유효성 검사 함수
 const validateProductData = (productData) => {
     if (!productData.name || !productData.price || !productData.tags || !productData.images) {
@@ -22,20 +23,12 @@ export const createProduct = async (productData) => {
             return { success: false, error: "Invalid product data." };
         }
 
-        const accessToken = localStorage.getItem('accessToken');
-        if (!accessToken) {
-            console.error('Authorization token is missing. Please log in.');
-            return { success: false, error: "Authorization token missing." };
-        }
-
-        console.log("Sending product data:", productData); // 디버깅용 로그
-
         const response = await fetch(`${BASE_URL}/products`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
             },
+            credentials: "include",
             body: JSON.stringify(productData),
         });
 
@@ -103,15 +96,16 @@ export const getProducts = async ({ page = 1, pageSize = 10, orderBy = "recent",
 
 // 상품 상세 가져오기
 export const getProductById = async (id) => {
-    const token = localStorage.getItem("accessToken");
     try {
         const response = await fetch(`${BASE_URL}/products/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
             },
+            credentials: "include", // 쿠키 인증 등을 사용하는 경우 필요
         });
+
+        console.log("Response status:", response.status);
 
         if (!response.ok) {
             throw new Error("Failed to fetch product details.");
@@ -120,24 +114,19 @@ export const getProductById = async (id) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching product details', error);
+        console.error("Error fetching product details", error);
         throw error;
     }
 };
 
-
 export async function deleteProduct(productId) {
-    const token = localStorage.getItem("accessToken");
-    if (!token) throw new Error("로그인이 필요합니다.");
-
     const res = await fetch(`${BASE_URL}/products/${productId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
     });
-
     if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "상품 삭제 실패");
@@ -148,19 +137,15 @@ export async function deleteProduct(productId) {
 
 //상품 수정
 export const updateProduct = async (productId, updatedData) => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        console.error('Authorization token is missing. Please log in.');
-        throw new Error("Authorization token missing.");
-    }
+
 
     try {
         const response = await fetch(`${BASE_URL}/products/${productId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
             body: JSON.stringify(updatedData),
         });
 

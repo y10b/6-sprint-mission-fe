@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SnsSign from "@/components/SnsSign";
 import { useState } from "react";
-import FormField from "@/components/Auth/AuthField"; // 새로 만든 컴포넌트
+import FormField from "@/components/Auth/AuthField";
 
 export default function Signin() {
   const { login } = useAuth();
@@ -27,13 +27,13 @@ export default function Signin() {
 
   const onSubmit = async (data) => {
     try {
-      const result = await loginApi(data);
-      await login(result);
+      await loginApi(data); // 서버가 쿠키 설정
+      await login(); // 사용자 정보 저장
       router.replace("/products");
     } catch (err) {
       setError("email", {
         type: "manual",
-        message: err.message || "로그인 실패",
+        message: err?.response?.data?.message || err.message || "로그인 실패",
       });
     }
   };

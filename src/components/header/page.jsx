@@ -12,8 +12,8 @@ export default function Header() {
 
   const isActive = (path) => pathname.startsWith(path);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push("/");
   };
 

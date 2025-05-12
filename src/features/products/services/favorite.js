@@ -5,21 +5,15 @@ export async function addFavorite(productId) {
         throw new Error("상품 ID가 없습니다.");
     }
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        throw new Error("로그인이 필요합니다.");
-    }
-
-    const url = `${BASE_URL}/products/${productId}/favorite`;
-
     const res = await fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}), // POST일 때 빈 body 추가
+        credentials: "include",
+        body: JSON.stringify({}),
     });
+
 
     if (!res.ok) {
         const errorData = await res.json();
@@ -34,19 +28,12 @@ export async function removeFavorite(productId) {
         throw new Error("상품 ID가 없습니다.");
     }
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        throw new Error("로그인이 필요합니다.");
-    }
-
-    const url = `${BASE_URL}/products/${productId}/favorite`;
-
     const res = await fetch(url, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
     });
 
     if (!res.ok) {

@@ -110,7 +110,7 @@ export default function CommentsProducts({ productId }) {
               <div className="flex items-center gap-3">
                 <div className="relative w-8 h-8">
                   <Image
-                    src={comment.writer.image || "/img/ic_profile.png"}
+                    src={comment.user?.image || "/img/ic_profile.png"}
                     alt="작성자 프로필"
                     fill
                     className="rounded-full"
@@ -118,7 +118,7 @@ export default function CommentsProducts({ productId }) {
                 </div>
                 <div>
                   <p className="text-xs text-secondary-600">
-                    {comment.writer.nickname}
+                    {comment.user?.nickname || "알 수 없음"}
                   </p>
                   <p className="text-xs text-gray-500">
                     {formatTimeAgoOrDate(comment.updatedAt)}

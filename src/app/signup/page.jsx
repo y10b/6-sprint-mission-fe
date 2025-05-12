@@ -41,8 +41,8 @@ export default function Signup() {
 
   const onSubmit = async (data) => {
     try {
-      const result = await signup(data);
-      await login(result);
+      await signup(data); // 서버가 쿠키로 토큰 설정
+      await login(); // 사용자 정보만 가져와서 저장
       router.replace("/products");
     } catch (err) {
       const errorMessage =

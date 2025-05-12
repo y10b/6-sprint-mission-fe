@@ -1,6 +1,6 @@
 export function getImageUrl(imagePath) {
     const BASE_URL = "http://localhost:5000";
-    const DEFAULT_IMAGE = "/default-image.jpg"; // public 폴더 내 기본 이미지
+    const DEFAULT_IMAGE = "/img/making.png"; // public 폴더 내 기본 이미지
 
     if (!imagePath) return DEFAULT_IMAGE;
 
