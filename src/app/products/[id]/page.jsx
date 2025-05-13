@@ -90,21 +90,34 @@ const ProductPage = () => {
         <div className="sm:w-1/2">
           <div className="relative h-[343px] sm:h-[400px] mb-4">
             {images.length > 0 ? (
-              <Slider {...sliderSettings} className="h-full">
-                {images.map((src, idx) => (
-                  <div
-                    key={idx}
-                    className="relative h-[343px] sm:h-[400px] rounded-xl overflow-hidden"
-                  >
-                    <Image
-                      src={src}
-                      alt={`상품 이미지 ${idx + 1}`}
-                      fill
-                      className="object-cover rounded-xl"
-                    />
-                  </div>
-                ))}
-              </Slider>
+              images.length === 1 ? (
+                // 이미지가 하나일 경우 그냥 Image 컴포넌트로 렌더링
+                <div className="relative h-[343px] sm:h-[400px] rounded-xl overflow-hidden">
+                  <Image
+                    src={images[0]}
+                    alt="상품 이미지"
+                    fill
+                    className="object-cover rounded-xl"
+                  />
+                </div>
+              ) : (
+                // 이미지가 여러 개일 경우 슬라이드 렌더링
+                <Slider {...sliderSettings} className="h-full">
+                  {images.map((src, idx) => (
+                    <div
+                      key={idx}
+                      className="relative h-[343px] sm:h-[400px] rounded-xl overflow-hidden"
+                    >
+                      <Image
+                        src={src}
+                        alt={`상품 이미지 ${idx + 1}`}
+                        fill
+                        className="object-cover rounded-xl"
+                      />
+                    </div>
+                  ))}
+                </Slider>
+              )
             ) : (
               <Image
                 src="/img/making.png"
