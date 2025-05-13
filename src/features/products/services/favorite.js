@@ -4,7 +4,7 @@ export async function addFavorite(productId) {
     if (!productId) {
         throw new Error("상품 ID가 없습니다.");
     }
-
+    const url = `${BASE_URL}/products/${productId}/like`;
     const res = await fetch(url, {
         method: "POST",
         headers: {

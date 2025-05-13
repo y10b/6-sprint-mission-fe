@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import {
   addFavorite,
   removeFavorite,
-} from "@/features/products/services/favorite"; // 경로는 네 프로젝트에 맞게 수정
+} from "@/features/products/services/favorite";
 
 export default function LikeToProduct({
   productId,

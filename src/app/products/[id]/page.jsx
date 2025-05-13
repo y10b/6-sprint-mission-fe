@@ -10,13 +10,13 @@ import CommentsProducts from "@/components/comments/_product/CommentsProducts";
 import Link from "next/link";
 import { TfiBackLeft } from "react-icons/tfi";
 import DropdownMenu from "@/components/Dropdownmenu";
-import { useAuth } from "@/context/AuthContext"; // ✅ 전역 인증 훅 가져오기
+import { useAuth } from "@/context/AuthContext";
 
 const ProductPage = () => {
   const router = useRouter();
   const { id } = useParams();
 
-  const { user, isInitialized } = useAuth(); // ✅ 전역 상태에서 로그인 여부 확인
+  const { user, isInitialized } = useAuth();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,8 +33,8 @@ const ProductPage = () => {
 
     const fetchProduct = async () => {
       try {
-        const data = await getProductById(id);
-        setProduct(data);
+        const data = await getProductById(id); // 서버에서 데이터 가져옴
+        setProduct(data); // data에는 isLiked 정보도 포함되어 있어야 함
       } catch (err) {
         console.error("상품 불러오기 실패:", err);
         setError("상품을 불러오는 데 실패했습니다.");
@@ -60,11 +60,15 @@ const ProductPage = () => {
     sellerNickname, // sellerNickname을 받아옴
     updatedAt,
     favoriteCount,
-    isLiked,
+    isLiked, // 서버에서 받아온 isLiked 상태
   } = product;
 
   const handleLikeToggle = (id, count) => {
-    product.favoriteCount = count;
+    setProduct((prev) => ({
+      ...prev,
+      favoriteCount: count,
+      isLiked: !prev.isLiked,
+    }));
   };
 
   return (
@@ -147,7 +151,7 @@ const ProductPage = () => {
                 <LikeToProduct
                   productId={productId}
                   initialCount={favoriteCount}
-                  initialIsFavorite={isLiked}
+                  initialIsFavorite={isLiked} // 서버에서 받아온 isLiked 상태를 사용
                   onLikeToggle={handleLikeToggle}
                   onLikeRemove={handleLikeToggle}
                 />
