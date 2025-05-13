@@ -3,8 +3,8 @@ const BASE_URL = "http://localhost:5000/api";
 
 // 유효성 검사 함수
 const validateProductData = (productData) => {
-    if (!productData.name || !productData.price || !productData.tags || !productData.images) {
-        console.error('Missing required fields: name, price, tags, and images are required.');
+    if (!productData.name || !productData.price || !productData.tags || !productData.imageUrl) {
+        console.error('Missing required fields: name, price, tags, and imageUrl are required.');
         return false;
     }
 
@@ -119,6 +119,7 @@ export const getProductById = async (id) => {
     }
 };
 
+// 상품 삭제하기
 export async function deleteProduct(productId) {
     const res = await fetch(`${BASE_URL}/products/${productId}`, {
         method: "DELETE",
@@ -127,12 +128,30 @@ export async function deleteProduct(productId) {
         },
         credentials: "include",
     });
+
     if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "상품 삭제 실패");
+        let errorMessage = "상품 삭제 실패";
+
+        // 응답이 JSON 형식이 아닐 수 있으므로 응답을 먼저 확인
+        try {
+            const errorData = await res.json();
+            errorMessage = errorData.message || "상품 삭제 실패";
+        } catch (e) {
+            const errorText = await res.text(); // 응답이 JSON이 아니면 텍스트로 파싱
+            errorMessage = errorText || "상품 삭제 실패 (응답 형식 오류)";
+        }
+
+        throw new Error(errorMessage);
     }
 
-    return await res.json();
+    // 응답이 비어있을 수 있으므로 확인 후 처리
+    try {
+        const data = await res.json();
+        return data;
+    } catch (e) {
+        // 빈 응답일 경우 빈 객체를 반환하거나 처리
+        return {};
+    }
 }
 
 //상품 수정
@@ -145,7 +164,7 @@ export const updateProduct = async (productId, updatedData) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include",
+            credentials: "include", // 💡 쿠키 포함!
             body: JSON.stringify(updatedData),
         });
 

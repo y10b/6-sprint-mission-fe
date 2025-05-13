@@ -21,9 +21,10 @@ export default function EditProductPage() {
     description: "",
     price: 0,
     tags: [],
-    images: [],
+    imageUrl: "", // images 대신 imageUrl로 수정
   });
 
+  const [displayImages, setDisplayImages] = useState([]); // Display images as array
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,12 +34,17 @@ export default function EditProductPage() {
       try {
         const data = await getProductById(id);
         setProduct({
-          name: data.name,
-          description: data.description,
-          price: data.price,
-          tags: data.tags,
-          images: data.images,
+          name: data.name || "",
+          description: data.description || "",
+          price: data.price || 0,
+          tags: data.tags || [],
+          imageUrl: data.imageUrl || "",
         });
+
+        // imageUrl이 있으면 display용 이미지 배열에 추가
+        if (data.imageUrl) {
+          setDisplayImages([{ url: data.imageUrl }]); // Put the image into display array
+        }
       } catch (err) {
         console.error("상품 불러오기 실패:", err);
       } finally {
@@ -59,26 +65,25 @@ export default function EditProductPage() {
     if (!files.length) return;
 
     try {
-      const uploadedImages = await Promise.all(
-        files.map(async (file) => ({ url: await uploadImage(file) }))
-      );
+      // 첫 번째 파일만 처리 (단일 이미지)
+      const uploadedUrl = await uploadImage(files[0]);
 
       setProduct((prev) => ({
         ...prev,
-        images: [...prev.images, ...uploadedImages].slice(0, 3),
+        imageUrl: uploadedUrl,
       }));
+
+      // 표시용 이미지 배열 업데이트
+      setDisplayImages([{ url: uploadedUrl }]); // Update display array with new image
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
       alert("이미지 업로드에 실패했습니다.");
     }
   };
 
-  const handleImageDelete = (index) => {
-    setProduct((prev) => {
-      const updatedImages = [...prev.images];
-      updatedImages.splice(index, 1);
-      return { ...prev, images: updatedImages };
-    });
+  const handleImageDelete = () => {
+    setProduct((prev) => ({ ...prev, imageUrl: "" }));
+    setDisplayImages([]); // Remove all displayed images
   };
 
   const handleSubmit = async (e) => {
@@ -109,10 +114,10 @@ export default function EditProductPage() {
         </div>
 
         <ImageUploader
-          images={product.images}
+          image={displayImages[0]} // 배열의 첫 번째 이미지를 단일 객체로 전달
           handleImageChange={handleImageChange}
           handleImageDelete={handleImageDelete}
-          error={product.images.length > 3}
+          error={false}
         />
 
         <FormInput
@@ -139,7 +144,7 @@ export default function EditProductPage() {
 
         <TagInput
           label="*태그"
-          tags={product.tags}
+          tags={product.tags || []}
           setTags={(newTags) =>
             setProduct((prev) => ({ ...prev, tags: newTags }))
           }

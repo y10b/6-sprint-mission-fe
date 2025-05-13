@@ -1,23 +1,15 @@
 const BASE_URL = "http://localhost:5000/api";
 
-export const uploadImage = async (file) => {
+// 이미지 업로드
+export const uploadImage = async (selectedFile) => {
     const formData = new FormData();
-    formData.append("image", file);
-
-    // 로컬스토리지에서 accessToken을 가져옴
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (!accessToken) {
-        throw new Error("Authorization token is missing");
-    }
+    formData.append("image", selectedFile);
 
     try {
-        const response = await fetch(`${BASE_URL}/images/upload`, {
+        const response = await fetch(`${BASE_URL}/upload`, {
             method: "POST",
             body: formData,
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-            },
+            credentials: "include",
         });
 
         if (!response.ok) {
@@ -25,7 +17,10 @@ export const uploadImage = async (file) => {
         }
 
         const data = await response.json();
-        return data.url; // 업로드된 이미지 URL 반환
+
+        console.log("✅ 업로드 응답 데이터:", data); // ✅ 이거 꼭 추가!
+
+        return data.imageUrl;
     } catch (error) {
         console.error("이미지 업로드 중 오류:", error);
         throw error;

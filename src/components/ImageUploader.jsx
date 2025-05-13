@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { TiDelete } from "react-icons/ti";
 
 export default function ImageUploader({
-  images,
+  image,
   handleImageChange,
   handleImageDelete,
   error,
@@ -18,7 +18,7 @@ export default function ImageUploader({
       {/* 슬라이더 스타일을 위한 가로 스크롤 컨테이너 */}
       <div className="flex gap-4 overflow-x-auto py-2 scroll-snap-x scroll-snap-mandatory scrollbar-hide">
         {/* 파일 업로드 버튼 */}
-        {images.length < 3 && (
+        {!image && (
           <label
             htmlFor="file-upload"
             className="flex flex-col items-center justify-center flex-shrink-0 w-40 h-40 rounded-xl cursor-pointer bg-secondary-100 hover:bg-gray-300 scroll-snap-start"
@@ -32,7 +32,6 @@ export default function ImageUploader({
             <input
               id="file-upload"
               type="file"
-              multiple
               accept="image/*"
               className="hidden"
               onChange={handleImageChange}
@@ -41,32 +40,29 @@ export default function ImageUploader({
         )}
 
         {/* 이미지 프리뷰 */}
-        {images.map((img, idx) => (
-          <div
-            key={idx}
-            className="relative flex-shrink-0 w-40 h-40 scroll-snap-start"
-          >
+        {image && (
+          <div className="relative flex-shrink-0 w-40 h-40 scroll-snap-start">
             <Image
-              src={img.url}
-              alt={`preview-${idx}`}
+              src={image.url}
+              alt="preview"
               fill
               className="object-cover rounded-xl"
               sizes="160px"
             />
             <button
               type="button"
-              onClick={() => handleImageDelete(idx)}
+              onClick={handleImageDelete}
               className="absolute top-2.5 right-2.5 cursor-pointer"
             >
               <TiDelete className="text-2xl text-gray-400" />
             </button>
           </div>
-        ))}
+        )}
       </div>
 
       {error && (
         <p className="mt-4 text-red-500 font-normal text-base leading-[26px]">
-          *이미지 등록은 최대 3개까지 가능합니다.
+          *이미지는 1장만 등록 가능합니다.
         </p>
       )}
     </div>

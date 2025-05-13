@@ -14,6 +14,7 @@ import ImageUploader from "@/components/ImageUploader";
 import TagInput from "@/components/TagInput";
 import { uploadImage } from "@/features/images/imageUpload";
 import { createProduct } from "@/features/products/services/productsApi";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CreateProduct() {
   const router = useRouter();
@@ -22,45 +23,34 @@ export default function CreateProduct() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState([]);
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user, isInitialized } = useAuth();
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("로그인이 필요한 페이지입니다.");
-        router.push("/signin");
-        return;
-      }
-    };
-
-    fetchProduct();
-  });
+    if (!isInitialized) return;
+    if (!user) {
+      alert("로그인이 필요한 페이지입니다.");
+      router.push("/signin");
+    }
+  }, [isInitialized, user, router]);
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (images.length + files.length > 3) {
-      setErrors((prev) => ({
-        ...prev,
-        images: "최대 3장까지 업로드 가능합니다.",
-      }));
-      return;
-    }
-
-    const newImages = files.map((file) => ({
+    const imageObject = {
       file,
       url: URL.createObjectURL(file),
-    }));
+    };
 
-    setImages((prev) => [...prev, ...newImages]);
+    setImage(imageObject);
     setErrors((prev) => ({ ...prev, images: "" }));
   };
 
-  const handleImageDelete = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const handleImageDelete = () => {
+    setImage(null);
   };
 
   const validateForm = () => {
@@ -77,10 +67,7 @@ export default function CreateProduct() {
 
     if (!validateTags(tags)) newErrors.tags = "태그를 1개 이상 입력해 주세요.";
 
-    if (images.length === 0)
-      newErrors.images = "이미지를 1장 이상 등록해 주세요.";
-    else if (images.length > 3)
-      newErrors.images = "최대 3장까지 업로드 가능합니다.";
+    if (!image) newErrors.images = "이미지를 1장 등록해 주세요.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,24 +75,23 @@ export default function CreateProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      const uploadedUrls = await Promise.all(
-        images.map((img) => uploadImage(img.file))
-      );
+      // ✅ 여기에서 imageUrl 꺼내기
+      const imageUrl = await uploadImage(image.file);
 
       const productData = {
         name,
         description,
         price: Number(price),
         tags,
-        images: uploadedUrls,
+        imageUrl, // ✅ 올바른 키 사용
       };
 
+      console.log("등록 시 보낼 데이터:", productData);
       const result = await createProduct(productData);
 
       if (result.success) {
@@ -113,7 +99,8 @@ export default function CreateProduct() {
       } else {
         alert(`상품 등록 실패: ${result.error}`);
       }
-    } catch {
+    } catch (error) {
+      console.error("상품 등록 에러:", error);
       alert("상품 등록 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
@@ -139,7 +126,7 @@ export default function CreateProduct() {
         </div>
 
         <ImageUploader
-          images={images}
+          image={image}
           handleImageChange={handleImageChange}
           handleImageDelete={handleImageDelete}
           error={errors.images}
