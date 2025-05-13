@@ -23,7 +23,7 @@ export default function CreateProduct() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [tags, setTags] = useState([]);
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]); // 배열로 변경
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, isInitialized } = useAuth();
@@ -38,19 +38,19 @@ export default function CreateProduct() {
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || images.length >= 3) return; // 최대 3개 제한
 
     const imageObject = {
       file,
       url: URL.createObjectURL(file),
     };
 
-    setImage(imageObject);
+    setImages((prevImages) => [...prevImages, imageObject]); // 이미지 추가
     setErrors((prev) => ({ ...prev, images: "" }));
   };
 
-  const handleImageDelete = () => {
-    setImage(null);
+  const handleImageDelete = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index)); // 해당 이미지 삭제
   };
 
   const validateForm = () => {
@@ -67,7 +67,10 @@ export default function CreateProduct() {
 
     if (!validateTags(tags)) newErrors.tags = "태그를 1개 이상 입력해 주세요.";
 
-    if (!image) newErrors.images = "이미지를 1장 등록해 주세요.";
+    if (images.length === 0)
+      newErrors.images = "이미지를 1장 이상 등록해 주세요."; // 최소 1장
+    if (images.length > 3)
+      newErrors.images = "이미지는 최대 3장까지 등록 가능합니다."; // 최대 3장 제한
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,15 +83,17 @@ export default function CreateProduct() {
     setIsSubmitting(true);
 
     try {
-      // ✅ 여기에서 imageUrl 꺼내기
-      const imageUrl = await uploadImage(image.file);
+      // ✅ 여기에서 imageUrls 꺼내기
+      const imageUrls = await Promise.all(
+        images.map((image) => uploadImage(image.file))
+      );
 
       const productData = {
         name,
         description,
         price: Number(price),
         tags,
-        imageUrl, // ✅ 올바른 키 사용
+        imageUrls, // ✅ 올바른 키 사용
       };
 
       console.log("등록 시 보낼 데이터:", productData);
@@ -126,7 +131,7 @@ export default function CreateProduct() {
         </div>
 
         <ImageUploader
-          image={image}
+          images={images}
           handleImageChange={handleImageChange}
           handleImageDelete={handleImageDelete}
           error={errors.images}

@@ -73,37 +73,35 @@ export default function ProductList() {
       {isLoading && <p>로딩 중...</p>}
 
       <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {products.map(
-          ({ id, name, price, imageUrl, favoriteCount, isLiked }) => (
-            <li key={id}>
-              <Link href={`/products/${id}`}>
-                <div className="relative w-full h-48 sm:h-56 md:h-64">
-                  <Image
-                    src={getImageUrl(imageUrl) || "/img/making.png"}
-                    alt={name}
-                    fill
-                    className="rounded-2xl object-cover"
-                  />
-                </div>
+        {products.map(({ id, name, price, images, favoriteCount, isLiked }) => (
+          <li key={id}>
+            <Link href={`/products/${id}`}>
+              <div className="relative w-full h-48 sm:h-56 md:h-64">
+                <Image
+                  src={getImageUrl(images?.[0]) || "/img/making.png"}
+                  alt={name}
+                  fill
+                  className="rounded-2xl object-cover"
+                />
+              </div>
 
-                <div className="mt-3">
-                  <h3 className="text-sm font-medium leading-6 text-secondary-800">
-                    {name}
-                  </h3>
-                  <p className="text-base font-bold leading-[26px] text-secondary-800">
-                    {formatNumber(price)}원
-                  </p>
-                  <LikeToProduct
-                    productId={id}
-                    initialCount={favoriteCount || 0} // 수정
-                    initialIsFavorite={isLiked}
-                    onFavoriteToggle={() => {}}
-                  />
-                </div>
-              </Link>
-            </li>
-          )
-        )}
+              <div className="mt-3">
+                <h3 className="text-sm font-medium leading-6 text-secondary-800">
+                  {name}
+                </h3>
+                <p className="text-base font-bold leading-[26px] text-secondary-800">
+                  {formatNumber(price)}원
+                </p>
+                <LikeToProduct
+                  productId={id}
+                  initialCount={favoriteCount || 0}
+                  initialIsFavorite={isLiked}
+                  onFavoriteToggle={() => {}}
+                />
+              </div>
+            </Link>
+          </li>
+        ))}
       </ul>
 
       {isFetching && (

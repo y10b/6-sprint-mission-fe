@@ -61,12 +61,12 @@ function BestProducts() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px]">
         {bestProducts
           .slice(0, visibleCount)
-          .map(({ id, imageUrl, name, price, favoriteCount, isLiked }) => (
+          .map(({ id, images, name, price, favoriteCount, isLiked }) => (
             <li key={id}>
               <Link href={`/products/${id}`}>
                 <div className="relative w-full h-[343px] md:h-[282px] mb-2 rounded-[19.46px] overflow-hidden cursor-pointer">
                   <Image
-                    src={getImageUrl(imageUrl)}
+                    src={getImageUrl(images?.[0])}
                     alt={name}
                     fill
                     className="object-cover"

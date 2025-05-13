@@ -3,13 +3,18 @@ const BASE_URL = "http://localhost:5000/api";
 
 // 유효성 검사 함수
 const validateProductData = (productData) => {
-    if (!productData.name || !productData.price || !productData.tags || !productData.imageUrl) {
-        console.error('Missing required fields: name, price, tags, and imageUrl are required.');
+    if (!productData.name || !productData.price || !productData.tags || !productData.imageUrls || productData.imageUrls.length === 0) {
+        console.error('Missing required fields: name, price, tags, and at least one imageUrl are required.');
         return false;
     }
 
     if (isNaN(productData.price)) {
         console.error('Price must be a valid number.');
+        return false;
+    }
+
+    if (productData.imageUrls.length > 3) {
+        console.error('A maximum of 3 images can be uploaded.');
         return false;
     }
 

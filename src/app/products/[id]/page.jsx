@@ -12,6 +12,10 @@ import { TfiBackLeft } from "react-icons/tfi";
 import DropdownMenu from "@/components/Dropdownmenu";
 import { useAuth } from "@/context/AuthContext";
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const ProductPage = () => {
   const router = useRouter();
   const { id } = useParams();
@@ -24,7 +28,6 @@ const ProductPage = () => {
   useEffect(() => {
     if (!id || !isInitialized) return;
 
-    // 로그인 안 된 경우
     if (!user) {
       alert("로그인이 필요한 페이지입니다.");
       router.push("/signin");
@@ -33,8 +36,8 @@ const ProductPage = () => {
 
     const fetchProduct = async () => {
       try {
-        const data = await getProductById(id); // 서버에서 데이터 가져옴
-        setProduct(data); // data에는 isLiked 정보도 포함되어 있어야 함
+        const data = await getProductById(id);
+        setProduct(data);
       } catch (err) {
         console.error("상품 불러오기 실패:", err);
         setError("상품을 불러오는 데 실패했습니다.");
@@ -51,16 +54,16 @@ const ProductPage = () => {
   if (!product) return <p>상품 정보를 불러올 수 없습니다.</p>;
 
   const {
-    imageUrl,
     name,
     price,
     description,
     tags = [],
     id: productId,
-    sellerNickname, // sellerNickname을 받아옴
+    sellerNickname,
     updatedAt,
     favoriteCount,
-    isLiked, // 서버에서 받아온 isLiked 상태
+    isLiked,
+    images = [],
   } = product;
 
   const handleLikeToggle = (id, count) => {
@@ -71,17 +74,45 @@ const ProductPage = () => {
     }));
   };
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    pauseOnHover: true,
+  };
+
   return (
     <div className="w-full max-w-4xl p-4 mt-6 mx-auto">
       <div className="sm:flex sm:gap-8">
         <div className="sm:w-1/2">
           <div className="relative h-[343px] sm:h-[400px] mb-4">
-            <Image
-              src={imageUrl || "/img/making.png"}
-              alt={name}
-              fill
-              className="rounded-xl object-cover"
-            />
+            {images.length > 0 ? (
+              <Slider {...sliderSettings} className="h-full">
+                {images.map((src, idx) => (
+                  <div
+                    key={idx}
+                    className="relative h-[343px] sm:h-[400px] rounded-xl overflow-hidden"
+                  >
+                    <Image
+                      src={src}
+                      alt={`상품 이미지 ${idx + 1}`}
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <Image
+                src="/img/making.png"
+                alt="기본 이미지"
+                fill
+                className="rounded-xl object-cover"
+              />
+            )}
           </div>
         </div>
 
@@ -135,9 +166,8 @@ const ProductPage = () => {
                 />
               </div>
               <div className="flex flex-col">
-                {/* sellerId 대신 sellerNickname 사용 */}
                 <p className="font-medium text-sm text-secondary-600">
-                  {sellerNickname} {/* 여기에 닉네임을 표시 */}
+                  {sellerNickname}
                 </p>
                 <p className="text-xs text-gray-500">
                   {new Date(updatedAt).toLocaleDateString()}
@@ -151,7 +181,7 @@ const ProductPage = () => {
                 <LikeToProduct
                   productId={productId}
                   initialCount={favoriteCount}
-                  initialIsFavorite={isLiked} // 서버에서 받아온 isLiked 상태를 사용
+                  initialIsFavorite={isLiked}
                   onLikeToggle={handleLikeToggle}
                   onLikeRemove={handleLikeToggle}
                 />
