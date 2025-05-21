@@ -1,18 +1,16 @@
-const BASE_URL = "https://panda-market-api.vercel.app";
+const BASE_URL = "http://localhost:5000/api";
 
 export async function postProductComment(productId, content) {
     if (!productId) {
         throw new Error("상품 ID가 없습니다.");
     }
 
-    const token = localStorage.getItem("accessToken");
-
     const res = await fetch(`${BASE_URL}/products/${productId}/comments`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({ content }),
     });
 
@@ -51,21 +49,18 @@ export async function getCommentsByProductId({ productId, limit = 4, cursor = nu
 
     return {
         comments: data.list || [],
-        nextCursor: data.nextCursor || null,
+        nextCursor: data.nextCursor || null,  // nextCursor 추가
     };
 }
 
-
 export async function updateComment(commentId, content) {
-    const token = localStorage.getItem("accessToken");
-    if (!token) throw new Error("로그인이 필요합니다.");
 
     const res = await fetch(`${BASE_URL}/comments/${commentId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({ content }),
     });
 
@@ -78,14 +73,10 @@ export async function updateComment(commentId, content) {
 }
 
 export async function deleteComment(commentId) {
-    const token = localStorage.getItem("accessToken");
-    if (!token) throw new Error("로그인이 필요합니다.");
 
     const res = await fetch(`${BASE_URL}/comments/${commentId}`, {
         method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
     });
 
     if (!res.ok) {

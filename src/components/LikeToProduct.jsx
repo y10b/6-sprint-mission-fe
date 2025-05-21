@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import {
   addFavorite,
   removeFavorite,
-} from "@/features/products/services/favorite"; // 경로는 네 프로젝트에 맞게 수정
+} from "@/features/products/services/favorite";
 
 export default function LikeToProduct({
   productId,
@@ -40,7 +40,6 @@ export default function LikeToProduct({
     } catch (error) {
       const message = error?.message || "";
 
-      // 중복 찜 처리 메시지 대응 (원하는 메시지로 교체 가능)
       if (message.includes("이미 찜한 상품")) {
         console.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
         try {

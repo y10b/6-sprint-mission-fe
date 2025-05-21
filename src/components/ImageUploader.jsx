@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { TiDelete } from "react-icons/ti";
 
 export default function ImageUploader({
-  images,
+  images = [],
   handleImageChange,
   handleImageDelete,
   error,
@@ -32,7 +32,6 @@ export default function ImageUploader({
             <input
               id="file-upload"
               type="file"
-              multiple
               accept="image/*"
               className="hidden"
               onChange={handleImageChange}
@@ -41,21 +40,21 @@ export default function ImageUploader({
         )}
 
         {/* 이미지 프리뷰 */}
-        {images.map((img, idx) => (
+        {images.map((image, index) => (
           <div
-            key={idx}
+            key={index}
             className="relative flex-shrink-0 w-40 h-40 scroll-snap-start"
           >
             <Image
-              src={img.url}
-              alt={`preview-${idx}`}
+              src={image.url}
+              alt="preview"
               fill
               className="object-cover rounded-xl"
               sizes="160px"
             />
             <button
               type="button"
-              onClick={() => handleImageDelete(idx)}
+              onClick={() => handleImageDelete(index)}
               className="absolute top-2.5 right-2.5 cursor-pointer"
             >
               <TiDelete className="text-2xl text-gray-400" />
@@ -66,7 +65,7 @@ export default function ImageUploader({
 
       {error && (
         <p className="mt-4 text-red-500 font-normal text-base leading-[26px]">
-          *이미지 등록은 최대 3개까지 가능합니다.
+          *이미지는 최대 3장까지 등록 가능합니다.
         </p>
       )}
     </div>
