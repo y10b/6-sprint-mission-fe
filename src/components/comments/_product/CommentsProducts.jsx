@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { getCommentsByProductId } from "@/features/comments/services/commentsApi";
-import { postProductComment } from "@/features/comments/services/commentsApi";
+import { getCommentsByProductId } from "@/lib/api/comments/commentsApi";
+import { postProductComment } from "@/lib/api/comments/commentsApi";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
 import DropdownMenu from "@/components/Dropdownmenu";
 
