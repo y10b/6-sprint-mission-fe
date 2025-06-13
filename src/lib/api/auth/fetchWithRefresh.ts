@@ -9,14 +9,10 @@ export const fetchWithRefresh = async (
   input: RequestInfo | URL,
   init: RequestInit = {}
 ): Promise<Response> => {
-  // Get the current access token
-  const accessToken = getAccessToken();
-
   // 기존 헤더와 새로운 헤더를 병합
   const headers = {
     ...init.headers,
     "Content-Type": "application/json",
-    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
 
   let res = await fetch(input, {
@@ -27,30 +23,20 @@ export const fetchWithRefresh = async (
 
   if (res.status === 401) {
     try {
-      // 액세스 토큰 만료로 판단
+      // 액세스 토큰 만료로 판단하고 리프레시 시도
       const refreshRes = await fetch("http://localhost:5000/users/refresh", {
         method: "POST",
-        credentials: "include", // ✅ 쿠키 포함
+        credentials: "include",
       });
 
       if (!refreshRes.ok) {
         throw new Error("로그인이 필요합니다.");
       }
 
-      const refreshData = await refreshRes.json();
-      // Store the new access token
-      setAccessToken(refreshData.accessToken);
-
-      // 새로운 요청 시도 with new token
-      const newHeaders = {
-        ...init.headers,
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${refreshData.accessToken}`,
-      };
-
+      // 새로운 요청 시도
       res = await fetch(input, {
         ...init,
-        headers: newHeaders,
+        headers,
         credentials: "include",
       });
 

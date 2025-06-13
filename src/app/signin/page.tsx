@@ -18,7 +18,7 @@ interface SigninFormData {
 }
 
 export default function Signin() {
-  const { login, setUserData } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,10 +34,17 @@ export default function Signin() {
   const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
     try {
       const result = await loginApi(data);
+      console.log("Login response:", result);
+
       if (result.user) {
-        await login();
-        setUserData(result.user);
+        await login(result.user);
         router.replace("/products");
+      } else {
+        console.error("Invalid login response:", result);
+        setError("email", {
+          type: "string",
+          message: "로그인 응답이 올바르지 않습니다.",
+        });
       }
     } catch (err) {
       const error = err as ServerError;

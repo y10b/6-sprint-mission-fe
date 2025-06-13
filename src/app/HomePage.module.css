@@ -21,29 +21,27 @@ body {
 
 /* Banner */
 .banner {
+  align-items: flex-end;
   background: var(--colorBanner);
   display: flex;
   height: 30.75rem;
+  justify-content: center;
   width: 100%;
-  position: relative;
 }
 
 .bannerInner {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  display: flex;
+  gap: 0.4375rem;
+  justify-content: center;
+  max-width: calc(100% - 4rem);
   width: 100%;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
 }
 
 .bannerText {
-  padding-bottom: 0;
+  padding-bottom: 3.75rem;
   text-align: left;
   white-space: nowrap;
-  flex: 1;
 }
 
 .bannerText p {
@@ -73,12 +71,6 @@ body {
 .bannerText button:hover {
   transform: scale(1.01);
   background-color: var(--colorBtnHover);
-}
-
-.bannerImg {
-  position: absolute;
-  bottom: 0;
-  right: 2rem;
 }
 
 /* Contents */
@@ -158,7 +150,7 @@ body {
   /* banner */
   .banner {
     width: 100%;
-    height: 540px;
+    height: 771px;
   }
 
   .bannerInner {

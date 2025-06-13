@@ -27,30 +27,35 @@ const ProductPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id || !isInitialized) return;
+    if (!id) return;
 
-    if (!user) {
-      alert("로그인이 필요한 페이지입니다.");
-      router.push("/signin");
-      return;
-    }
-
-    const fetchProduct = async () => {
-      try {
-        const data = await getProductById(Number(id));
-        setProduct(data);
-      } catch (err) {
-        console.error("상품 불러오기 실패:", err);
-        setError("상품을 불러오는 데 실패했습니다.");
-      } finally {
-        setIsLoading(false);
+    if (isInitialized) {
+      if (!user) {
+        alert("로그인이 필요한 페이지입니다.");
+        router.push("/signin");
+        return;
       }
-    };
 
-    fetchProduct();
+      const fetchProduct = async () => {
+        try {
+          const data = await getProductById(Number(id));
+          setProduct(data);
+        } catch (err) {
+          console.error("상품 불러오기 실패:", err);
+          setError("상품을 불러오는 데 실패했습니다.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchProduct();
+    }
   }, [id, isInitialized, user, router]);
 
-  if (isLoading) return <p>로딩 중...</p>;
+  if (!isInitialized) return <p>로딩 중...</p>;
+
+  if (isLoading) return <p>상품 정보를 불러오는 중...</p>;
+
   if (error) return <p>{error}</p>;
   if (!product) return <p>상품 정보를 불러올 수 없습니다.</p>;
 

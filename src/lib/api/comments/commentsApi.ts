@@ -36,12 +36,14 @@ export async function postProductComment(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
     credentials: "include",
     body: JSON.stringify({ content }),
   });
 
   if (!res.ok) {
+    console.log("accessToken:", localStorage.getItem("accessToken"));
     const errorData = await res.json();
     throw new Error(errorData.message || "댓글 작성에 실패했습니다.");
   }
@@ -80,6 +82,7 @@ export async function getCommentsByProductId({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -87,11 +90,13 @@ export async function getCommentsByProductId({
     throw new Error(errorData.message || "댓글 조회 실패");
   }
 
-  const data = await res.json();
+  const comments = await res.json();
 
+  // 백엔드가 댓글 배열을 직접 반환하므로, 프론트엔드에서 필요한 형식으로 변환
   return {
-    comments: data.list || [],
-    nextCursor: data.nextCursor || null,
+    comments: comments || [],
+    nextCursor:
+      comments.length >= limit ? comments[comments.length - 1]?.id : null,
   };
 }
 
@@ -129,5 +134,6 @@ export async function deleteComment(
     throw new Error(errorData.message || "댓글 삭제 실패");
   }
 
-  return await res.json();
+  // 204 No Content 응답은 성공이지만 응답 본문이 없음
+  return { success: true };
 }
