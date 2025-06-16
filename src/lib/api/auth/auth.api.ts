@@ -154,7 +154,7 @@ export const signup = async (userData: SignupInput): Promise<AuthResponse> => {
     nickname: userData.nickname,
   };
 
-  const response = await fetch(`${BASE_URL}/users/signup`, {
+  const response = await fetch(`${BASE_URL}/users/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

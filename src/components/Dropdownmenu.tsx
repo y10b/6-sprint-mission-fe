@@ -50,7 +50,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
     if (type === "product") {
       router.push(`/products/${itemId.toString()}/edit`);
-    } else if (type === "article" && !parentId) {
+    } else if (type === "article") {
       router.push(`/articles/${itemId.toString()}/edit`);
     } else {
       const content = prompt("수정할 내용을 입력해주세요");
@@ -64,8 +64,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           await updateComment(itemId, content);
           alert("댓글 수정 성공!");
           window.location.reload();
-        } else if (type === "article" && baseUrl && parentId) {
-          await updateArticle(baseUrl, parentId, itemId, content);
+        } else if (type === "article") {
+          const title = prompt("수정할 제목을 입력해주세요") || "";
+          if (!title) {
+            alert("제목이 비어있습니다!");
+            return;
+          }
+          await updateArticle(itemId, title, content);
           alert("글 수정 성공!");
         }
         setIsOpen(false);
@@ -88,8 +93,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         await deleteComment(itemId);
         alert("댓글 삭제 완료");
         if (onDelete) onDelete();
-      } else if (type === "article" && baseUrl && parentId) {
-        await deleteArticle(baseUrl, parentId, itemId);
+      } else if (type === "article") {
+        await deleteArticle(itemId);
         alert("글 삭제 완료");
         if (onDelete) onDelete();
         router.push("/articles");

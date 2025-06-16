@@ -2,17 +2,40 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { getCommentsByProductId } from "@/lib/api/comments/commentsApi";
+import {
+  getCommentsByProductId,
+  GetCommentsResponse,
+} from "@/lib/api/comments/commentsApi";
 import { postProductComment } from "@/lib/api/comments/commentsApi";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
 import DropdownMenu from "@/components/Dropdownmenu";
 
-export default function CommentsProducts({ productId }) {
-  const [comments, setComments] = useState([]);
-  const [nextCursor, setNextCursor] = useState(null);
-  const [newComment, setNewComment] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+interface User {
+  id: number;
+  nickname: string;
+  image?: string | null;
+}
+
+interface Comment {
+  id: number;
+  content: string;
+  userId: number;
+  productId: number;
+  createdAt: string;
+  updatedAt: string;
+  user: User;
+}
+
+interface CommentsProductsProps {
+  productId: number;
+}
+
+export default function CommentsProducts({ productId }: CommentsProductsProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [nextCursor, setNextCursor] = useState<number | null>(null);
+  const [newComment, setNewComment] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const fetchComments = useCallback(
     async (isInitial = false) => {
@@ -20,18 +43,18 @@ export default function CommentsProducts({ productId }) {
 
       setIsLoading(true);
       try {
-        const { comments: fetchedComments, nextCursor } =
-          await getCommentsByProductId({
-            productId,
-            limit: 4,
-            cursor: isInitial ? null : nextCursor,
-          });
+        const currentCursor = isInitial ? null : nextCursor;
+        const response = await getCommentsByProductId({
+          productId,
+          limit: 4,
+          cursor: currentCursor,
+        });
 
         setComments((prev) =>
-          isInitial ? fetchedComments : [...prev, ...fetchedComments]
+          isInitial ? response.comments : [...prev, ...response.comments]
         );
-        setNextCursor(nextCursor !== 0 ? nextCursor : null);
-      } catch {
+        setNextCursor(response.nextCursor);
+      } catch (error) {
         setError("댓글을 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
@@ -43,11 +66,15 @@ export default function CommentsProducts({ productId }) {
   const handleSubmit = async () => {
     if (!newComment.trim()) return;
     try {
-      const addedComment = await postProductComment(productId, newComment);
-      setComments((prev) => [addedComment, ...prev]);
+      const response = await postProductComment(productId, newComment);
+      setComments((prev) => [response.data, ...prev]);
       setNewComment("");
-    } catch (err) {
-      setError(err.message || "댓글 작성에 실패했습니다.");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("댓글 작성에 실패했습니다.");
+      }
     }
   };
 

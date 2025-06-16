@@ -4,7 +4,23 @@ import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getBestBadge, getDefaultImg } from "@/utils/imagePath";
 
-const Card = ({ article }) => {
+interface Article {
+  id: number;
+  title: string;
+  content: string;
+  author?: string;
+  authorImage?: string;
+  images?: string;
+  likes?: { length: number };
+  createdAt: string;
+}
+
+interface CardProps {
+  article: Article;
+  defaultImage?: string;
+}
+
+const Card = ({ article, defaultImage }: CardProps) => {
   return (
     <div className="bg-gray-50 px-6 pt-[46px] pb-4 rounded-lg  relative">
       <Link href={`/articles/${article.id}`} className="block">

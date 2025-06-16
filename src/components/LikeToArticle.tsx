@@ -2,22 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import axios from "axios";
 
-const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
+interface LikeToArticleProps {
+  articleId: number;
+  initialCount: number;
+  onLikeToggle?: (articleId: number, count: number) => void;
+}
+
+const LikeToArticle = ({
+  articleId,
+  initialCount = 0,
+  onLikeToggle,
+}: LikeToArticleProps) => {
   const [isClicked, setIsClicked] = useState(false);
-  const [count, setCount] = useState(initialCount || 0);
+  const [count, setCount] = useState(initialCount);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           `http://localhost:5000/articles/${articleId}`
         );
-        const likesCount = response.data.likesCount || 0;
+        if (!response.ok) {
+          throw new Error("좋아요 수를 가져오는데 실패했습니다.");
+        }
+        const data = await response.json();
+        const likesCount = data.likesCount || 0;
         setCount(likesCount);
       } catch (error) {
-        console.error(error);
+        console.error("좋아요 수 조회 실패:", error);
       }
     };
 
@@ -31,19 +44,29 @@ const LikeToArticle = ({ articleId, initialCount, onLikeToggle }) => {
     setCount(newCount);
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/articles/${articleId}/like`
+      const response = await fetch(
+        `http://localhost:5000/articles/${articleId}/like`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      if (response.status === 200) {
-        const updatedCount = response.data.likesCount || newCount;
-        setCount(updatedCount);
-        if (onLikeToggle) {
-          onLikeToggle(articleId, updatedCount);
-        }
+      if (!response.ok) {
+        throw new Error("좋아요 토글에 실패했습니다.");
+      }
+
+      const data = await response.json();
+      const updatedCount = data.likesCount || newCount;
+      setCount(updatedCount);
+
+      if (onLikeToggle) {
+        onLikeToggle(articleId, updatedCount);
       }
     } catch (error) {
-      console.error(error);
+      console.error("좋아요 토글 실패:", error);
       setIsClicked(!isClicked);
       setCount(count); // 되돌리기
     }

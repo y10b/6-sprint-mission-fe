@@ -1,31 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { TfiBackLeft } from "react-icons/tfi";
 
 import PostDetail from "@/components/articles/ArticleDetail";
 import CommentSection from "@/components/comments/_article/commentsection";
+import { Article as ArticleType, Comment } from "@/types/article";
 
 const Article = () => {
-  const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [post, setPost] = useState<ArticleType | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>("");
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
         try {
-          const res = await axios.get(`http://localhost:5000/articles/${id}`);
-          setPost(res.data);
+          const response = await fetch(`http://localhost:5000/articles/${id}`);
+          if (!response.ok) {
+            throw new Error("게시글을 불러오는데 실패했습니다.");
+          }
+          const articleData = await response.json();
+          setPost(articleData);
 
-          const commentRes = await axios.get(
+          const commentResponse = await fetch(
             `http://localhost:5000/comments/articles/${id}`
           );
-          setComments(commentRes.data.comments || []);
+          if (!commentResponse.ok) {
+            throw new Error("댓글을 불러오는데 실패했습니다.");
+          }
+          const commentData = await commentResponse.json();
+          setComments(commentData.comments || []);
         } catch (err) {
           console.error("데이터 로딩 실패:", err);
         }
@@ -41,8 +49,10 @@ const Article = () => {
     <div className="container mx-auto mt-8 px-4">
       <PostDetail
         post={post}
-        onLikeToggle={(id, newCount) =>
-          setPost((prev) => ({ ...prev, likes: new Array(newCount) }))
+        onLikeToggle={(id: number, newCount: number) =>
+          setPost((prev) =>
+            prev ? { ...prev, likes: { length: newCount } } : null
+          )
         }
       />
 

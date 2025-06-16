@@ -4,11 +4,8 @@ import Link from "next/link"; // next/link로 라우팅
 
 export default function Footer() {
   return (
-    <footer className="overflow-x-hidden overflow-y-auto mt-[100px]">
+    <footer className="overflow-x-hidden overflow-y-auto">
       <article className="foot">
-        {/* Footer Decoration */}
-        <div className=" bg-gray-200 h-12 mt-7"></div>
-
         {/* Footer License Section */}
         <section className=" flex  gap-3 items-start bg-secondary-900 justify-between pt-8 px-4 h-40">
           {/* Copy Section */}

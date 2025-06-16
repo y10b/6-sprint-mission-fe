@@ -9,6 +9,7 @@ import FormTextarea from "@/components/FormTextarea";
 import TagInput from "@/components/TagInput";
 import ImageUploader from "@/components/ImageUploader";
 import { Product, UpdateProductInput } from "@/types/product";
+import { useAuth } from "@/context/AuthContext";
 
 type ProductId = string;
 type ImageUrl = string;
@@ -31,11 +32,13 @@ interface UploadedImage {
 interface EditProductFormState extends EditableProductFields {
   isValid: boolean;
   isDirty: boolean;
+  sellerId?: number;
 }
 
 export default function EditProductPage() {
   const { id } = useParams<{ id: ProductId }>();
   const router = useRouter();
+  const { user } = useAuth();
 
   const [product, setProduct] = useState<EditProductFormState>({
     name: "",
@@ -57,6 +60,14 @@ export default function EditProductPage() {
     const fetchProduct = async () => {
       try {
         const data = await getProductById(Number(id));
+
+        // 현재 로그인한 사용자가 판매자가 아니면 상품 상세 페이지로 리다이렉트
+        if (!user || user.id !== data.sellerId) {
+          alert("상품 수정 권한이 없습니다.");
+          router.push(`/products/${id}`);
+          return;
+        }
+
         setProduct({
           name: data.name,
           description: data.description,
@@ -65,6 +76,7 @@ export default function EditProductPage() {
           images: data.images,
           isValid: true,
           isDirty: false,
+          sellerId: data.sellerId,
         });
 
         if (data.images && data.images.length > 0) {
@@ -98,7 +110,7 @@ export default function EditProductPage() {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, router, user]);
 
   const validateForm = (
     updatedProduct: Partial<EditableProductFields>

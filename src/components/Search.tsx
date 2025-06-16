@@ -36,7 +36,9 @@ export default function Search({
   return (
     <div
       className={`relative ${
-        variant === "short" ? "w-[200px] sm:w-[240px]" : "w-full"
+        variant === "short"
+          ? "w-[200px] sm:w-[240px]"
+          : "w-74 sm:w-140 md:w-[1054px]"
       }`}
     >
       <input

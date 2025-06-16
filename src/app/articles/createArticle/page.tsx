@@ -1,19 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
+
+interface Article {
+  title: string;
+  content: string;
+}
 
 const CreateArticle = () => {
   const router = useRouter();
-  const [title, setTitle] = useState(""); // 제목 상태
-  const [content, setcontent] = useState(""); // 내용 상태
-  const [titleError, setTitleError] = useState(""); // 제목 오류 메시지 상태
-  const [contentError, setcontentError] = useState(""); // 내용 오류 메시지 상태
-  const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [titleError, setTitleError] = useState<string>("");
+  const [contentError, setContentError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // 제목 유효성 검사
-  const validateTitle = (title) => {
-    const trimmedTitle = title.trim(); // 공백 제거
+  const validateTitle = (title: string): string => {
+    const trimmedTitle = title.trim();
     if (trimmedTitle.length === 0) {
       return "제목을 입력해주세요.";
     }
@@ -23,68 +27,64 @@ const CreateArticle = () => {
     return "";
   };
 
-  // 내용 유효성 검사
-  const validatecontent = (content) => {
-    const trimmedcontent = content.trim(); // 공백 제거
-    if (trimmedcontent.length === 0) {
+  const validateContent = (content: string): string => {
+    const trimmedContent = content.trim();
+    if (trimmedContent.length === 0) {
       return "내용을 입력해주세요.";
     }
-    if (trimmedcontent.length > 100) {
+    if (trimmedContent.length > 100) {
       return "내용은 100자 이하이어야 합니다.";
     }
     return "";
   };
 
-  // 실시간으로 유효성 검사
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    setTitleError(validateTitle(newTitle)); // 실시간으로 유효성 검사
+    setTitleError(validateTitle(newTitle));
   };
 
-  const handlecontentChange = (e) => {
-    const newcontent = e.target.value;
-    setcontent(newcontent);
-    setcontentError(validatecontent(newcontent)); // 실시간으로 유효성 검사
+  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+    setContentError(validateContent(newContent));
   };
 
-  // 폼 제출 시 유효성 검사 및 처리
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 유효성 검사
     const titleErrorMessage = validateTitle(title);
-    const contentErrorMessage = validatecontent(content);
+    const contentErrorMessage = validateContent(content);
 
-    // 오류 메시지 설정
     setTitleError(titleErrorMessage);
-    setcontentError(contentErrorMessage);
+    setContentError(contentErrorMessage);
 
-    // 유효성 검사 통과 시 POST 요청
     if (!titleErrorMessage && !contentErrorMessage) {
-      setIsSubmitting(true); // 제출 상태 업데이트
+      setIsSubmitting(true);
 
-      // POST 요청
-      fetch("http://localhost:5000/articles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          content,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          router.push("/articles");
-        })
-        .catch((error) => {
-          console.error("게시글 작성 오류:", error);
-        })
-        .finally(() => {
-          setIsSubmitting(false); // 제출 상태 초기화
+      try {
+        const response = await fetch("http://localhost:5000/articles", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            content,
+          } as Article),
         });
+
+        if (!response.ok) {
+          throw new Error("게시글 작성에 실패했습니다.");
+        }
+
+        await response.json();
+        router.push("/articles");
+      } catch (error) {
+        console.error("게시글 작성 오류:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -100,9 +100,9 @@ const CreateArticle = () => {
             className={`cursor-pointer p-2 rounded-lg text-gray-100 text-lg font-semibold w-[74px] ${
               isFormValid ? "bg-blue-500" : "bg-gray-400"
             }`}
-            disabled={!isFormValid}
+            disabled={!isFormValid || isSubmitting}
           >
-            등록
+            {isSubmitting ? "등록 중..." : "등록"}
           </button>
         </div>
 
@@ -133,7 +133,7 @@ const CreateArticle = () => {
             } text-gray-400 resize-none`}
             placeholder="내용을 입력해주세요"
             value={content}
-            onChange={handlecontentChange}
+            onChange={handleContentChange}
           ></textarea>
           {contentError && (
             <p className="text-red-500 text-sm mt-2">{contentError}</p>

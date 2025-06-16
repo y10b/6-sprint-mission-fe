@@ -5,10 +5,8 @@
 
 /* ===== 테마 정의 ===== */
 @theme {
-  /* 브레이크포인트 정의: 기본 반응형 브레이크 포인트를 디자인 요구사항에 따라 변경가능. */
   --breakpoint-sm: 743px;
   --breakpoint-md: 1199px;
-  /* 그 이상부터 적용 가능 md:text-2xl이면 1199px 이상부터 2xl으로 적용 */
 
   /* 색상 정의: 디자인 내용에 따라 정의. 실사용 시 className="text-primary-50" */
   --color-primary-100: #3692ff;

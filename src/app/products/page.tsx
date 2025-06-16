@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { usePaginatedProducts } from "@/hooks/usePaginatedProducts";
 import { formatNumber } from "@/utils/formatNumber";
 import Search from "@/components/Search";
-import Filters from "@/components/Filters";
+import Filters, { OrderByValue } from "@/components/Filters";
 import Pagination from "@/components/Pagination";
 import LikeToProduct from "@/components/LikeToProduct";
 import Link from "next/link";
@@ -17,9 +17,9 @@ import { UseQueryResult } from "@tanstack/react-query";
 export default function ProductList() {
   const [keyword, setKeyword] = useState<string>(""),
     [searchText, setSearchText] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<string>("latest"),
+  const [orderBy, setOrderBy] = useState<OrderByValue>("latest"),
     [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(4);
 
   const {
     data,
@@ -38,8 +38,13 @@ export default function ProductList() {
 
   const setResponsivePageSize = useCallback(() => {
     const w = window.innerWidth;
-    setPageSize(w <= 742 ? 4 : w <= 1198 ? 6 : 10);
-  }, []);
+    const newPageSize = w <= 742 ? 4 : w <= 1198 ? 6 : 10;
+
+    if (newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+      setPage(1);
+    }
+  }, [pageSize]);
 
   useEffect(() => {
     setResponsivePageSize();
@@ -55,6 +60,11 @@ export default function ProductList() {
 
   const handleLikeToggle = () => {
     // 좋아요 토글 로직 구현
+  };
+
+  const handleOrderByChange = (value: OrderByValue) => {
+    setOrderBy(value);
+    setPage(1);
   };
 
   return (
@@ -74,20 +84,14 @@ export default function ProductList() {
               상품 등록하기
             </button>
           </Link>
-          <Filters
-            orderBy={orderBy}
-            setOrderBy={(v: string) => {
-              setOrderBy(v);
-              setPage(1);
-            }}
-          />
+          <Filters orderBy={orderBy} setOrderBy={handleOrderByChange} />
         </div>
       </div>
 
       {isError && <p className="text-red-500">불러오기 실패</p>}
       {isLoading && <p>로딩 중...</p>}
 
-      <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
         {products.map(
           ({ id, name, price, images, favoriteCount, isLiked }: Product) => (
             <li key={id}>
@@ -126,7 +130,7 @@ export default function ProductList() {
         <p className="text-center mt-4 text-gray-400">업데이트 중...</p>
       )}
 
-      <div className="mt-10">
+      <div className="mt-10 mb-[135px]">
         <Pagination
           page={page}
           setPage={setPage}

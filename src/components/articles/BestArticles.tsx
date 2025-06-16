@@ -1,7 +1,25 @@
 "use client";
 import Card from "@/components/articles/Card";
 
-const BestArticles = ({ articles = [], defaultImage }) => {
+interface Article {
+  id: number;
+  title: string;
+  content: string;
+  author?: string;
+  authorImage?: string;
+  images?: string;
+  likes?: { length: number };
+  likeCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface BestArticlesProps {
+  articles: Article[];
+  defaultImage: string;
+}
+
+const BestArticles = ({ articles = [], defaultImage }: BestArticlesProps) => {
   return (
     <div className=" best-articles">
       <h1 className=" mt-5 mb-4 text-2xl font-bold text-gray-900">

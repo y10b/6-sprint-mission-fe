@@ -4,7 +4,22 @@ import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getDefaultImg, getProfileImg } from "@/utils/imagePath";
 
-const ArticleList = ({ articles }) => {
+interface Article {
+  id: number;
+  title: string;
+  content: string;
+  author?: string;
+  authorImage?: string;
+  images?: string;
+  likes?: { length: number };
+  createdAt: string;
+}
+
+interface ArticleListProps {
+  articles: Article[];
+}
+
+const ArticleList = ({ articles }: ArticleListProps) => {
   return (
     <div className="article-items mt-10 space-y-6">
       {articles.length > 0 ? (

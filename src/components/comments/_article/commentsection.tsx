@@ -1,11 +1,21 @@
 "use client";
 
-import Dropdown from "@/components/DropDownProducts";
+import React, { ChangeEvent } from "react";
+import Dropdown from "@/components/Dropdownmenu";
 import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
+import { Comment } from "@/types/article";
 
-const CommentSection = ({
+interface CommentSectionProps {
+  comments: Comment[];
+  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
+  newComment: string;
+  setNewComment: React.Dispatch<React.SetStateAction<string>>;
+  articleId: number;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({
   comments,
   setComments,
   newComment,
@@ -26,12 +36,16 @@ const CommentSection = ({
       );
 
       if (!response.ok) throw new Error("댓글 등록에 실패했습니다.");
-      const newCommentData = await response.json();
+      const newCommentData: Comment = await response.json();
 
       setComments((prev) => [...prev, newCommentData]);
       setNewComment("");
     } catch (error) {
-      alert(error.message);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("댓글 등록에 실패했습니다.");
+      }
     }
   };
 
@@ -44,7 +58,9 @@ const CommentSection = ({
         className="w-full h-[104px] text-secondary-400 text-base font-[400] mt-2 p-4 rounded-lg bg-gray-100 resize-none"
         placeholder="댓글을 입력해 주세요."
         value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          setNewComment(e.target.value)
+        }
       />
       <div className="mt-4 text-right">
         <button
@@ -72,9 +88,9 @@ const CommentSection = ({
                   {comment.content}
                 </p>
                 <Dropdown
-                  articleId={articleId}
-                  commentId={comment.id}
-                  baseUrl="http://localhost:5000/comments/articles"
+                  type="comment"
+                  itemId={comment.id}
+                  parentId={articleId}
                   onDelete={() => {
                     setComments((prev) =>
                       prev.filter((c) => c.id !== comment.id)

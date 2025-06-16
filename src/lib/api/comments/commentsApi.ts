@@ -57,7 +57,7 @@ interface GetCommentsParams {
   cursor?: number | null;
 }
 
-interface GetCommentsResponse {
+export interface GetCommentsResponse {
   comments: Comment[];
   nextCursor: number | null;
 }

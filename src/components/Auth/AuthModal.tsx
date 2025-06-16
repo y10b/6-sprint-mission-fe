@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
 
-function Modal({ message, onClose }) {
+interface ModalProps {
+  message: string;
+  onClose: () => void;
+}
+
+function Modal({ message, onClose }: ModalProps): React.ReactElement {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg w-[300px] shadow-lg text-center">
