@@ -137,7 +137,11 @@ export const login = async (credentials: LoginInput): Promise<AuthResponse> => {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.message || "Login failed");
+      throw new Error(
+        result.error ||
+          result.message ||
+          "이메일 또는 비밀번호가 일치하지 않습니다."
+      );
     }
 
     return result;
@@ -148,28 +152,33 @@ export const login = async (credentials: LoginInput): Promise<AuthResponse> => {
 };
 
 export const signup = async (userData: SignupInput): Promise<AuthResponse> => {
-  const requestData = {
-    email: userData.email,
-    encryptedPassword: userData.password,
-    nickname: userData.nickname,
-  };
+  try {
+    const requestData = {
+      email: userData.email,
+      encryptedPassword: userData.password,
+      nickname: userData.nickname,
+    };
 
-  const response = await fetch(`${BASE_URL}/users/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(requestData),
-  });
+    const response = await fetch(`${BASE_URL}/users/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(requestData),
+    });
 
-  const result = await response.json();
+    const result = await response.json();
 
-  if (!response.ok) {
-    throw new Error(result.message || "Signup failed");
+    if (!response.ok) {
+      throw new Error(result.error || result.message || "Signup failed");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Signup error:", error);
+    throw error;
   }
-
-  return result;
 };
 
 export const logout = async (): Promise<void> => {

@@ -1,8 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import {
+  useForm,
+  FieldValues,
+  UseFormRegister,
+  FieldErrors,
+} from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signup } from "@/lib/api/auth/auth.api";
+import { login as loginApi } from "@/lib/api/auth/auth.api";
 import { useAuth } from "@/context/AuthContext";
 import {
   validateEmail,
@@ -16,8 +22,9 @@ import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/Auth/AuthModal";
 import { useState } from "react";
 import { ServerError } from "@/types/error";
+import { AxiosError } from "axios";
 
-interface SignupFormData {
+interface SignupFormData extends FieldValues {
   email: string;
   nickname: string;
   password: string;
@@ -29,10 +36,17 @@ interface ShowState {
   passwordConfirmation: boolean;
 }
 
+interface ApiErrorResponse {
+  success: boolean;
+  error: string;
+  message?: string;
+}
+
 export default function Signup() {
   const { login } = useAuth();
   const router = useRouter();
-  const [errorModal, setErrorModal] = useState(false);
+  const [errorModal, setErrorModal] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [show, setShow] = useState<ShowState>({
     password: false,
     passwordConfirmation: false,
@@ -46,26 +60,50 @@ export default function Signup() {
     formState: { errors, isValid },
   } = useForm<SignupFormData>({
     mode: "onChange",
+    defaultValues: {
+      email: "",
+      nickname: "",
+      password: "",
+      passwordConfirmation: "",
+    },
   });
 
-  const toggleShow = (field: keyof ShowState) => {
+  const toggleShow = (field: keyof ShowState): void => {
     setShow((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const onSubmit = async (data: SignupFormData) => {
+  const onSubmit = async (data: SignupFormData): Promise<void> => {
     try {
       await signup(data);
-      await login();
+      const loginResponse = await loginApi({
+        email: data.email,
+        password: data.password,
+      });
+      login(loginResponse.user);
       router.replace("/products");
     } catch (err) {
-      const error = err as ServerError;
-      const errorMessage =
-        error?.response?.data?.message || error.message || "회원가입 실패";
+      console.error("Signup error:", err);
+      let errorMessage: string;
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        const error = err as AxiosError<ApiErrorResponse>;
+        errorMessage =
+          error.response?.data?.error ||
+          error.response?.data?.message ||
+          error.message ||
+          "회원가입에 실패했습니다. 다시 시도해주세요.";
+      }
+
       if (errorMessage.includes("이메일")) {
         setError("email", { type: "manual", message: errorMessage });
-      } else {
-        setErrorModal(true);
+      } else if (errorMessage.includes("닉네임")) {
+        setError("nickname", { type: "manual", message: errorMessage });
       }
+
+      setErrorMessage(errorMessage);
+      setErrorModal(true);
     }
   };
 
@@ -73,13 +111,16 @@ export default function Signup() {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[343px] sm:w-160 mx-auto mt-6"
+        className="w-[343px] sm:w-160 mx-auto mt-6 sm:mt-12 md:mt-15 mb-[179px] sm:mb-[243px] md:mb-[178px] "
       >
-        <div className="relative w-50 sm:w-99 h-[66px] sm:h-33 mx-auto mb-8">
-          <Link href="/">
-            <Image src="/img/logo.png" alt="logo" fill />
-          </Link>
-        </div>
+        {/* vercel 이미지 컴포넌트 아끼기 위해 이미지 태그 사용 */}
+        <Link href="/">
+          <img
+            src="/img/logo.png"
+            alt="logo"
+            className="w-50 sm:w-99 h-[66px] sm:h-33 mx-auto mb-8"
+          />
+        </Link>
 
         <FormField
           label="이메일"
@@ -140,9 +181,9 @@ export default function Signup() {
         <button
           type="submit"
           disabled={!isValid}
-          className={`cursor-pointer mt-4 w-full h-14 rounded-[40px] font-semibold text-xl text-white ${
+          className={`mt-4 w-full h-14 rounded-[40px] font-semibold text-xl text-white ${
             isValid
-              ? "bg-blue-500 hover:bg-blue-600"
+              ? "bg-primary-100 hover:bg-primary-200 cursor-pointer"
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
@@ -160,10 +201,7 @@ export default function Signup() {
       </form>
 
       {errorModal && (
-        <Modal
-          message="회원가입에 실패했습니다. 다시 시도해주세요."
-          onClose={() => setErrorModal(false)}
-        />
+        <Modal message={errorMessage} onClose={() => setErrorModal(false)} />
       )}
     </>
   );

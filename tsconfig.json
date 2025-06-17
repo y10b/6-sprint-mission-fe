@@ -115,6 +115,6 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "src/app/articles/page.jsx"
-  ],
+, "src/app/articles/createArticle/page.jsx"  ],
   "exclude": ["node_modules"]
 }
