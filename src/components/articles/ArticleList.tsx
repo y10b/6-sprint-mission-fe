@@ -8,11 +8,12 @@ interface Article {
   id: number;
   title: string;
   content: string;
-  author?: string;
+  authorNickname?: string;
   authorImage?: string;
   images?: string;
   likes?: { length: number };
   createdAt: string;
+  likeCount?: number;
 }
 
 interface ArticleListProps {
@@ -52,14 +53,17 @@ const ArticleList = ({ articles }: ArticleListProps) => {
                     fill
                   />
                 </div>
-                <p>{article.author || "게스트"}</p>
+                <p>{article.authorNickname || "총명한판다"}</p>
                 <p className="text-gray-400">
                   {new Date(article.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <LikeToArticle
                 articleId={article.id}
-                initialCount={article.likes?.length || 0}
+                initialCount={article.likeCount || 0}
+                onLikeToggle={(id: number, newCount: number) => {
+                  // 좋아요 상태 업데이트 로직 추가
+                }}
               />
             </div>
           </div>

@@ -5,11 +5,12 @@ import Dropdown from "@/components/Dropdownmenu";
 import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
-import { Comment } from "@/types/article";
+import { ArticleComment } from "@/types/article";
+import { createArticleComment } from "@/lib/api/comments/commentsApi";
 
 interface CommentSectionProps {
-  comments: Comment[];
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
+  comments: ArticleComment[];
+  setComments: React.Dispatch<React.SetStateAction<ArticleComment[]>>;
   newComment: string;
   setNewComment: React.Dispatch<React.SetStateAction<string>>;
   articleId: number;
@@ -26,21 +27,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     if (newComment.trim() === "") return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/comments/articles/${articleId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: newComment, author: "guest" }),
-        }
-      );
-
-      if (!response.ok) throw new Error("댓글 등록에 실패했습니다.");
-      const newCommentData: Comment = await response.json();
-
+      const newCommentData = await createArticleComment(articleId, newComment);
       setComments((prev) => [...prev, newCommentData]);
       setNewComment("");
     } catch (error) {
+      console.error("Error data:", error);
       if (error instanceof Error) {
         alert(error.message);
       } else {
@@ -50,12 +41,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 ">
       <label className="text-base leading-[26px] font-semibold text-gray-900">
         댓글달기
       </label>
       <textarea
-        className="w-full h-[104px] text-secondary-400 text-base font-[400] mt-2 p-4 rounded-lg bg-gray-100 resize-none"
+        className="w-full h-[104px] placeholder:text-secondary-400 text-base font-[400] mt-2 p-4 rounded-lg bg-gray-100 resize-none"
         placeholder="댓글을 입력해 주세요."
         value={newComment}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
@@ -102,16 +93,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({
               <div className="flex items-center mt-6">
                 <div className="relative w-8 h-8 mb-2 mr-2 rounded-3xl overflow-hidden">
                   <Image
-                    src={comment.authorImage || getProfileImg()}
-                    alt={comment.authorImage || "작성자 이미지"}
+                    src={getProfileImg()}
+                    alt={`${comment.user.nickname}의 프로필 이미지`}
                     fill
                     className="object-cover rounded-3xl"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-sm font-medium">
-                    {comment.author || "똑똑한판다"}
-                  </p>
+                  <p className="text-sm font-medium">{comment.user.nickname}</p>
                   <p className="text-sm text-gray-500">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </p>

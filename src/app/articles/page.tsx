@@ -13,7 +13,6 @@ interface Article {
   author?: string;
   authorImage?: string;
   images?: string;
-  likes?: { length: number };
   likeCount: number;
   createdAt: string;
   updatedAt: string;
@@ -26,6 +25,7 @@ const ArticlePage = () => {
   const [orderBy, setOrderBy] = useState<OrderByValue>("latest");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [articlesPerPage] = useState<number>(4);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
   const fetchData = async () => {
     try {
@@ -37,9 +37,16 @@ const ArticlePage = () => {
       });
 
       setAllArticles(data.articles);
+      setTotalCount(data.totalCount);
 
-      const best = [...data.articles].sort((a, b) => b.likeCount - a.likeCount);
-      setBestArticles(best.slice(0, 3));
+      // 베스트 게시글은 좋아요 순으로 정렬하여 상위 3개만 표시
+      const best = await fetchArticlesFromAPI({
+        page: 1,
+        limit: 3,
+        sort: "likes",
+        keyword: "",
+      });
+      setBestArticles(best.articles);
     } catch (err) {
       console.error("데이터 가져오기 실패:", err);
     }
@@ -66,6 +73,7 @@ const ArticlePage = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         articlesPerPage={articlesPerPage}
+        totalCount={totalCount}
       />
     </div>
   );

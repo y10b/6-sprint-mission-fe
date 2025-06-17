@@ -28,6 +28,7 @@ interface ArticlesProps {
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   articlesPerPage: number;
+  totalCount: number;
 }
 
 const Articles = ({
@@ -39,26 +40,21 @@ const Articles = ({
   currentPage,
   setCurrentPage,
   articlesPerPage,
+  totalCount,
 }: ArticlesProps) => {
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  const indexOfLastArticle = currentPage * articlesPerPage;
-  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-  const currentArticles = filteredArticles.slice(
-    indexOfFirstArticle,
-    indexOfLastArticle
-  );
-
-  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+  const totalPages = Math.ceil(totalCount / articlesPerPage);
 
   const handleSearch = (text: string) => {
     setKeyword(text);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   return (
-    <div className="article-list mt-10">
+    <div className="article-list mt-10 mb-[135px] ">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">게시글</h1>
         <Link href="/articles/createArticle">
@@ -68,7 +64,7 @@ const Articles = ({
         </Link>
       </div>
 
-      <div className="search-filters flex justify-between items-center  mt-6">
+      <div className="search-filters flex justify-between items-center mt-6">
         <Search
           keyword={keyword}
           setKeyword={setKeyword}
@@ -78,7 +74,7 @@ const Articles = ({
         <Filters orderBy={orderBy} setOrderBy={setOrderBy} />
       </div>
 
-      <ArticleList articles={currentArticles} />
+      <ArticleList articles={articles} />
 
       <Pagination
         page={currentPage}

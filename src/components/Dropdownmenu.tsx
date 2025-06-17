@@ -135,7 +135,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         </div>
       )}
 
-      {/* ✅ 삭제 모달 */}
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}

@@ -38,7 +38,7 @@ export default function Search({
       className={`relative ${
         variant === "short"
           ? "w-72 sm:w-[242px] "
-          : "w-74 sm:w-140 md:w-[1054px]"
+          : "w-45 sm:w-140 md:w-[1054px]"
       }`}
     >
       <input

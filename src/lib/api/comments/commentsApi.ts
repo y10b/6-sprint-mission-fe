@@ -1,3 +1,5 @@
+import { ArticleComment } from "@/types/article";
+
 interface Comment {
   id: number;
   content: string;
@@ -136,4 +138,90 @@ export async function deleteComment(
 
   // 204 No Content 응답은 성공이지만 응답 본문이 없음
   return { success: true };
+}
+
+// 게시글 댓글 조회 API
+export async function getArticleComments(
+  articleId: number
+): Promise<ArticleComment[]> {
+  const response = await fetch(`${BASE_URL}/articles/${articleId}/comments`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "댓글을 불러오는데 실패했습니다.");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+// 게시글 댓글 작성 API
+export async function createArticleComment(
+  articleId: number,
+  content: string
+): Promise<ArticleComment> {
+  const response = await fetch(`${BASE_URL}/articles/${articleId}/comments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "댓글 작성에 실패했습니다.");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+// 게시글 댓글 수정 API
+export async function updateArticleComment(
+  commentId: number,
+  content: string
+): Promise<ArticleComment> {
+  const response = await fetch(`${BASE_URL}/articles/comments/${commentId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "댓글 수정에 실패했습니다.");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+// 게시글 댓글 삭제 API
+export async function deleteArticleComment(commentId: number): Promise<void> {
+  const response = await fetch(`${BASE_URL}/articles/comments/${commentId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "댓글 삭제에 실패했습니다.");
+  }
 }

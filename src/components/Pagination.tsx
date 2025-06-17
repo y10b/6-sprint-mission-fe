@@ -2,7 +2,19 @@
 
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
-export default function Pagination({ page, setPage, hasNext, totalPages }) {
+interface PaginationProps {
+  page: number;
+  setPage: (page: number) => void;
+  hasNext: boolean;
+  totalPages: number;
+}
+
+export default function Pagination({
+  page,
+  setPage,
+  hasNext,
+  totalPages,
+}: PaginationProps) {
   const range = 2;
 
   const getPageNumbers = () => {
@@ -11,7 +23,7 @@ export default function Pagination({ page, setPage, hasNext, totalPages }) {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     if (newPage !== page && newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }

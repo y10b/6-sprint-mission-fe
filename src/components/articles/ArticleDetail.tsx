@@ -53,7 +53,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
       <div className="flex justify-end">
         <LikeToArticle
           articleId={post.id}
-          initialCount={post.likes?.length || 0}
+          initialCount={post.likeCount || 0}
           onLikeToggle={onLikeToggle}
         />
       </div>

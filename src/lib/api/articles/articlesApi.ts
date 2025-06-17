@@ -16,13 +16,72 @@ export const fetchArticlesFromAPI = async ({
   });
 
   try {
-    const res = await fetch(`${BASE_URL}/articles?${params}`);
+    const res = await fetch(`${BASE_URL}/articles?${params}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
     if (!res.ok) throw new Error("게시글 데이터를 불러오는 데 실패했습니다.");
 
-    const { articles, totalCount } = await res.json(); // ✅ 여기 수정
-    return { articles, totalCount };
+    const data = await res.json();
+    return {
+      articles: data.articles,
+      totalCount: data.totalCount,
+    };
   } catch (error) {
     console.error("API 호출 실패:", error);
+    throw error;
+  }
+};
+
+export const getArticleWithLikes = async (articleId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("게시글 정보를 가져오는데 실패했습니다.");
+    }
+
+    const data = await response.json();
+    return {
+      likeCount: data.likeCount || 0,
+      isLiked: data.isLiked || false,
+    };
+  } catch (error) {
+    console.error("게시글 정보 조회 실패:", error);
+    throw error;
+  }
+};
+
+export const toggleArticleLike = async (articleId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/articles/${articleId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("좋아요 토글에 실패했습니다.");
+    }
+
+    const data = await response.json();
+    return {
+      liked: data.liked,
+    };
+  } catch (error) {
+    console.error("좋아요 토글 실패:", error);
     throw error;
   }
 };
@@ -36,7 +95,9 @@ export async function updateArticle(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ title, content }),
   });
 
@@ -51,6 +112,11 @@ export async function updateArticle(
 export async function deleteArticle(articleId: number): Promise<void> {
   const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -60,7 +126,13 @@ export async function deleteArticle(articleId: number): Promise<void> {
 }
 
 export async function getArticle(articleId: number): Promise<Article> {
-  const response = await fetch(`${BASE_URL}/articles/${articleId}`);
+  const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -71,7 +143,13 @@ export async function getArticle(articleId: number): Promise<Article> {
 }
 
 export async function getArticles(): Promise<Article[]> {
-  const response = await fetch(`${BASE_URL}/articles`);
+  const response = await fetch(`${BASE_URL}/articles`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -91,7 +169,9 @@ export async function createArticle(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ title, content }),
   });
 

@@ -2,6 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import {
+  getArticleWithLikes,
+  toggleArticleLike,
+} from "@/lib/api/articles/articlesApi";
 
 interface LikeToArticleProps {
   articleId: number;
@@ -20,15 +25,9 @@ const LikeToArticle = ({
   useEffect(() => {
     const fetchLikeCount = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/articles/${articleId}`
-        );
-        if (!response.ok) {
-          throw new Error("좋아요 수를 가져오는데 실패했습니다.");
-        }
-        const data = await response.json();
-        const likesCount = data.likesCount || 0;
-        setCount(likesCount);
+        const data = await getArticleWithLikes(articleId);
+        setCount(data.likeCount);
+        setIsClicked(data.isLiked);
       } catch (error) {
         console.error("좋아요 수 조회 실패:", error);
       }
@@ -37,60 +36,35 @@ const LikeToArticle = ({
     fetchLikeCount();
   }, [articleId]);
 
-  const toggleClick = async () => {
-    const newCount = isClicked ? count - 1 : count + 1;
-
-    setIsClicked(!isClicked);
-    setCount(newCount);
-
+  const handleToggleClick = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/articles/${articleId}/like`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const data = await toggleArticleLike(articleId);
+      setIsClicked(data.liked);
 
-      if (!response.ok) {
-        throw new Error("좋아요 토글에 실패했습니다.");
-      }
-
-      const data = await response.json();
-      const updatedCount = data.likesCount || newCount;
-      setCount(updatedCount);
+      // 좋아요 상태에 따라 카운트 업데이트
+      const newCount = data.liked ? count + 1 : count - 1;
+      setCount(newCount);
 
       if (onLikeToggle) {
-        onLikeToggle(articleId, updatedCount);
+        onLikeToggle(articleId, newCount);
       }
     } catch (error) {
       console.error("좋아요 토글 실패:", error);
-      setIsClicked(!isClicked);
-      setCount(count); // 되돌리기
     }
   };
 
   return (
-    <div className="flex items-center space-x-1 text-gray-700 text-sm">
+    <button
+      onClick={handleToggleClick}
+      className="flex items-center gap-1 text-gray-500 hover:text-gray-700"
+    >
       {isClicked ? (
-        <FaHeart
-          className="text-red-500 cursor-pointer hover:scale-110 transition-transform"
-          size={18}
-          onClick={toggleClick}
-        />
+        <AiFillHeart className="w-5 h-5 text-red-500" />
       ) : (
-        <FaRegHeart
-          className="text-gray-400 cursor-pointer hover:scale-110 transition-transform"
-          size={18}
-          onClick={toggleClick}
-        />
+        <AiOutlineHeart className="w-5 h-5" />
       )}
-      <span className="font-medium">
-        {count >= 0 ? count.toLocaleString() : 0}
-      </span>
-    </div>
+      <span>{count}</span>
+    </button>
   );
 };
 

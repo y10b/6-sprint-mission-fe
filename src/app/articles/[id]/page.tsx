@@ -7,11 +7,13 @@ import { TfiBackLeft } from "react-icons/tfi";
 
 import PostDetail from "@/components/articles/ArticleDetail";
 import CommentSection from "@/components/comments/_article/commentsection";
-import { Article as ArticleType, Comment } from "@/types/article";
+import { Article as ArticleType, ArticleComment } from "@/types/article";
+import { getArticle } from "@/lib/api/articles/articlesApi";
+import { getArticleComments } from "@/lib/api/comments/commentsApi";
 
 const Article = () => {
   const [post, setPost] = useState<ArticleType | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<ArticleComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const { id } = useParams();
 
@@ -19,21 +21,12 @@ const Article = () => {
     if (id) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/articles/${id}`);
-          if (!response.ok) {
-            throw new Error("게시글을 불러오는데 실패했습니다.");
-          }
-          const articleData = await response.json();
+          const articleData = await getArticle(Number(id));
           setPost(articleData);
 
-          const commentResponse = await fetch(
-            `http://localhost:5000/comments/articles/${id}`
-          );
-          if (!commentResponse.ok) {
-            throw new Error("댓글을 불러오는데 실패했습니다.");
-          }
-          const commentData = await commentResponse.json();
-          setComments(commentData.comments || []);
+          const commentData = await getArticleComments(Number(id));
+          console.log("Fetched comments:", commentData);
+          setComments(commentData);
         } catch (err) {
           console.error("데이터 로딩 실패:", err);
         }
@@ -64,7 +57,7 @@ const Article = () => {
         setNewComment={setNewComment}
       />
 
-      <div className="mt-16 text-center">
+      <div className="mt-16 text-center mb-[319px] sm:mb-[219px] md:mb-[193px]">
         <Link href="/articles">
           <button className="mx-auto flex gap-2 w-[240px] px-12 py-3 bg-primary-100 text-[18px] text-gray-100 font-[600] rounded-[40px] hover:bg-primary-300 cursor-pointer relative">
             목록으로 돌아가기
