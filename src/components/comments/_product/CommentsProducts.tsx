@@ -65,9 +65,15 @@ export default function CommentsProducts({ productId }: CommentsProductsProps) {
 
   const handleSubmit = async () => {
     if (!newComment.trim()) return;
+
+    setIsLoading(true);
+    setError("");
+
     try {
       const response = await postProductComment(productId, newComment);
-      setComments((prev) => [response.data, ...prev]);
+
+      // 새 댓글 추가 후 댓글 목록을 새로 불러옴
+      await fetchComments(true);
       setNewComment("");
     } catch (error) {
       if (error instanceof Error) {
@@ -75,6 +81,8 @@ export default function CommentsProducts({ productId }: CommentsProductsProps) {
       } else {
         setError("댓글 작성에 실패했습니다.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,20 +108,20 @@ export default function CommentsProducts({ productId }: CommentsProductsProps) {
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
-          disabled={!newComment.trim()}
+          disabled={!newComment.trim() || isLoading}
           className={`w-[74px] h-[42px] rounded-xl font-semibold text-base text-white ${
-            newComment.trim()
+            newComment.trim() && !isLoading
               ? "bg-primary-100 hover:bg-primary-200"
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          등록
+          {isLoading ? "등록 중" : "등록"}
         </button>
       </div>
 
       <hr className="my-6 text-gray-200" />
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center">

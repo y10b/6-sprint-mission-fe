@@ -45,16 +45,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // 사용자 정보 직접 설정
   const login = useCallback((userData: User) => {
-    console.log("[AuthProvider] Setting user data:", userData);
     setUser(userData);
   }, []);
 
   // 사용자 정보 가져오기
   const fetchUserData = useCallback(async () => {
-    console.log("[AuthProvider] Fetching user data...");
     try {
       const userData = await getCurrentUser();
-      console.log("[AuthProvider] Fetched user data:", userData);
 
       if (userData) {
         setUser(userData);
@@ -80,7 +77,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // 초기 로드 시 사용자 정보 가져오기
   useEffect(() => {
-    console.log("[AuthProvider] Initializing auth state...");
     const initAuth = async () => {
       setIsLoading(true);
       try {
@@ -114,12 +110,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout,
   };
-
-  console.log("[AuthProvider] Current state:", {
-    user,
-    isLoading,
-    isInitialized,
-  });
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

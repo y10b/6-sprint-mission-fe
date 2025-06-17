@@ -59,45 +59,58 @@ function BestProducts() {
     fetchBestProducts();
   }, []);
 
+  const textStrokeClass =
+    "[text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000]";
+
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">베스트 상품</h2>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px]">
-        {bestProducts
-          .slice(0, visibleCount)
-          .map(({ id, images, name, price, favoriteCount, isLiked }) => (
-            <li key={id}>
-              <Link href={`/products/${id}`}>
-                <div className="relative w-full h-[343px] md:h-[282px] mb-2 rounded-[19.46px] overflow-hidden cursor-pointer">
-                  <Image
-                    src={getImageUrl(images?.[0])}
-                    alt={name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 743px) 100vw,
-                     (max-width: 1199px) 50vw,
-                     25vw"
-                  />
-                </div>
-
-                <h3 className="mb-[6px] text-sm font-medium leading-6 text-secondary-800">
-                  {name}
-                </h3>
-                <p className="mb-[6px] text-base font-bold leading-[26px] text-secondary-800">
-                  {formatNumber(price)}원
-                </p>
-
-                <LikeToProduct
-                  productId={id}
-                  initialCount={favoriteCount}
-                  initialIsFavorite={isLiked}
-                  onLikeToggle={handleLikeToggle}
-                  onLikeRemove={handleLikeRemove}
-                />
-              </Link>
-            </li>
-          ))}
-      </ul>
+    <div className="w-full">
+      <div className="relative w-full">
+        <div className="absolute top-4 left-4 z-10">
+          <h2 className={`text-xl font-bold text-white ${textStrokeClass}`}>
+            베스트 상품
+          </h2>
+        </div>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          {bestProducts
+            .slice(0, visibleCount)
+            .map(({ id, images, name, price, favoriteCount, isLiked }) => (
+              <li key={id} className="w-full">
+                <Link href={`/products/${id}`}>
+                  <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
+                    <Image
+                      src={getImageUrl(images?.[0])}
+                      alt={name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 743px) 100vw, (max-width: 1199px) 50vw, 25vw"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                      <h3
+                        className={`text-sm font-medium leading-6 text-white line-clamp-2 ${textStrokeClass}`}
+                      >
+                        {name}
+                      </h3>
+                      <p
+                        className={`mt-1 text-base font-bold leading-[26px] text-white ${textStrokeClass}`}
+                      >
+                        {formatNumber(price)}원
+                      </p>
+                      <div className="mt-2">
+                        <LikeToProduct
+                          productId={id}
+                          initialCount={favoriteCount}
+                          initialIsFavorite={isLiked}
+                          onLikeToggle={handleLikeToggle}
+                          onLikeRemove={handleLikeRemove}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   );
 }

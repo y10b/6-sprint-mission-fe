@@ -20,7 +20,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-10 h-[70px] px-4 sm:px-6 md:px-50">
+    <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-100 h-[70px] px-4 sm:px-6 md:px-50">
       <div className="flex items-center gap-2 sm:gap-5 md:gap-6">
         <Link href="/" className="block">
           <div className="relative w-[81px] h-10 sm:w-[153px] sm:h-[51px]">

@@ -38,7 +38,7 @@ export default function ProductList() {
 
   const setResponsivePageSize = useCallback(() => {
     const w = window.innerWidth;
-    const newPageSize = w <= 742 ? 4 : w <= 1198 ? 6 : 10;
+    const newPageSize = w < 743 ? 4 : w < 1199 ? 6 : 10;
 
     if (newPageSize !== pageSize) {
       setPageSize(newPageSize);
@@ -70,43 +70,65 @@ export default function ProductList() {
   return (
     <div className="w-full max-w-[1200px] mx-auto px-4 mt-6">
       <BestProducts />
-      <div className="mt-10 flex justify-between items-center mb-8">
-        <span className="text-xl font-bold">판매 중인 상품</span>
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-          <Search
-            keyword={searchText}
-            setKeyword={setSearchText}
-            variant="short"
-            onSearch={onSearch}
-          />
-          <Link href="/products/createProduct">
-            <button className="cursor-pointer w-36 h-10 rounded-md bg-blue-500 text-white font-semibold hover:bg-blue-700">
-              상품 등록하기
-            </button>
-          </Link>
-          <Filters orderBy={orderBy} setOrderBy={handleOrderByChange} />
+
+      <div className="mt-10 mb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* 모바일: 첫 번째 줄 (제목 + 버튼), 태블릿/PC: 왼쪽 */}
+          <div className="flex items-center justify-between sm:block">
+            <h2 className="text-xl font-bold whitespace-nowrap">
+              판매 중인 상품
+            </h2>
+            <div className="sm:hidden">
+              <Link href="/products/createProduct">
+                <button className="cursor-pointer whitespace-nowrap px-4 h-10 rounded-md bg-primary-100 text-white font-semibold hover:bg-primary-200">
+                  상품 등록하기
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* 모바일: 두 번째 줄 (검색 + 필터), 태블릿/PC: 오른쪽 */}
+          <div className="flex flex-row items-center gap-2 sm:w-auto">
+            <div className="flex-1 sm:w-[280px]">
+              <Search
+                keyword={searchText}
+                setKeyword={setSearchText}
+                variant="short"
+                onSearch={onSearch}
+              />
+            </div>
+            <div className="hidden sm:block">
+              <Link href="/products/createProduct">
+                <button className="cursor-pointer w-[133px] h-[42px] bg-primary-100 rounded-[8px] text-gray-100 font-semibold text-base leading-[26px]">
+                  상품 등록하기
+                </button>
+              </Link>
+            </div>
+            <Filters orderBy={orderBy} setOrderBy={handleOrderByChange} />
+          </div>
         </div>
       </div>
 
       {isError && <p className="text-red-500">불러오기 실패</p>}
       {isLoading && <p>로딩 중...</p>}
 
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
         {products.map(
           ({ id, name, price, images, favoriteCount, isLiked }: Product) => (
             <li key={id}>
               <Link href={`/products/${id}`}>
-                <div className="relative w-full h-48 sm:h-56 md:h-64">
+                <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
                   <Image
                     src={getImageUrl(images?.[0]) || "/img/making.png"}
                     alt={name}
                     fill
-                    className="rounded-2xl object-cover"
+                    className="object-cover"
+                    sizes="(max-width: 743px) 50vw, (max-width: 1199px) 33vw, 20vw"
                   />
                 </div>
 
                 <div className="mt-3">
-                  <h3 className="text-sm font-medium leading-6 text-secondary-800">
+                  <h3 className="text-sm font-medium leading-6 text-secondary-800 line-clamp-2">
                     {name}
                   </h3>
                   <p className="text-base font-bold leading-[26px] text-secondary-800">

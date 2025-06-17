@@ -221,8 +221,8 @@ export default function EditProductPage() {
             disabled={!product.isValid || !product.isDirty}
             className={`w-[74px] h-[42px] rounded-lg ${
               product.isValid && product.isDirty
-                ? "bg-primary-100 hover:bg-primary-200"
-                : "bg-gray-400"
+                ? "bg-primary-100 hover:bg-primary-200 cursor-pointer"
+                : "bg-gray-400 cursor-not-allowed"
             } text-gray-100 font-semibold text-base transition-colors`}
           >
             등록

@@ -181,14 +181,16 @@ export const updateProduct = async (
   updatedData: UpdateProductInput
 ): Promise<Product> => {
   try {
-    const response = await fetch(`${BASE_URL}/products/${productId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(updatedData),
-    });
+    const response = await fetchWithRefresh(
+      `${BASE_URL}/products/${productId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      }
+    );
 
     const data = await response.json();
 

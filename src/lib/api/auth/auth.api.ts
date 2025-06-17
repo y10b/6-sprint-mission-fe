@@ -28,7 +28,6 @@ let accessToken: string | null =
 
 export const setAccessToken = (token: string | null) => {
   try {
-    console.log("Setting access token:", token);
     accessToken = token;
 
     if (typeof window !== "undefined") {
@@ -36,7 +35,6 @@ export const setAccessToken = (token: string | null) => {
         localStorage.setItem("accessToken", token);
         // 저장 확인
         const stored = localStorage.getItem("accessToken");
-        console.log("Verified stored token:", stored);
         if (stored !== token) {
           console.error("Token storage verification failed");
         }
@@ -207,16 +205,12 @@ export const logout = async (): Promise<void> => {
 
 export const getCurrentUser = async (): Promise<User | null> => {
   try {
-    console.log("[getCurrentUser] Attempting to fetch user data...");
-
     const response = await fetch(`${BASE_URL}/users/me`, {
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
     });
-
-    console.log("[getCurrentUser] Response status:", response.status);
 
     if (!response.ok) {
       if (response.status === 401) {
@@ -262,10 +256,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
           }
 
           const retryData = await retryResponse.json();
-          console.log(
-            "[getCurrentUser] Successfully got user data after refresh:",
-            retryData
-          );
           return retryData;
         } catch (refreshError) {
           console.error("[getCurrentUser] Refresh failed:", refreshError);
@@ -280,7 +270,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
     }
 
     const result = await response.json();
-    console.log("[getCurrentUser] Successfully got user data:", result);
     return result;
   } catch (error) {
     console.error("[getCurrentUser] Error:", error);

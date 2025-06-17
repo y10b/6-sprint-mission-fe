@@ -4,12 +4,7 @@ import { useMemo } from "react";
 import { Listbox } from "@headlessui/react";
 import { FaChevronDown } from "react-icons/fa";
 
-export type OrderByValue =
-  | "latest"
-  | "oldest"
-  | "expensive"
-  | "cheap"
-  | "likes";
+export type OrderByValue = "latest" | "likes";
 
 interface OrderOption {
   value: OrderByValue;
@@ -23,9 +18,6 @@ interface FiltersProps {
 
 const options: readonly OrderOption[] = [
   { value: "latest", label: "최신 순" },
-  { value: "oldest", label: "오래된 순" },
-  { value: "expensive", label: "비싼 순" },
-  { value: "cheap", label: "저렴한 순" },
   { value: "likes", label: "좋아요 순" },
 ] as const;
 

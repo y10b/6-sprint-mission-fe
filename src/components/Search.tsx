@@ -37,7 +37,7 @@ export default function Search({
     <div
       className={`relative ${
         variant === "short"
-          ? "w-[200px] sm:w-[240px]"
+          ? "w-72 sm:w-[242px] "
           : "w-74 sm:w-140 md:w-[1054px]"
       }`}
     >
@@ -49,7 +49,7 @@ export default function Search({
         onCompositionStart={() => setIsComposing(true)}
         onCompositionEnd={() => setIsComposing(false)}
         placeholder="검색어를 입력해주세요"
-        className="w-full h-10 pl-4 pr-10 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+        className="w-full h-[42px] pl-4 pr-10 rounded-md  focus:outline-none bg-secondary-100 placeholder:text-secondary-400"
       />
       <button
         onClick={() => onSearch(keyword)}
