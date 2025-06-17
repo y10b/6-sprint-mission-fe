@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { createArticle } from "@/lib/api/articles/articlesApi";
 
 interface Article {
   title: string;
@@ -63,25 +64,11 @@ const CreateArticle = () => {
       setIsSubmitting(true);
 
       try {
-        const response = await fetch("http://localhost:5000/articles", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            content,
-          } as Article),
-        });
-
-        if (!response.ok) {
-          throw new Error("게시글 작성에 실패했습니다.");
-        }
-
-        await response.json();
+        await createArticle(title, content);
         router.push("/articles");
       } catch (error) {
         console.error("게시글 작성 오류:", error);
+        alert("게시글 작성에 실패했습니다.");
       } finally {
         setIsSubmitting(false);
       }
@@ -113,7 +100,7 @@ const CreateArticle = () => {
           <input
             className={`w-full p-4 bg-gray-100 rounded-lg text-lg ${
               titleError ? "border-red-500" : "border-gray-300"
-            } text-gray-400`}
+            } placeholder:text-gray-400`}
             placeholder="제목을 입력해주세요"
             value={title}
             onChange={handleTitleChange}
@@ -130,7 +117,7 @@ const CreateArticle = () => {
           <textarea
             className={`w-full h-[282px] bg-gray-100 p-4 rounded-lg text-lg ${
               contentError ? "border-red-500" : "border-gray-300"
-            } text-gray-400 resize-none`}
+            } placeholder:text-gray-400 resize-none`}
             placeholder="내용을 입력해주세요"
             value={content}
             onChange={handleContentChange}

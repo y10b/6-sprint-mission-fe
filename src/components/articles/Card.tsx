@@ -3,17 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getBestBadge, getDefaultImg } from "@/utils/imagePath";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  authorNickname?: string;
-  authorImage?: string;
-  images?: string;
-  likes?: { length: number };
-  createdAt: string;
-}
+import { Article } from "@/types/article";
 
 interface CardProps {
   article: Article;
@@ -49,7 +39,7 @@ const Card = ({ article, defaultImage }: CardProps) => {
           <p>{article.authorNickname || "총명한판다"}</p>
           <LikeToArticle
             articleId={article.id}
-            initialCount={article.likes?.length || 0}
+            initialCount={article.likeCount || 0}
           />
         </div>
         <p>{new Date(article.createdAt).toLocaleDateString()}</p>

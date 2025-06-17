@@ -3,18 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getDefaultImg, getProfileImg } from "@/utils/imagePath";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  authorNickname?: string;
-  authorImage?: string;
-  images?: string;
-  likes?: { length: number };
-  createdAt: string;
-  likeCount?: number;
-}
+import { Article } from "@/types/article";
 
 interface ArticleListProps {
   articles: Article[];
@@ -49,11 +38,11 @@ const ArticleList = ({ articles }: ArticleListProps) => {
                 <div className="relative w-6 h-6 rounded-xl border-gray-400">
                   <Image
                     src={article.authorImage || getProfileImg()}
-                    alt={article.authorImage || "작성자 이미지"}
+                    alt={article.authorNickname || "작성자"}
                     fill
                   />
                 </div>
-                <p>{article.authorNickname || "총명한판다"}</p>
+                <p>{article.authorNickname || "작성자"}</p>
                 <p className="text-gray-400">
                   {new Date(article.createdAt).toLocaleDateString()}
                 </p>

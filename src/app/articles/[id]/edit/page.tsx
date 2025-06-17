@@ -2,17 +2,8 @@
 
 import { useEffect, useState, FormEvent, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  authorImage?: string;
-  images?: string[];
-  likes?: number;
-  createdAt: string;
-}
+import { getArticle, updateArticle } from "@/lib/api/articles/articlesApi";
+import { Article } from "@/types/article";
 
 export default function EditArticlePage() {
   const { id } = useParams();
@@ -26,11 +17,7 @@ export default function EditArticlePage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/articles/${id}`);
-        if (!response.ok) {
-          throw new Error("게시글을 불러오는데 실패했습니다.");
-        }
-        const data: Article = await response.json();
+        const data = await getArticle(Number(id));
         setTitle(data.title);
         setContent(data.content);
       } catch (err) {
@@ -50,22 +37,7 @@ export default function EditArticlePage() {
     setError("");
 
     try {
-      const response = await fetch(`http://localhost:5000/articles/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          content,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("게시글 수정에 실패했습니다.");
-      }
-
-      await response.json();
+      await updateArticle(Number(id), title, content);
       alert("게시글이 수정되었습니다!");
       router.push(`/articles/${id}`);
     } catch (err) {
@@ -100,7 +72,7 @@ export default function EditArticlePage() {
           *제목
         </label>
         <input
-          className="w-full py-4 px-6 my-3 bg-gray-100 rounded-xl text-secondary-400"
+          className="w-full py-4 px-6 my-3 bg-gray-100 rounded-xl  placeholder:text-secondary-400"
           placeholder="제목"
           value={title}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -112,7 +84,7 @@ export default function EditArticlePage() {
           *내용
         </label>
         <textarea
-          className="w-full h-[282px] resize-none py-4 px-6 my-3 bg-gray-100 rounded-xl text-secondary-400"
+          className="w-full h-[282px] resize-none py-4 px-6 my-3 bg-gray-100 rounded-xl placeholder:text-secondary-400"
           placeholder="내용"
           value={content}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>

@@ -2,7 +2,11 @@ export interface Article {
   id: number;
   title: string;
   content: string;
-  author?: string;
+  authorNickname?: string;
+  user?: {
+    id: number;
+    nickname: string;
+  };
   authorImage?: string | null;
   images?: string;
   likeCount: number;
