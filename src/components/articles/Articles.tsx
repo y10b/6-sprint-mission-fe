@@ -5,19 +5,7 @@ import Filters, { OrderByValue } from "@/components/Filters";
 import Pagination from "@/components/Pagination";
 import ArticleList from "@/components/articles/ArticleList";
 import { Dispatch, SetStateAction } from "react";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  authorImage?: string;
-  images?: string;
-  likes?: { length: number };
-  likeCount: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Article } from "@/types/article";
 
 interface ArticlesProps {
   articles: Article[];

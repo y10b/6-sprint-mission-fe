@@ -7,12 +7,29 @@ import { TfiBackLeft } from "react-icons/tfi";
 
 import PostDetail from "@/components/articles/ArticleDetail";
 import CommentSection from "@/components/comments/_article/commentsection";
-import { Article as ArticleType, ArticleComment } from "@/types/article";
+import { IArticle as ArticleType, ArticleComment } from "@/types/article";
 import { getArticle } from "@/lib/api/articles/articlesApi";
 import { getArticleComments } from "@/lib/api/comments/commentsApi";
 
+// Article 초기값 객체 – null 사용을 피함
+const initialArticle: ArticleType = {
+  id: 0,
+  title: "",
+  content: "",
+  authorNickname: "",
+  user: {
+    id: 0,
+    nickname: "",
+  },
+  authorImage: null,
+  images: "",
+  likeCount: 0,
+  isLiked: false,
+  createdAt: "",
+};
+
 const Article = () => {
-  const [post, setPost] = useState<ArticleType | null>(null);
+  const [post, setPost] = useState<ArticleType>(initialArticle);
   const [comments, setComments] = useState<ArticleComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const { id } = useParams();
@@ -36,16 +53,15 @@ const Article = () => {
     }
   }, [id]);
 
-  if (!post) return <p>게시글을 로딩 중입니다...</p>;
+  // 데이터가 아직 로딩되지 않은 상태 판단 (id === 0)
+  if (post.id === 0) return <p>게시글을 로딩 중입니다...</p>;
 
   return (
     <div className="container mx-auto mt-8 px-4">
       <PostDetail
         post={post}
-        onLikeToggle={(id: number, newCount: number) =>
-          setPost((prev) =>
-            prev ? { ...prev, likes: { length: newCount } } : null
-          )
+        onLikeToggle={(_: number, newCount: number) =>
+          setPost((prev) => ({ ...prev, likeCount: newCount }))
         }
       />
 

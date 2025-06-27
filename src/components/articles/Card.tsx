@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getBestBadge, getDefaultImg } from "@/utils/imagePath";
-import { Article } from "@/types/article";
+import { IArticle } from "@/types/article";
 
 interface CardProps {
-  article: Article;
+  article: IArticle;
   defaultImage?: string;
 }
 

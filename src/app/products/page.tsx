@@ -11,14 +11,17 @@ import Link from "next/link";
 import Image from "next/image";
 import BestProducts from "./BestProducts";
 import { getImageUrl } from "@/utils/getImageUrl";
-import { ProductsResponse, Product } from "@/types/product";
+import { IProductsResponse, IProduct } from "@/types/product";
 import { UseQueryResult } from "@tanstack/react-query";
 
 export default function ProductList() {
-  const [keyword, setKeyword] = useState<string>(""),
-    [searchText, setSearchText] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<OrderByValue>("latest"),
-    [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<{ keyword: string; text: string }>({
+    keyword: "",
+    text: "",
+  });
+
+  const [orderBy, setOrderBy] = useState<OrderByValue>("latest");
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(4);
 
   const {
@@ -26,11 +29,11 @@ export default function ProductList() {
     isLoading,
     isError,
     isFetching,
-  }: UseQueryResult<ProductsResponse, Error> = usePaginatedProducts({
+  }: UseQueryResult<IProductsResponse, Error> = usePaginatedProducts({
     page,
     pageSize,
     orderBy,
-    keyword,
+    keyword: search.keyword,
   });
 
   const products = data?.list || [],
@@ -54,7 +57,7 @@ export default function ProductList() {
 
   const onSearch = (text: string) => {
     console.log("🔍 검색어 적용됨:", text);
-    setKeyword(text);
+    setSearch((prev) => ({ ...prev, keyword: text }));
     setPage(1);
   };
 
@@ -91,8 +94,14 @@ export default function ProductList() {
           <div className="flex flex-row items-center gap-2 sm:w-auto">
             <div className="flex-1 sm:w-[280px]">
               <Search
-                keyword={searchText}
-                setKeyword={setSearchText}
+                keyword={search.text}
+                setKeyword={(value) =>
+                  setSearch((prev) => ({
+                    ...prev,
+                    text:
+                      typeof value === "function" ? value(prev.text) : value,
+                  }))
+                }
                 variant="short"
                 onSearch={onSearch}
               />
@@ -114,7 +123,7 @@ export default function ProductList() {
 
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
         {products.map(
-          ({ id, name, price, images, favoriteCount, isLiked }: Product) => (
+          ({ id, name, price, images, favoriteCount, isLiked }: IProduct) => (
             <li key={id}>
               <Link href={`/products/${id}`}>
                 <div className="relative w-full aspect-square rounded-2xl overflow-hidden">

@@ -11,52 +11,43 @@ import Link from "next/link";
 import { TfiBackLeft } from "react-icons/tfi";
 import DropdownMenu from "@/components/Dropdownmenu";
 import { useAuth } from "@/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Product } from "@/types/product";
+import { IProduct } from "@/types/product";
 
 const ProductPage = () => {
   const router = useRouter();
   const { id } = useParams();
 
   const { user, isInitialized } = useAuth();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [product, setProduct] = useState<IProduct | null>(null);
 
+  // React Query로 상품 데이터 가져오기
+  const {
+    data: productData,
+    isPending: isLoading,
+    error,
+  } = useQuery<IProduct, Error>({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(Number(id)),
+    enabled: isInitialized && !!user && !!id,
+  });
+
+  // productData 로컬 상태에 반영
   useEffect(() => {
-    if (!id) return;
-
-    if (isInitialized) {
-      if (!user) {
-        alert("로그인이 필요한 페이지입니다.");
-        router.push("/signin");
-        return;
-      }
-
-      const fetchProduct = async () => {
-        try {
-          const data = await getProductById(Number(id));
-          setProduct(data);
-        } catch (err) {
-          console.error("상품 불러오기 실패:", err);
-          setError("상품을 불러오는 데 실패했습니다.");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchProduct();
+    if (productData) {
+      setProduct(productData);
     }
-  }, [id, isInitialized, user, router]);
+  }, [productData]);
 
   if (!isInitialized) return <p>로딩 중...</p>;
 
   if (isLoading) return <p>상품 정보를 불러오는 중...</p>;
 
-  if (error) return <p>{error}</p>;
+  if (error) return <p>상품을 불러오는 데 실패했습니다.</p>;
   if (!product) return <p>상품 정보를 불러올 수 없습니다.</p>;
 
   const {
@@ -73,7 +64,7 @@ const ProductPage = () => {
   } = product;
 
   const handleLikeToggle = () => {
-    setProduct((prev: Product | null): Product | null => {
+    setProduct((prev: IProduct | null): IProduct | null => {
       if (!prev) return null; // prev가 null이면 그대로 null 반환
 
       return {
@@ -114,7 +105,7 @@ const ProductPage = () => {
               ) : (
                 // 이미지가 여러 개일 경우 슬라이드 렌더링
                 <Slider {...sliderSettings} className="h-full">
-                  {images.map((src, idx) => (
+                  {images.map((src: string, idx: number) => (
                     <div
                       key={idx}
                       className="relative h-[343px] sm:h-[400px] rounded-xl overflow-hidden"
@@ -168,7 +159,7 @@ const ProductPage = () => {
               상품 태그
             </h2>
             <div className="flex flex-wrap gap-2">
-              {tags.map((tag, idx) => (
+              {tags.map((tag: string, idx: number) => (
                 <span
                   key={idx}
                   className="px-4 py-[5px] bg-gray-100 text-base font-normal text-gray-800 rounded-full h-9"

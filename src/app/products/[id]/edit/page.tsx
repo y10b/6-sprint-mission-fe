@@ -8,32 +8,18 @@ import FormInput from "@/components/FormInput";
 import FormTextarea from "@/components/FormTextarea";
 import TagInput from "@/components/TagInput";
 import ImageUploader from "@/components/ImageUploader";
-import { Product, UpdateProductInput } from "@/types/product";
+import {
+  TUpdateProductInput,
+  EditableProductFields,
+  UploadedImage,
+  EditProductFormState,
+} from "@/types/product";
 import { useAuth } from "@/context/AuthContext";
 
 type ProductId = string;
 type ImageUrl = string;
 type Tag = string;
 type Price = number;
-
-interface EditableProductFields {
-  name: string;
-  description: string;
-  price: Price;
-  tags: Tag[];
-  images: ImageUrl[];
-}
-
-interface UploadedImage {
-  file: File;
-  url: ImageUrl;
-}
-
-interface EditProductFormState extends EditableProductFields {
-  isValid: boolean;
-  isDirty: boolean;
-  sellerId?: number;
-}
 
 export default function EditProductPage() {
   const { id } = useParams<{ id: ProductId }>();
@@ -191,7 +177,7 @@ export default function EditProductPage() {
     e.preventDefault();
     if (!id || !product.isValid) return;
 
-    const updateData: UpdateProductInput = {
+    const updateData: TUpdateProductInput = {
       name: product.name,
       description: product.description,
       price: product.price,

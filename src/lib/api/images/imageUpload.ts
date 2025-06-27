@@ -2,25 +2,36 @@ const BASE_URL = "http://localhost:5000/api";
 
 // 이미지 업로드
 export const uploadImage = async (selectedFile: File) => {
-  const formData = new FormData();
-  formData.append("image", selectedFile);
-
   try {
-    const response = await fetch(`${BASE_URL}/upload`, {
+    // 1) Presigned URL 요청
+    const presignedRes = await fetch(`${BASE_URL}/upload/presigned`, {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
+      body: JSON.stringify({
+        fileName: selectedFile.name,
+        fileType: selectedFile.type,
+      }),
     });
 
-    if (!response.ok) {
-      throw new Error("이미지 업로드 실패");
+    if (!presignedRes.ok) {
+      throw new Error("Presigned URL 생성 실패");
     }
 
-    const data = await response.json();
+    const { uploadUrl, fileUrl } = await presignedRes.json();
 
-    console.log("✅ 업로드 응답 데이터:", data); // ✅ 이거 꼭 추가!
+    // 2) S3에 직접 업로드
+    const s3UploadRes = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "Content-Type": selectedFile.type },
+      body: selectedFile,
+    });
 
-    return data.imageUrl;
+    if (!s3UploadRes.ok) {
+      throw new Error("S3 업로드 실패");
+    }
+
+    return fileUrl as string;
   } catch (error) {
     console.error("이미지 업로드 중 오류:", error);
     throw error;

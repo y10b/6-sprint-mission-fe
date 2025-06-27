@@ -1,21 +1,9 @@
 "use client";
 import Card from "@/components/articles/Card";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  authorImage?: string;
-  images?: string;
-  likes?: { length: number };
-  likeCount: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { IArticle } from "@/types/article";
 
 interface BestArticlesProps {
-  articles: Article[];
+  articles: IArticle[];
   defaultImage: string;
 }
 

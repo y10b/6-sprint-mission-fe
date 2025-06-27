@@ -1,26 +1,15 @@
 "use client";
 
-import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import BestArticles from "@/components/articles/BestArticles";
 import Articles from "@/components/articles/Articles";
 import { fetchArticlesFromAPI } from "@/lib/api/articles/articlesApi";
 import { OrderByValue } from "@/components/Filters";
-
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  authorImage?: string;
-  images?: string;
-  likeCount: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { IArticle } from "@/types/article";
 
 const ArticlePage = () => {
-  const [allArticles, setAllArticles] = useState<Article[]>([]);
-  const [bestArticles, setBestArticles] = useState<Article[]>([]);
+  const [allArticles, setAllArticles] = useState<IArticle[]>([]);
+  const [bestArticles, setBestArticles] = useState<IArticle[]>([]);
   const [keyword, setKeyword] = useState<string>("");
   const [orderBy, setOrderBy] = useState<OrderByValue>("latest");
   const [currentPage, setCurrentPage] = useState<number>(1);

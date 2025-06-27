@@ -2,14 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
-import { getProfileImg } from "@/utils/imagePath";
+import { getProfileImg, getDefaultImg } from "@/utils/imagePath";
 import LikeToArticle from "@/components/LikeToArticle";
-import { Article } from "@/types/article";
+import { IArticle } from "@/types/article";
 import DropdownMenu from "../Dropdownmenu";
 import { useRouter } from "next/navigation";
 
 interface ArticleDetailProps {
-  post: Article;
+  post: IArticle;
   onLikeToggle: (id: number, newCount: number) => void;
 }
 
@@ -50,11 +50,21 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
       <h1 className="text-2xl font-bold mb-4">{post.title}</h1>
       <p className="text-gray-700 mb-6 whitespace-pre-wrap">{post.content}</p>
 
-      {post.images && (
+      {post.images ? (
         <div className="mb-6">
           <Image
             src={post.images}
             alt="게시글 이미지"
+            width={600}
+            height={400}
+            className="rounded-lg"
+          />
+        </div>
+      ) : (
+        <div className="mb-6">
+          <Image
+            src={getDefaultImg()}
+            alt="기본 이미지"
             width={600}
             height={400}
             className="rounded-lg"

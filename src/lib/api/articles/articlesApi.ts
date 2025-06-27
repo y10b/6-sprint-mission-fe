@@ -1,4 +1,4 @@
-import { Article } from "@/types/article";
+import { IArticle } from "@/types/article";
 
 const BASE_URL = "http://localhost:5000/api";
 
@@ -89,8 +89,9 @@ export const toggleArticleLike = async (articleId: number) => {
 export async function updateArticle(
   articleId: number,
   title: string,
-  content: string
-): Promise<Article> {
+  content: string,
+  imageUrl?: string
+): Promise<IArticle> {
   const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
     method: "PATCH",
     headers: {
@@ -98,7 +99,7 @@ export async function updateArticle(
       Accept: "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ title, content }),
+    body: JSON.stringify({ title, content, images: imageUrl }),
   });
 
   if (!response.ok) {
@@ -125,7 +126,7 @@ export async function deleteArticle(articleId: number): Promise<void> {
   }
 }
 
-export async function getArticle(articleId: number): Promise<Article> {
+export async function getArticle(articleId: number): Promise<IArticle> {
   const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
     credentials: "include",
     headers: {
@@ -142,7 +143,7 @@ export async function getArticle(articleId: number): Promise<Article> {
   return response.json();
 }
 
-export async function getArticles(): Promise<Article[]> {
+export async function getArticles(): Promise<IArticle[]> {
   const response = await fetch(`${BASE_URL}/articles`, {
     credentials: "include",
     headers: {
@@ -163,8 +164,9 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function createArticle(
   title: string,
-  content: string
-): Promise<Article> {
+  content: string,
+  imageUrl?: string
+): Promise<IArticle> {
   const response = await fetch(`${BASE_URL}/articles`, {
     method: "POST",
     headers: {
@@ -172,7 +174,7 @@ export async function createArticle(
       Accept: "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ title, content }),
+    body: JSON.stringify({ title, content, images: imageUrl }),
   });
 
   if (!response.ok) {

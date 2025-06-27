@@ -85,19 +85,28 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   // 삭제 확인 처리
   const handleConfirmDelete = async () => {
     try {
-      if (type === "product") {
-        await deleteProduct(itemId.toString());
-        alert("상품이 삭제되었습니다.");
-        router.push("/products");
-      } else if (type === "comment") {
-        await deleteComment(itemId);
-        alert("댓글 삭제 완료");
-        if (onDelete) onDelete();
-      } else if (type === "article") {
-        await deleteArticle(itemId);
-        alert("글 삭제 완료");
-        if (onDelete) onDelete();
-        router.push("/articles");
+      switch (type) {
+        case "product": {
+          await deleteProduct(itemId.toString());
+          alert("상품이 삭제되었습니다.");
+          router.push("/products");
+          break;
+        }
+        case "comment": {
+          await deleteComment(itemId);
+          alert("댓글 삭제 완료");
+          if (onDelete) onDelete();
+          break;
+        }
+        case "article": {
+          await deleteArticle(itemId);
+          alert("글 삭제 완료");
+          if (onDelete) onDelete();
+          router.push("/articles");
+          break;
+        }
+        default:
+          break;
       }
     } catch (error) {
       console.error("삭제 실패:", error);

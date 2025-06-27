@@ -5,12 +5,10 @@ import { getProducts } from "@/lib/api/products/productsApi";
 import LikeToProduct from "@/components/LikeToProduct";
 import { formatNumber } from "@/utils/formatNumber";
 import { getImageUrl } from "@/utils/getImageUrl";
-import { Product } from "@/types/product";
-
-interface BestProduct extends Product {}
+import { IProduct } from "@/types/product";
 
 function BestProducts() {
-  const [bestProducts, setBestProducts] = useState<BestProduct[]>([]);
+  const [bestProducts, setBestProducts] = useState<IProduct[]>([]);
   const [visibleCount, setVisibleCount] = useState(4);
 
   const handleResize = useCallback(() => {

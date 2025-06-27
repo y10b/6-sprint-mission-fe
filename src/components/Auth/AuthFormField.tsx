@@ -13,7 +13,7 @@ interface FormFieldProps {
   register: UseFormRegisterReturn;
 }
 
-export default function FormField({
+export default function AuthFormField({
   label,
   id,
   type = "text",

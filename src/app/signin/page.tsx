@@ -5,24 +5,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login as loginApi } from "@/lib/api/auth/auth.api";
 import { getValidationError } from "@/utils/authValidation";
-import Image from "next/image";
 import Link from "next/link";
 import SnsSign from "@/components/SnsSign";
 import { useState } from "react";
-import FormField from "@/components/Auth/AuthField";
+import AuthFormField from "@/components/Auth/AuthFormField";
 import Modal from "@/components/Auth/AuthModal";
 import { AxiosError } from "axios";
-
-interface SigninFormData {
-  email: string;
-  password: string;
-}
-
-interface ApiErrorResponse {
-  success: boolean;
-  error: string;
-  message?: string;
-}
+import { ApiErrorResponse, SigninFormData } from "@/types/auth";
 
 export default function Signin() {
   const { login } = useAuth();
@@ -102,7 +91,7 @@ export default function Signin() {
         </Link>
 
         {/* 이메일 입력 */}
-        <FormField
+        <AuthFormField
           id="email"
           label="이메일"
           type="email"
@@ -114,7 +103,7 @@ export default function Signin() {
         />
 
         {/* 비밀번호 입력 */}
-        <FormField
+        <AuthFormField
           id="password"
           label="비밀번호"
           placeholder="비밀번호를 입력해주세요"

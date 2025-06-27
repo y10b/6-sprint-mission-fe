@@ -1,21 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { createArticle } from "@/lib/api/articles/articlesApi";
-
-interface Article {
-  title: string;
-  content: string;
-}
+import ImageUploader from "@/components/ImageUploader";
+import { uploadImage } from "@/lib/api/images/imageUpload";
+import { useMutation } from "@tanstack/react-query";
 
 const CreateArticle = () => {
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [titleError, setTitleError] = useState<string>("");
-  const [contentError, setContentError] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ title: string; content: string }>({
+    title: "",
+    content: "",
+  });
+  const [imageError, setImageError] = useState<string>("");
 
   const validateTitle = (title: string): string => {
     const trimmedTitle = title.trim();
@@ -42,14 +44,34 @@ const CreateArticle = () => {
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    setTitleError(validateTitle(newTitle));
+    setErrors((prev) => ({ ...prev, title: validateTitle(newTitle) }));
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
     setContent(newContent);
-    setContentError(validateContent(newContent));
+    setErrors((prev) => ({ ...prev, content: validateContent(newContent) }));
   };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setImageError("");
+  };
+
+  const { mutateAsync: submitArticle, isPending } = useMutation({
+    mutationFn: async () => {
+      await createArticleWithImage();
+    },
+    onSuccess: () => {
+      router.push("/articles");
+    },
+    onError: () => {
+      alert("게시글 작성에 실패했습니다.");
+    },
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,25 +79,28 @@ const CreateArticle = () => {
     const titleErrorMessage = validateTitle(title);
     const contentErrorMessage = validateContent(content);
 
-    setTitleError(titleErrorMessage);
-    setContentError(contentErrorMessage);
+    setErrors({ title: titleErrorMessage, content: contentErrorMessage });
 
     if (!titleErrorMessage && !contentErrorMessage) {
-      setIsSubmitting(true);
-
-      try {
-        await createArticle(title, content);
-        router.push("/articles");
-      } catch (error) {
-        console.error("게시글 작성 오류:", error);
-        alert("게시글 작성에 실패했습니다.");
-      } finally {
-        setIsSubmitting(false);
-      }
+      await submitArticle();
     }
   };
 
-  const isFormValid = !titleError && !contentError && title && content;
+  const createArticleWithImage = async () => {
+    let imageUrl: string | undefined = undefined;
+    if (image) {
+      try {
+        imageUrl = await uploadImage(image);
+      } catch (err) {
+        console.error("이미지 업로드 실패:", err);
+        setImageError("이미지 업로드에 실패했습니다.");
+        return;
+      }
+    }
+    await createArticle(title, content, imageUrl);
+  };
+
+  const isFormValid = !errors.title && !errors.content && title && content;
 
   return (
     <div className="max-w-7xl mx-auto mt-8 px-4">
@@ -87,9 +112,9 @@ const CreateArticle = () => {
             className={`cursor-pointer p-2 rounded-lg text-gray-100 text-lg font-semibold w-[74px] ${
               isFormValid ? "bg-blue-500" : "bg-gray-400"
             }`}
-            disabled={!isFormValid || isSubmitting}
+            disabled={!isFormValid || isPending}
           >
-            {isSubmitting ? "등록 중..." : "등록"}
+            {isPending ? "등록 중..." : "등록"}
           </button>
         </div>
 
@@ -99,14 +124,14 @@ const CreateArticle = () => {
           </label>
           <input
             className={`w-full p-4 bg-gray-100 rounded-lg text-lg ${
-              titleError ? "border-red-500" : "border-gray-300"
+              errors.title ? "border-red-500" : "border-gray-300"
             } placeholder:text-gray-400`}
             placeholder="제목을 입력해주세요"
             value={title}
             onChange={handleTitleChange}
           />
-          {titleError && (
-            <p className="text-red-500 text-sm mt-2">{titleError}</p>
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-2">{errors.title}</p>
           )}
         </div>
 
@@ -116,15 +141,32 @@ const CreateArticle = () => {
           </label>
           <textarea
             className={`w-full h-[282px] bg-gray-100 p-4 rounded-lg text-lg ${
-              contentError ? "border-red-500" : "border-gray-300"
+              errors.content ? "border-red-500" : "border-gray-300"
             } placeholder:text-gray-400 resize-none`}
             placeholder="내용을 입력해주세요"
             value={content}
             onChange={handleContentChange}
           ></textarea>
-          {contentError && (
-            <p className="text-red-500 text-sm mt-2">{contentError}</p>
+          {errors.content && (
+            <p className="text-red-500 text-sm mt-2">{errors.content}</p>
           )}
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-xl font-semibold text-gray-800 mb-2">
+            이미지 (선택)
+          </label>
+          <ImageUploader
+            images={
+              previewUrl ? [{ file: image as File, url: previewUrl }] : []
+            }
+            handleImageChange={handleImageChange}
+            handleImageDelete={() => {
+              setImage(null);
+              setPreviewUrl(null);
+            }}
+            error={imageError}
+          />
         </div>
       </form>
     </div>

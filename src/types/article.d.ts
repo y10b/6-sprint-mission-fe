@@ -1,14 +1,14 @@
-export interface Article {
+export interface IArticle {
   id: number;
   title: string;
   content: string;
-  authorNickname?: string;
-  user?: {
+  authorNickname: string;
+  user: {
     id: number;
     nickname: string;
   };
   authorImage?: string | null;
-  images?: string;
+  images: string;
   likeCount: number;
   isLiked: boolean;
   createdAt: string;
@@ -42,3 +42,5 @@ export interface ServerComment {
     nickname: string;
   };
 }
+
+export type TArticleFormData = Pick<IArticle, "title" | "content" | "images">;

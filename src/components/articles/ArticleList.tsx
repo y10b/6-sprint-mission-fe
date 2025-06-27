@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getDefaultImg, getProfileImg } from "@/utils/imagePath";
-import { Article } from "@/types/article";
+import { IArticle } from "@/types/article";
 
 interface ArticleListProps {
-  articles: Article[];
+  articles: IArticle[];
 }
 
 const ArticleList = ({ articles }: ArticleListProps) => {

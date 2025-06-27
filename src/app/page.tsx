@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image"; // Image 컴포넌트 import
 import Banner from "@/components/ui/banner";
 import { useRouter } from "next/navigation";
