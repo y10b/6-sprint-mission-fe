@@ -63,7 +63,11 @@ export default function EditArticlePage() {
           return;
         }
       }
-      await updateArticle(Number(id), form.title, form.content, imageUrl);
+      await updateArticle(Number(id), {
+        title: form.title,
+        content: form.content,
+        images: imageUrl,
+      });
       alert("게시글이 수정되었습니다!");
       router.push(`/articles/${id}`);
     } catch (err) {

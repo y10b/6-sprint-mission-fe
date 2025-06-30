@@ -4,34 +4,18 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   getCommentsByProductId,
-  GetCommentsResponse,
+  postProductComment,
 } from "@/lib/api/comments/commentsApi";
-import { postProductComment } from "@/lib/api/comments/commentsApi";
+import { IProductComment, GetProductCommentsResponse } from "@/types";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
 import DropdownMenu from "@/components/Dropdownmenu";
-
-interface User {
-  id: number;
-  nickname: string;
-  image?: string | null;
-}
-
-interface Comment {
-  id: number;
-  content: string;
-  userId: number;
-  productId: number;
-  createdAt: string;
-  updatedAt: string;
-  user: User;
-}
 
 interface CommentsProductsProps {
   productId: number;
 }
 
 export default function CommentsProducts({ productId }: CommentsProductsProps) {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<IProductComment[]>([]);
   const [nextCursor, setNextCursor] = useState<number | null>(null);
   const [newComment, setNewComment] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

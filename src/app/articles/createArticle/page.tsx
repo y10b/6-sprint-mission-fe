@@ -97,7 +97,11 @@ const CreateArticle = () => {
         return;
       }
     }
-    await createArticle(title, content, imageUrl);
+    await createArticle({
+      title,
+      content,
+      images: imageUrl,
+    });
   };
 
   const isFormValid = !errors.title && !errors.content && title && content;

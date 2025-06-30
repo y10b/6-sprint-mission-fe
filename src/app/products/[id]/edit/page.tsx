@@ -16,13 +16,8 @@ import {
 } from "@/types/product";
 import { useAuth } from "@/context/AuthContext";
 
-type ProductId = string;
-type ImageUrl = string;
-type Tag = string;
-type Price = number;
-
 export default function EditProductPage() {
-  const { id } = useParams<{ id: ProductId }>();
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
 
@@ -67,7 +62,7 @@ export default function EditProductPage() {
 
         if (data.images && data.images.length > 0) {
           const existingImages = await Promise.all(
-            data.images.map(async (url: ImageUrl) => {
+            data.images.map(async (url: string) => {
               try {
                 const response = await fetch(url);
                 const blob = await response.blob();
@@ -247,7 +242,7 @@ export default function EditProductPage() {
         <TagInput
           label="*태그"
           tags={product.tags}
-          setTags={(newTags: Tag[]) =>
+          setTags={(newTags: string[]) =>
             setProduct((prev) => ({
               ...prev,
               tags: newTags,

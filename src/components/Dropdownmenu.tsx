@@ -70,7 +70,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             alert("제목이 비어있습니다!");
             return;
           }
-          await updateArticle(itemId, title, content);
+          await updateArticle(itemId, { title, content });
           alert("글 수정 성공!");
         }
         setIsOpen(false);

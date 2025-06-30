@@ -5,10 +5,10 @@ import Filters, { OrderByValue } from "@/components/Filters";
 import Pagination from "@/components/Pagination";
 import ArticleList from "@/components/articles/ArticleList";
 import { Dispatch, SetStateAction } from "react";
-import type { Article } from "@/types/article";
+import { IArticle } from "@/types";
 
 interface ArticlesProps {
-  articles: Article[];
+  articles: IArticle[];
   keyword: string;
   setKeyword: Dispatch<SetStateAction<string>>;
   orderBy: OrderByValue;

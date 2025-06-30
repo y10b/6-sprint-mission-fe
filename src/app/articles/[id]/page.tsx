@@ -7,30 +7,21 @@ import { TfiBackLeft } from "react-icons/tfi";
 
 import PostDetail from "@/components/articles/ArticleDetail";
 import CommentSection from "@/components/comments/_article/commentsection";
-import { IArticle as ArticleType, ArticleComment } from "@/types/article";
+import { IArticle as ArticleType, IArticleComment } from "@/types/article";
 import { getArticle } from "@/lib/api/articles/articlesApi";
 import { getArticleComments } from "@/lib/api/comments/commentsApi";
 
-// Article 초기값 객체 – null 사용을 피함
-const initialArticle: ArticleType = {
-  id: 0,
-  title: "",
-  content: "",
-  authorNickname: "",
-  user: {
-    id: 0,
-    nickname: "",
-  },
-  authorImage: null,
-  images: "",
-  likeCount: 0,
-  isLiked: false,
-  createdAt: "",
-};
+// 상태를 더 명시적으로 관리하는 타입
+type ArticleState =
+  | { status: "loading" }
+  | { status: "error"; message: string }
+  | { status: "success"; data: ArticleType };
 
 const Article = () => {
-  const [post, setPost] = useState<ArticleType>(initialArticle);
-  const [comments, setComments] = useState<ArticleComment[]>([]);
+  const [articleState, setArticleState] = useState<ArticleState>({
+    status: "loading",
+  });
+  const [comments, setComments] = useState<IArticleComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const { id } = useParams();
 
@@ -38,14 +29,20 @@ const Article = () => {
     if (id) {
       const fetchData = async () => {
         try {
+          setArticleState({ status: "loading" });
+
           const articleData = await getArticle(Number(id));
-          setPost(articleData);
+          setArticleState({ status: "success", data: articleData });
 
           const commentData = await getArticleComments(Number(id));
           console.log("Fetched comments:", commentData);
           setComments(commentData);
         } catch (err) {
           console.error("데이터 로딩 실패:", err);
+          setArticleState({
+            status: "error",
+            message: "게시글을 불러오는데 실패했습니다.",
+          });
         }
       };
 
@@ -53,15 +50,29 @@ const Article = () => {
     }
   }, [id]);
 
-  // 데이터가 아직 로딩되지 않은 상태 판단 (id === 0)
-  if (post.id === 0) return <p>게시글을 로딩 중입니다...</p>;
+  // 상태별 렌더링
+  if (articleState.status === "loading") {
+    return <p className="text-center mt-8">게시글을 로딩 중입니다...</p>;
+  }
+
+  if (articleState.status === "error") {
+    return (
+      <p className="text-center mt-8 text-red-500">{articleState.message}</p>
+    );
+  }
+
+  // 이제 articleState.status === 'success'이므로 data가 보장됨
+  const post = articleState.data;
 
   return (
     <div className="container mx-auto mt-8 px-4">
       <PostDetail
         post={post}
         onLikeToggle={(_: number, newCount: number) =>
-          setPost((prev) => ({ ...prev, likeCount: newCount }))
+          setArticleState({
+            status: "success",
+            data: { ...post, likeCount: newCount },
+          })
         }
       />
 

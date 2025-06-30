@@ -16,11 +16,7 @@ import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/Auth/AuthModal";
 import { useState } from "react";
 import { AxiosError } from "axios";
-import {
-  ApiErrorResponse,
-  ShowPasswordState,
-  SignupFormData,
-} from "@/types/auth";
+import { AuthError, ShowPasswordState, SignupFormData } from "@/types/auth";
 
 export default function Signup() {
   const { login } = useAuth();
@@ -68,7 +64,7 @@ export default function Signup() {
       if (err instanceof Error) {
         errorMessage = err.message;
       } else {
-        const error = err as AxiosError<ApiErrorResponse>;
+        const error = err as AxiosError<AuthError>;
         errorMessage =
           error.response?.data?.error ||
           error.response?.data?.message ||

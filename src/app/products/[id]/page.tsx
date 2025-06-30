@@ -19,7 +19,6 @@ import "slick-carousel/slick/slick-theme.css";
 import { IProduct } from "@/types/product";
 
 const ProductPage = () => {
-  const router = useRouter();
   const { id } = useParams();
 
   const { user, isInitialized } = useAuth();

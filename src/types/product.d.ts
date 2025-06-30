@@ -1,18 +1,19 @@
-export interface IProduct {
-  id: number;
+import { BaseEntity } from "./index";
+
+export interface IProduct extends BaseEntity {
   name: string;
   description: string;
   price: number;
   tags: string[];
   sellerId: number;
   sellerNickname: string;
-  createdAt: string;
-  updatedAt: string;
-  comments: Comment[];
+  comments: IProductComment[];
   favoriteCount: number;
   isLiked: boolean;
   images: string[];
 }
+
+export type { IProductComment } from "./comment";
 
 export interface IPaginationParams {
   page?: number;

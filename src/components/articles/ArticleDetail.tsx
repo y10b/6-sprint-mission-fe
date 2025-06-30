@@ -4,14 +4,9 @@ import React from "react";
 import Image from "next/image";
 import { getProfileImg, getDefaultImg } from "@/utils/imagePath";
 import LikeToArticle from "@/components/LikeToArticle";
-import { IArticle } from "@/types/article";
+import { ArticleDetailProps } from "@/types";
 import DropdownMenu from "../Dropdownmenu";
 import { useRouter } from "next/navigation";
-
-interface ArticleDetailProps {
-  post: IArticle;
-  onLikeToggle: (id: number, newCount: number) => void;
-}
 
 const ArticleDetail: React.FC<ArticleDetailProps> = ({
   post,

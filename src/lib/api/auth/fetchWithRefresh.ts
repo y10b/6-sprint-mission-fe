@@ -1,9 +1,11 @@
-import { getAccessToken, setAccessToken } from "./auth.api";
+import { ApiError } from "@/types";
 
 interface RequestInit extends globalThis.RequestInit {
   credentials?: RequestCredentials;
   headers?: HeadersInit;
 }
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_AUTH;
 
 export const fetchWithRefresh = async (
   input: RequestInfo | URL,
@@ -24,7 +26,7 @@ export const fetchWithRefresh = async (
   if (res.status === 401) {
     try {
       // 액세스 토큰 만료로 판단하고 리프레시 시도
-      const refreshRes = await fetch("http://localhost:5000/users/refresh", {
+      const refreshRes = await fetch(`${BASE_URL}/users/refresh`, {
         method: "POST",
         credentials: "include",
       });

@@ -9,7 +9,7 @@ import {
   ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getCurrentUser } from "@/lib/api/auth/auth.api";
+import { getCurrentUser, checkInitialToken } from "@/lib/api/auth/auth.api";
 import { logout as logoutApi } from "@/lib/api/auth/auth.api";
 
 interface User {
@@ -75,23 +75,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [router]);
 
-  // 초기 로드 시 사용자 정보 가져오기
+  // 초기 로드 시 토큰 확인 및 사용자 정보 가져오기
   useEffect(() => {
     const initAuth = async () => {
       setIsLoading(true);
       try {
-        await fetchUserData();
+        console.log("[AuthProvider] 초기화 시작...");
+
+        // 먼저 refresh token으로 새로운 access token 발급 시도
+        const userData = await checkInitialToken();
+
+        if (userData) {
+          console.log("[AuthProvider] 토큰 갱신 성공, 사용자 정보 설정");
+          setUser(userData);
+        } else {
+          console.log("[AuthProvider] 토큰 갱신 실패, 현재 사용자 정보 확인");
+          // checkInitialToken 실패 시 fallback으로 getCurrentUser 시도
+          await fetchUserData();
+        }
       } catch (error) {
         console.error("[AuthProvider] 초기화 에러:", error);
         setUser(null);
       } finally {
         setIsInitialized(true);
         setIsLoading(false);
+        console.log("[AuthProvider] 초기화 완료");
       }
     };
 
     initAuth();
-  }, [fetchUserData]);
+  }, []); // fetchUserData 의존성 제거하여 무한 루프 방지
 
   // 로그인한 상태에서 특정 경로에 접근 시 리다이렉트
   useEffect(() => {

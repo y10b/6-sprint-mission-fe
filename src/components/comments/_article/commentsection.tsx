@@ -5,12 +5,12 @@ import Dropdown from "@/components/Dropdownmenu";
 import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
-import { ArticleComment } from "@/types/article";
+import { IArticleComment } from "@/types/article";
 import { createArticleComment } from "@/lib/api/comments/commentsApi";
 
 interface CommentSectionProps {
-  comments: ArticleComment[];
-  setComments: React.Dispatch<React.SetStateAction<ArticleComment[]>>;
+  comments: IArticleComment[];
+  setComments: React.Dispatch<React.SetStateAction<IArticleComment[]>>;
   newComment: string;
   setNewComment: React.Dispatch<React.SetStateAction<string>>;
   articleId: number;

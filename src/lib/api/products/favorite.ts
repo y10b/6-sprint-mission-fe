@@ -1,10 +1,10 @@
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function addFavorite(productId: number) {
   if (!productId) {
     throw new Error("상품 ID가 없습니다.");
   }
-  const url = `${BASE_URL}/products/${productId}/like`;
+  const url = `${BASE_URL}/api/products/${productId}/like`;
   const res = await fetch(url, {
     method: "POST",
     headers: {

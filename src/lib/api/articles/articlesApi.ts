@@ -1,6 +1,6 @@
-import { IArticle } from "@/types/article";
+import { IArticle, ICreateArticleInput, TUpdateArticleInput } from "@/types";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchArticlesFromAPI = async ({
   page = 1,
@@ -88,9 +88,7 @@ export const toggleArticleLike = async (articleId: number) => {
 
 export async function updateArticle(
   articleId: number,
-  title: string,
-  content: string,
-  imageUrl?: string
+  updateData: TUpdateArticleInput
 ): Promise<IArticle> {
   const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
     method: "PATCH",
@@ -99,7 +97,7 @@ export async function updateArticle(
       Accept: "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ title, content, images: imageUrl }),
+    body: JSON.stringify(updateData),
   });
 
   if (!response.ok) {
@@ -163,9 +161,7 @@ export async function getArticles(): Promise<IArticle[]> {
 }
 
 export async function createArticle(
-  title: string,
-  content: string,
-  imageUrl?: string
+  articleData: ICreateArticleInput
 ): Promise<IArticle> {
   const response = await fetch(`${BASE_URL}/articles`, {
     method: "POST",
@@ -174,7 +170,7 @@ export async function createArticle(
       Accept: "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ title, content, images: imageUrl }),
+    body: JSON.stringify(articleData),
   });
 
   if (!response.ok) {

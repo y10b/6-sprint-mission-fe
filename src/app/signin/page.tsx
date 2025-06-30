@@ -11,7 +11,7 @@ import { useState } from "react";
 import AuthFormField from "@/components/Auth/AuthFormField";
 import Modal from "@/components/Auth/AuthModal";
 import { AxiosError } from "axios";
-import { ApiErrorResponse, SigninFormData } from "@/types/auth";
+import { AuthError, SigninFormData } from "@/types/auth";
 
 export default function Signin() {
   const { login } = useAuth();
@@ -52,7 +52,7 @@ export default function Signin() {
       if (err instanceof Error) {
         errorMessage = err.message;
       } else {
-        const error = err as AxiosError<ApiErrorResponse>;
+        const error = err as AxiosError<AuthError>;
         errorMessage =
           error.response?.data?.error ||
           error.response?.data?.message ||

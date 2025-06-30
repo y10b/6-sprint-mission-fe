@@ -3,14 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import LikeToArticle from "@/components/LikeToArticle";
 import { getBestBadge, getDefaultImg } from "@/utils/imagePath";
-import { IArticle } from "@/types/article";
+import { ArticleCardProps } from "@/types";
 
-interface CardProps {
-  article: IArticle;
-  defaultImage?: string;
-}
-
-const Card = ({ article, defaultImage }: CardProps) => {
+const Card = ({ article, defaultImage }: ArticleCardProps) => {
   return (
     <div className="bg-secondary-50 px-6 pt-[46px] pb-4 rounded-lg relative">
       <Link href={`/articles/${article.id}`} className="block">

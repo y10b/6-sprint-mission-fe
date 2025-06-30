@@ -1,16 +1,17 @@
 // api/product.ts
 import {
-  Product,
-  CreateProductInput,
-  UpdateProductInput,
-  ProductsResponse,
-} from "@/types/product";
+  IProduct,
+  ICreateProductInput,
+  TUpdateProductInput,
+  IProductsResponse,
+  ApiResponse,
+} from "@/types";
 import { fetchWithRefresh } from "@/lib/api/auth/fetchWithRefresh";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 유효성 검사 함수
-const validateProductData = (productData: CreateProductInput): boolean => {
+const validateProductData = (productData: ICreateProductInput): boolean => {
   if (
     !productData.name ||
     !productData.price ||
@@ -39,8 +40,8 @@ const validateProductData = (productData: CreateProductInput): boolean => {
 
 // 상품 생성
 export const createProduct = async (
-  productData: CreateProductInput
-): Promise<{ success: boolean; data?: Product; error?: string }> => {
+  productData: ICreateProductInput
+): Promise<ApiResponse<IProduct>> => {
   try {
     if (!validateProductData(productData)) {
       return { success: false, error: "Invalid product data." };
@@ -89,7 +90,7 @@ export const getProducts = async ({
   pageSize?: number;
   orderBy?: string;
   keyword?: string;
-}): Promise<ProductsResponse> => {
+}): Promise<IProductsResponse> => {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
@@ -119,7 +120,7 @@ export const getProducts = async ({
 };
 
 // 상품 상세 가져오기
-export const getProductById = async (id: number): Promise<Product> => {
+export const getProductById = async (id: number): Promise<IProduct> => {
   try {
     const response = await fetch(`${BASE_URL}/products/${id}`, {
       method: "GET",
@@ -133,7 +134,7 @@ export const getProductById = async (id: number): Promise<Product> => {
       throw new Error("Failed to fetch product details.");
     }
 
-    const data: Product = await response.json();
+    const data: IProduct = await response.json();
     return data;
   } catch (error) {
     console.error("Error fetching product details", error);
@@ -178,8 +179,8 @@ export const deleteProduct = async (
 // 상품 수정
 export const updateProduct = async (
   productId: string,
-  updatedData: UpdateProductInput
-): Promise<Product> => {
+  updatedData: TUpdateProductInput
+): Promise<IProduct> => {
   try {
     const response = await fetchWithRefresh(
       `${BASE_URL}/products/${productId}`,

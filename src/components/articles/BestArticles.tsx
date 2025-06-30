@@ -1,11 +1,6 @@
 "use client";
 import Card from "@/components/articles/Card";
-import type { IArticle } from "@/types/article";
-
-interface BestArticlesProps {
-  articles: IArticle[];
-  defaultImage: string;
-}
+import { BestArticlesProps } from "@/types";
 
 const BestArticles = ({ articles = [], defaultImage }: BestArticlesProps) => {
   return (
