@@ -1,11 +1,9 @@
-import { ApiError } from "@/types";
-
 interface RequestInit extends globalThis.RequestInit {
   credentials?: RequestCredentials;
   headers?: HeadersInit;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_AUTH;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchWithRefresh = async (
   input: RequestInfo | URL,

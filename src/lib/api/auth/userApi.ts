@@ -1,6 +1,6 @@
 import { fetchWithRefresh } from "@/lib/api/auth/fetchWithRefresh";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_AUTH;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getCurrentUser() {
   try {

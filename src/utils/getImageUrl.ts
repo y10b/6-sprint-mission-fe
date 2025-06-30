@@ -1,5 +1,6 @@
 export function getImageUrl(imagePath?: string | null) {
-  const BASE_URL = "http://localhost:5000"; // public 폴더 내 기본 이미지
+  const BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "https://api.toieeeeeea.shop";
   const DEFAULT_IMAGE = "/img/making.png"; // Default image path
 
   if (!imagePath) {

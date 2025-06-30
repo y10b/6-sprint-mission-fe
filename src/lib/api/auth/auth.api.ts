@@ -6,7 +6,7 @@ import {
   RefreshTokenResponse,
 } from "@/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_AUTH;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // localStorage 의존성 제거 - httpOnly 쿠키만 사용
 export const setAccessToken = (token: string | null) => {
