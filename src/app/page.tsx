@@ -1,103 +1,149 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Image from "next/image"; // Image 컴포넌트 import
+import Banner from "@/components/ui/banner";
+import { useRouter } from "next/navigation";
+
+const HomePage = () => {
+  const router = useRouter();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="w-full">
+      {/* Banner Section */}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <Banner
+        imageUrl="/img/home_top.png"
+        mobileText={{
+          firstLine: "일상의 모든 물건을",
+          secondLine: "거래해보세요",
+        }}
+        tabletText={{
+          firstLine: "일상의 모든 물건을 거래해보세요",
+        }}
+        pcText={{
+          firstLine: "일상의 모든 물건을",
+          secondLine: "거래해 보세요",
+        }}
+        altText="배너 이미지"
+        buttonText="구경하러 가기"
+        onButtonClick={() => {
+          router.push("/products");
+        }}
+      />
+
+      {/* Content Sections */}
+      <article className="max-w-[1200px] mx-auto mt-[52px] md:mt-[100px] mb-[52px] md:mb-[100px]">
+        {/* First Section */}
+        <div className="px-4 md:px-6 lg:px-[120px]">
+          <section className="bg-[#fcfcfc] flex flex-col lg:flex-row lg:items-center lg:gap-[108px]">
+            {/* Image - Left on PC */}
+            <div className="w-full lg:w-1/2">
+              <div className="relative w-[calc(100%-32px)] md:w-[calc(100%-48px)] lg:w-[588px] mx-4 md:mx-6 lg:mx-0 aspect-[343/259] md:aspect-[696/444] lg:aspect-[588/444]">
+                <Image
+                  src="/img/Img_home_01.png"
+                  alt="Hot item 이미지"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+            {/* Text */}
+            <div className="w-full lg:w-1/2 mt-4 md:mt-6 lg:mt-0 px-4 md:px-6">
+              <p className="font-bold text-base sm:text-[18px] leading-[26px] text-primary-100">
+                Hot item
+              </p>
+              <p className="mt-2 sm:mt-4 md:mt-3 font-bold text-2xl sm:text-[32px] md:text-[40px] leading-8 md:leading-[140%] text-secondary-700">
+                인기 상품을 <br className="hidden md:block" /> 확인해보세요
+              </p>
+              <p className="mt-4 sm:mt-6 font-medium text-base sm:text-[18px] md:text-xl leading-[26px] md:leading-8 text-secondary-700">
+                가장 HOT한 중고거래 물품을 <br className="hidden md:block" />{" "}
+                판다 마켓에서 확인해 보세요
+              </p>
+            </div>
+          </section>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Second Section */}
+        <div className="mt-[52px] md:mt-[100px] px-4 md:px-6 lg:px-[120px]">
+          <section className="bg-[#fcfcfc] flex flex-col lg:flex-row lg:items-center lg:gap-[108px]">
+            {/* Text - Left on PC */}
+            <div className="w-full lg:w-1/2 mt-4 md:mt-6 lg:mt-0 px-4 md:px-6 order-2 lg:order-1 text-right">
+              <p className="font-bold text-base sm:text-[18px] leading-[26px] text-primary-100 text-right">
+                Search
+              </p>
+              <p className="mt-2 sm:mt-4 md:mt-3 font-bold text-2xl sm:text-[32px] md:text-[40px] leading-8 md:leading-[140%] text-secondary-700 text-right">
+                구매를 원하는 <br className="hidden md:block" /> 상품을
+                검색하세요
+              </p>
+              <p className="mt-4 sm:mt-6 font-medium text-base sm:text-[18px] md:text-xl leading-[26px] md:leading-8 text-secondary-700 text-right">
+                구매하고 싶은 물품은 검색해서
+                <br className="hidden md:block" /> 쉽게 찾아보세요
+              </p>
+            </div>
+            {/* Image - Right on PC */}
+            <div className="w-full lg:w-1/2 order-1 lg:order-2">
+              <div className="relative w-[calc(100%-32px)] md:w-[calc(100%-48px)] lg:w-[588px] mx-4 md:mx-6 lg:mx-0 aspect-[343/259] md:aspect-[696/444] lg:aspect-[588/444]">
+                <Image
+                  src="/img/Img_home_02.png"
+                  alt="Search 이미지"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Third Section */}
+        <div className="mt-[52px] md:mt-[100px] px-4 md:px-6 lg:px-[120px]">
+          <section className="bg-[#fcfcfc] flex flex-col lg:flex-row lg:items-center lg:gap-[108px]">
+            {/* Image - Left on PC */}
+            <div className="w-full lg:w-1/2">
+              <div className="relative w-[calc(100%-32px)] md:w-[calc(100%-48px)] lg:w-[588px] mx-4 md:mx-6 lg:mx-0 aspect-[343/259] md:aspect-[696/444] lg:aspect-[588/444]">
+                <Image
+                  src="/img/Img_home_03.png"
+                  alt="Register 이미지"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            {/* Text */}
+            <div className="w-full lg:w-1/2 mt-4 md:mt-6 lg:mt-0 px-4 md:px-6">
+              <p className="font-bold text-base sm:text-[18px] leading-[26px] text-primary-100">
+                Register
+              </p>
+              <p className="mt-2 sm:mt-4 md:mt-3 font-bold text-2xl sm:text-[32px] md:text-[40px] leading-8 md:leading-[140%] text-secondary-700">
+                판매를 원하는 <br className="hidden md:block" /> 상품을
+                등록하세요
+              </p>
+              <p className="mt-4 sm:mt-6 font-medium text-base sm:text-[18px] md:text-xl leading-[26px] md:leading-8 text-secondary-700">
+                어떤 물건이든 판매하고 싶은 상품을
+                <br className="hidden md:block" /> 쉽게 등록하세요
+              </p>
+            </div>
+          </section>
+        </div>
+      </article>
+      <Banner
+        imageUrl="/img/home_bottom.png"
+        mobileText={{
+          firstLine: "믿을 수 있는",
+          secondLine: "판다마켓 중고 거래",
+        }}
+        tabletText={{
+          firstLine: "믿을 수 있는",
+          secondLine: "판다마켓 중고 거래",
+        }}
+        pcText={{
+          firstLine: "믿을 수 있는",
+          secondLine: "판다마켓 중고 거래",
+        }}
+        altText="랜덤 배경 이미지"
+      />
     </div>
   );
-}
+};
+
+export default HomePage;

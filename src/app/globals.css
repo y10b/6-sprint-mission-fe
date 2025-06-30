@@ -1,26 +1,37 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 @import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ===== 테마 정의 ===== */
+@theme {
+  --breakpoint-sm: 743px;
+  --breakpoint-md: 1199px;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* 색상 정의: 디자인 내용에 따라 정의. 실사용 시 className="text-primary-50" */
+  --color-primary-100: #3692ff;
+  --color-primary-200: #1967d6;
+  --color-primary-300: #1251aa;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-error: #f74747;
+
+  --color-gray-50: #fcfcfc;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+
+  --color-secondary-900: #111827;
+  --color-secondary-800: #1f2937;
+  --color-secondary-700: #374161;
+  --color-secondary-600: #4b5563;
+  --color-secondary-500: #6b7280;
+  --color-secondary-400: #9ca3af;
+  --color-secondary-200: #e5e7eb;
+  --color-secondary-100: #f3f4f6;
+  --color-secondary-50: #f9fafb;
+
+  --color-skyblue: #e6f2ff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Pretendard";
 }
