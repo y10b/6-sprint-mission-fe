@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MdMoreVert } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { logger } from "@/utils/logger";
 
 import DeleteModal from "@/components/DeleteModal";
 
@@ -109,7 +110,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           break;
       }
     } catch (error) {
-      console.error("삭제 실패:", error);
+      logger.error("삭제 실패:", error);
       const errorMessage =
         error instanceof Error ? error.message : "삭제에 실패했습니다.";
       alert(errorMessage);

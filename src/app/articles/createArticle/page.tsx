@@ -6,6 +6,7 @@ import { createArticle } from "@/lib/api/articles/articlesApi";
 import ImageUploader from "@/components/ImageUploader";
 import { uploadImage } from "@/lib/api/images/imageUpload";
 import { useMutation } from "@tanstack/react-query";
+import { logger } from "@/utils/logger";
 
 const CreateArticle = () => {
   const router = useRouter();
@@ -92,7 +93,7 @@ const CreateArticle = () => {
       try {
         imageUrl = await uploadImage(image);
       } catch (err) {
-        console.error("이미지 업로드 실패:", err);
+        logger.error("이미지 업로드 실패:", err);
         setImageError("이미지 업로드에 실패했습니다.");
         return;
       }

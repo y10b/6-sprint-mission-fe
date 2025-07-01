@@ -1,6 +1,8 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { addFavorite, removeFavorite } from "@/lib/api/products/favorite";
+import { useAuth } from "@/context/AuthContext";
+import { logger } from "@/utils/logger";
 
 interface LikeToProductProps {
   productId: number;
@@ -47,7 +49,7 @@ export default function LikeToProduct({
         const message = error.message;
 
         if (message.includes("이미 찜한 상품")) {
-          console.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
+          logger.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
           try {
             const data = await removeFavorite(productId); // 바로 취소 처리 시도
             setIsClicked(false);
@@ -55,11 +57,11 @@ export default function LikeToProduct({
             onLikeRemove?.(productId, data.favoriteCount);
             return;
           } catch (e) {
-            console.error("좋아요 취소도 실패함:", e);
+            logger.error("좋아요 취소도 실패", e);
           }
         }
 
-        console.error("좋아요 처리 실패:", error);
+        logger.error("좋아요 처리 실패", error);
       }
       setIsClicked(prevClicked);
       setCount(prevCount);

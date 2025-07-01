@@ -7,6 +7,7 @@ import {
   getArticleWithLikes,
   toggleArticleLike,
 } from "@/lib/api/articles/articlesApi";
+import { logger } from "@/utils/logger";
 
 interface LikeToArticleProps {
   articleId: number;
@@ -29,7 +30,7 @@ const LikeToArticle = ({
         setCount(data.likeCount);
         setIsClicked(data.isLiked);
       } catch (error) {
-        console.error("좋아요 수 조회 실패:", error);
+        logger.error("좋아요 수 조회 실패:", error);
       }
     };
 
@@ -49,7 +50,7 @@ const LikeToArticle = ({
         onLikeToggle(articleId, newCount);
       }
     } catch (error) {
-      console.error("좋아요 토글 실패:", error);
+      logger.error("좋아요 토글 실패:", error);
     }
   };
 

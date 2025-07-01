@@ -6,6 +6,7 @@ import Articles from "@/components/articles/Articles";
 import { fetchArticlesFromAPI } from "@/lib/api/articles/articlesApi";
 import { OrderByValue } from "@/components/Filters";
 import type { IArticle } from "@/types/article";
+import { logger } from "@/utils/logger";
 
 const ArticlePage = () => {
   const [allArticles, setAllArticles] = useState<IArticle[]>([]);
@@ -37,7 +38,7 @@ const ArticlePage = () => {
       });
       setBestArticles(best.articles);
     } catch (err) {
-      console.error("데이터 가져오기 실패:", err);
+      logger.error("데이터 가져오기 실패:", err);
     }
   };
 

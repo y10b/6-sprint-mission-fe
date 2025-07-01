@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +8,7 @@ import LikeToProduct from "@/components/LikeToProduct";
 import { formatNumber } from "@/utils/formatNumber";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { IProduct } from "@/types/product";
+import { logger } from "@/utils/logger";
 
 function BestProducts() {
   const [bestProducts, setBestProducts] = useState<IProduct[]>([]);
@@ -51,7 +54,7 @@ function BestProducts() {
           setBestProducts(topLiked);
         }
       } catch (error) {
-        console.error("베스트 상품을 불러오는 데 실패했습니다.", error);
+        logger.error("베스트 상품을 불러오는 데 실패했습니다.", error);
       }
     };
     fetchBestProducts();

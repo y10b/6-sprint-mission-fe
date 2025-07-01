@@ -1,4 +1,5 @@
 import { refreshToken } from "@/lib/api/auth/auth.api";
+import { logger } from "@/utils/logger";
 
 interface FetchOptions extends RequestInit {
   retryCount?: number;
@@ -42,7 +43,7 @@ export async function fetchWithRefresh(
       retryCount: retryCount + 1,
     });
   } catch (error) {
-    console.error("Fetch error:", error);
+    logger.error("요청 처리 실패", error);
     throw error;
   }
 }

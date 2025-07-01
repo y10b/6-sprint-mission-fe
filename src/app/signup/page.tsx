@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signup } from "@/lib/api/auth/auth.api";
@@ -14,7 +15,7 @@ import Link from "next/link";
 import FormField from "@/components/Auth/AuthFormField";
 import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/Auth/AuthModal";
-import { useState } from "react";
+import { logger } from "@/utils/logger";
 import { AxiosError } from "axios";
 import { AuthError, ShowPasswordState, SignupFormData } from "@/types/auth";
 
@@ -58,7 +59,7 @@ export default function Signup() {
       login(loginResponse.user);
       router.replace("/products");
     } catch (err) {
-      console.error("Signup error:", err);
+      logger.error("Signup error:", err);
       let errorMessage: string;
 
       if (err instanceof Error) {

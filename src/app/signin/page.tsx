@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -7,11 +8,11 @@ import { login as loginApi } from "@/lib/api/auth/auth.api";
 import { getValidationError } from "@/utils/authValidation";
 import Link from "next/link";
 import SnsSign from "@/components/SnsSign";
-import { useState } from "react";
 import AuthFormField from "@/components/Auth/AuthFormField";
 import Modal from "@/components/Auth/AuthModal";
 import { AxiosError } from "axios";
 import { AuthError, SigninFormData } from "@/types/auth";
+import { logger } from "@/utils/logger";
 
 export default function Signin() {
   const { login } = useAuth();
@@ -46,7 +47,7 @@ export default function Signin() {
         setErrorModal(true);
       }
     } catch (err) {
-      console.error("Login Error:", err);
+      logger.error("Login Error:", err);
       let errorMessage: string;
 
       if (err instanceof Error) {

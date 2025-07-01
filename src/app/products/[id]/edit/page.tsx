@@ -15,6 +15,7 @@ import {
   EditProductFormState,
 } from "@/types/product";
 import { useAuth } from "@/context/AuthContext";
+import { logger } from "@/utils/logger";
 
 export default function EditProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -72,7 +73,7 @@ export default function EditProductPage() {
                 });
                 return { file, url };
               } catch (error) {
-                console.error("이미지 변환 실패:", error);
+                logger.error("이미지 변환 실패", error);
                 const placeholderFile = new File([], "placeholder.jpg", {
                   type: "image/jpeg",
                 });
@@ -83,7 +84,7 @@ export default function EditProductPage() {
           setDisplayImages(existingImages);
         }
       } catch (err) {
-        console.error("상품 불러오기 실패:", err);
+        logger.error("상품 불러오기 실패", err);
         setError("상품을 불러오는데 실패했습니다.");
       } finally {
         setLoading(false);
@@ -146,7 +147,7 @@ export default function EditProductPage() {
         })),
       ]);
     } catch (error) {
-      console.error("이미지 업로드 실패:", error);
+      logger.error("이미지 업로드 실패", error);
       setError("이미지 업로드에 실패했습니다.");
     }
   };
@@ -185,7 +186,7 @@ export default function EditProductPage() {
       alert("상품이 수정되었습니다!");
       router.push(`/products/${id}`);
     } catch (err) {
-      console.error("상품 수정 에러:", err);
+      logger.error("상품 수정 에러", err);
       setError("상품 수정에 실패했습니다.");
     }
   };

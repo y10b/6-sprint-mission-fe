@@ -56,7 +56,6 @@ export default function ProductList() {
   }, [setResponsivePageSize]);
 
   const onSearch = (text: string) => {
-    console.log("🔍 검색어 적용됨:", text);
     setSearch((prev) => ({ ...prev, keyword: text }));
     setPage(1);
   };

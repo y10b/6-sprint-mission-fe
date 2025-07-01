@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   createContext,
   useContext,
   useState,
@@ -11,22 +11,16 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { getCurrentUser, checkInitialToken } from "@/lib/api/auth/auth.api";
 import { logout as logoutApi } from "@/lib/api/auth/auth.api";
-
-interface User {
-  id: number;
-  email: string;
-  nickname: string;
-  image?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { logger } from "@/utils/logger";
+import { IUser } from "@/types";
 
 interface AuthContextType {
-  user: User | null;
+  user: IUser | null;
   isLoading: boolean;
   isInitialized: boolean;
-  login: (userData: User) => void;
+  login: (userData: IUser) => void;
   logout: () => Promise<void>;
+  fetchUserData: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -36,7 +30,7 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -44,8 +38,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const pathname = usePathname();
 
   // 사용자 정보 직접 설정
-  const login = useCallback((userData: User) => {
+  const login = useCallback((userData: IUser) => {
     setUser(userData);
+    // Sentry에 사용자 컨텍스트 설정
+    logger.setUser(userData.id.toString(), userData.email);
   }, []);
 
   // 사용자 정보 가져오기
@@ -55,11 +51,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (userData) {
         setUser(userData);
+        logger.setUser(userData.id.toString(), userData.email);
       } else {
         setUser(null);
       }
     } catch (error) {
-      console.error("[AuthProvider] getCurrentUser 에러:", error);
+      logger.error("사용자 정보 조회 에러", error);
       setUser(null);
     }
   }, []);
@@ -69,9 +66,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await logoutApi();
       setUser(null);
+      // Sentry에서 사용자 정보 제거
+      logger.setUser("", "");
       router.replace("/");
     } catch (error) {
-      console.error("[AuthProvider] 로그아웃 에러:", error);
+      logger.error("로그아웃 에러", error);
     }
   }, [router]);
 
@@ -80,26 +79,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const initAuth = async () => {
       setIsLoading(true);
       try {
-        console.log("[AuthProvider] 초기화 시작...");
+        logger.info("[AuthProvider] 초기화 시작...");
 
         // 먼저 refresh token으로 새로운 access token 발급 시도
         const userData = await checkInitialToken();
 
         if (userData) {
-          console.log("[AuthProvider] 토큰 갱신 성공, 사용자 정보 설정");
           setUser(userData);
+          logger.setUser(userData.id.toString(), userData.email);
         } else {
-          console.log("[AuthProvider] 토큰 갱신 실패, 현재 사용자 정보 확인");
           // checkInitialToken 실패 시 fallback으로 getCurrentUser 시도
           await fetchUserData();
         }
       } catch (error) {
-        console.error("[AuthProvider] 초기화 에러:", error);
+        logger.error("인증 초기화 에러", error);
         setUser(null);
       } finally {
         setIsInitialized(true);
         setIsLoading(false);
-        console.log("[AuthProvider] 초기화 완료");
       }
     };
 
@@ -122,6 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     isInitialized,
     login,
     logout,
+    fetchUserData,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -16,6 +16,7 @@ import { uploadImage } from "@/lib/api/images/imageUpload";
 import { createProduct } from "@/lib/api/products/productsApi";
 import { useAuth } from "@/context/AuthContext";
 import type { CreateProductFormData, ImageData } from "@/types/product";
+import { logger } from "@/utils/logger";
 
 export default function CreateProduct() {
   const router = useRouter();
@@ -87,7 +88,6 @@ export default function CreateProduct() {
         imageUrls,
       };
 
-      console.log("등록 시 보낼 데이터:", productData);
       const result = await createProduct(productData);
 
       if (result.success) {
@@ -96,7 +96,7 @@ export default function CreateProduct() {
         alert(`상품 등록 실패: ${result.error}`);
       }
     } catch (error) {
-      console.error("상품 등록 에러:", error);
+      logger.error("상품 등록 에러:", error);
       alert("상품 등록 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);

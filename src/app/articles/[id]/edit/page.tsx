@@ -6,6 +6,7 @@ import { getArticle, updateArticle } from "@/lib/api/articles/articlesApi";
 import ImageUploader from "@/components/ImageUploader";
 import { uploadImage } from "@/lib/api/images/imageUpload";
 import type { TArticleFormData } from "@/types/article";
+import { logger } from "@/utils/logger";
 
 export default function EditArticlePage() {
   const { id } = useParams();
@@ -36,7 +37,7 @@ export default function EditArticlePage() {
         }));
         setPreviewUrl(data.images || null);
       } catch (err) {
-        console.error("게시글 로딩 실패:", err);
+        logger.error("게시글 로딩 실패:", err);
         setError("게시글을 불러오는데 실패했습니다.");
       }
     };
@@ -57,7 +58,7 @@ export default function EditArticlePage() {
         try {
           imageUrl = await uploadImage(image);
         } catch (err) {
-          console.error("이미지 업로드 실패:", err);
+          logger.error("이미지 업로드 실패:", err);
           setImageError("이미지 업로드에 실패했습니다.");
           setIsSubmitting(false);
           return;
@@ -71,7 +72,7 @@ export default function EditArticlePage() {
       alert("게시글이 수정되었습니다!");
       router.push(`/articles/${id}`);
     } catch (err) {
-      console.error("수정 실패:", err);
+      logger.error("수정 실패:", err);
       setError("게시글 수정에 실패했습니다.");
       alert("수정에 실패했습니다.");
     } finally {

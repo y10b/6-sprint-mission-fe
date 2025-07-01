@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { TfiBackLeft } from "react-icons/tfi";
+import { logger } from "@/utils/logger";
 
 import PostDetail from "@/components/articles/ArticleDetail";
 import CommentSection from "@/components/comments/_article/commentsection";
@@ -35,10 +36,10 @@ const Article = () => {
           setArticleState({ status: "success", data: articleData });
 
           const commentData = await getArticleComments(Number(id));
-          console.log("Fetched comments:", commentData);
+
           setComments(commentData);
         } catch (err) {
-          console.error("데이터 로딩 실패:", err);
+          logger.error("데이터 로딩 실패:", err);
           setArticleState({
             status: "error",
             message: "게시글을 불러오는데 실패했습니다.",

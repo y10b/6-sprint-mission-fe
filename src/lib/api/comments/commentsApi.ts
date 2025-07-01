@@ -27,7 +27,6 @@ export async function postProductComment(
   });
 
   if (!res.ok) {
-    console.log("accessToken:", localStorage.getItem("accessToken"));
     const errorData = await res.json();
     throw new Error(errorData.message || "댓글 작성에 실패했습니다.");
   }

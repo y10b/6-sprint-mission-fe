@@ -3,6 +3,8 @@ interface RequestInit extends globalThis.RequestInit {
   headers?: HeadersInit;
 }
 
+import { logger } from "@/utils/logger";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchWithRefresh = async (
@@ -44,7 +46,7 @@ export const fetchWithRefresh = async (
         throw new Error("요청 실패");
       }
     } catch (error) {
-      console.error("Token refresh failed:", error);
+      logger.error("토큰 갱신 실패", error);
       throw new Error("토큰 갱신에 실패했습니다.");
     }
   }

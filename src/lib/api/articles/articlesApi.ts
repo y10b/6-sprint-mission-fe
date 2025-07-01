@@ -1,4 +1,5 @@
 import { IArticle, ICreateArticleInput, TUpdateArticleInput } from "@/types";
+import { logger } from "@/utils/logger";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
@@ -31,7 +32,7 @@ export const fetchArticlesFromAPI = async ({
       totalCount: data.totalCount,
     };
   } catch (error) {
-    console.error("API 호출 실패:", error);
+    logger.error("API 호출 실패:", error);
     throw error;
   }
 };
@@ -56,7 +57,7 @@ export const getArticleWithLikes = async (articleId: number) => {
       isLiked: data.isLiked || false,
     };
   } catch (error) {
-    console.error("게시글 정보 조회 실패:", error);
+    logger.error("게시글 정보 조회 실패:", error);
     throw error;
   }
 };
@@ -81,7 +82,7 @@ export const toggleArticleLike = async (articleId: number) => {
       liked: data.liked,
     };
   } catch (error) {
-    console.error("좋아요 토글 실패:", error);
+    logger.error("좋아요 토글 실패:", error);
     throw error;
   }
 };

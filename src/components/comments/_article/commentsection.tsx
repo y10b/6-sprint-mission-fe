@@ -7,6 +7,8 @@ import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
 import { IArticleComment } from "@/types/article";
 import { createArticleComment } from "@/lib/api/comments/commentsApi";
+import { useState } from "react";
+import { logger } from "@/utils/logger";
 
 interface CommentSectionProps {
   comments: IArticleComment[];
@@ -31,7 +33,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       setComments((prev) => [...prev, newCommentData]);
       setNewComment("");
     } catch (error) {
-      console.error("Error data:", error);
+      logger.error("Error data:", error);
       if (error instanceof Error) {
         alert(error.message);
       } else {

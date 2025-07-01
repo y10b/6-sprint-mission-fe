@@ -1,3 +1,5 @@
+import { logger } from "@/utils/logger";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 // 이미지 업로드
@@ -33,7 +35,7 @@ export const uploadImage = async (selectedFile: File) => {
 
     return fileUrl as string;
   } catch (error) {
-    console.error("이미지 업로드 중 오류:", error);
+    logger.error("이미지 업로드 중 오류", error);
     throw error;
   }
 };

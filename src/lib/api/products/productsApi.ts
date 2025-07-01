@@ -7,6 +7,7 @@ import {
   ApiResponse,
 } from "@/types";
 import { fetchWithRefresh } from "@/lib/api/auth/fetchWithRefresh";
+import { logger } from "@/utils/logger";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
@@ -19,19 +20,28 @@ const validateProductData = (productData: ICreateProductInput): boolean => {
     !productData.imageUrls ||
     productData.imageUrls.length === 0
   ) {
-    console.error(
-      "Missing required fields: name, price, tags, and at least one imageUrl are required."
+    logger.error(
+      "Missing required fields",
+      new Error(
+        "Missing required fields: name, price, tags, and at least one imageUrl are required."
+      )
     );
     return false;
   }
 
   if (isNaN(productData.price)) {
-    console.error("Price must be a valid number.");
+    logger.error(
+      "Price must be a valid number",
+      new Error("Price must be a valid number.")
+    );
     return false;
   }
 
   if (productData.imageUrls.length > 3) {
-    console.error("A maximum of 3 images can be uploaded.");
+    logger.error(
+      "A maximum of 3 images can be uploaded",
+      new Error("A maximum of 3 images can be uploaded.")
+    );
     return false;
   }
 
@@ -114,7 +124,7 @@ export const getProducts = async ({
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching products", error);
+    logger.error("Error fetching products", error);
     throw error;
   }
 };
@@ -137,7 +147,7 @@ export const getProductById = async (id: number): Promise<IProduct> => {
     const data: IProduct = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching product details", error);
+    logger.error("Error fetching product details", error);
     throw error;
   }
 };
@@ -201,7 +211,7 @@ export const updateProduct = async (
 
     return data;
   } catch (error) {
-    console.error("Error updating product", error);
+    logger.error("Error updating product", error);
     throw error;
   }
 };
