@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { TfiBackLeft } from "react-icons/tfi";
 import { logger } from "@/utils/logger";
 
@@ -11,6 +11,8 @@ import CommentSection from "@/components/comments/_article/commentsection";
 import { IArticle as ArticleType, IArticleComment } from "@/types/article";
 import { getArticle } from "@/lib/api/articles/articlesApi";
 import { getArticleComments } from "@/lib/api/comments/commentsApi";
+import Modal from "@/components/Auth/AuthModal";
+import { useAuth } from "@/context/AuthContext";
 
 // 상태를 더 명시적으로 관리하는 타입
 type ArticleState =
@@ -24,10 +26,20 @@ const Article = () => {
   });
   const [comments, setComments] = useState<IArticleComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { id } = useParams();
+  const router = useRouter();
+  const { user, isInitialized } = useAuth();
+
+  // 로그인이 안 된 상태에서 모달 표시
+  useEffect(() => {
+    if (isInitialized && !user) {
+      setShowAuthModal(true);
+    }
+  }, [isInitialized, user]);
 
   useEffect(() => {
-    if (id) {
+    if (id && user) {
       const fetchData = async () => {
         try {
           setArticleState({ status: "loading" });
@@ -49,7 +61,23 @@ const Article = () => {
 
       fetchData();
     }
-  }, [id]);
+  }, [id, user]);
+
+  // 로그인이 안 된 상태에서는 모달만 표시
+  if (!isInitialized) return <p className="text-center mt-8">로딩 중...</p>;
+
+  if (!user) {
+    return (
+      <>
+        {showAuthModal && (
+          <Modal
+            message="로그인이 필요합니다."
+            onClose={() => router.push("/signin")}
+          />
+        )}
+      </>
+    );
+  }
 
   // 상태별 렌더링
   if (articleState.status === "loading") {

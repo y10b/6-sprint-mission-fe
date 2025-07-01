@@ -17,12 +17,22 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IProduct } from "@/types/product";
+import Modal from "@/components/Auth/AuthModal";
 
 const ProductPage = () => {
   const { id } = useParams();
+  const router = useRouter();
 
   const { user, isInitialized } = useAuth();
   const [product, setProduct] = useState<IProduct | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // 로그인이 안 된 상태에서 모달 표시
+  useEffect(() => {
+    if (isInitialized && !user) {
+      setShowAuthModal(true);
+    }
+  }, [isInitialized, user]);
 
   // React Query로 상품 데이터 가져오기
   const {
@@ -43,6 +53,20 @@ const ProductPage = () => {
   }, [productData]);
 
   if (!isInitialized) return <p>로딩 중...</p>;
+
+  // 로그인이 안 된 상태에서는 모달만 표시
+  if (!user) {
+    return (
+      <>
+        {showAuthModal && (
+          <Modal
+            message="로그인이 필요합니다."
+            onClose={() => router.push("/signin")}
+          />
+        )}
+      </>
+    );
+  }
 
   if (isLoading) return <p>상품 정보를 불러오는 중...</p>;
 
