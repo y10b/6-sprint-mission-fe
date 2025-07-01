@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 // 이미지 업로드
 export const uploadImage = async (selectedFile: File) => {

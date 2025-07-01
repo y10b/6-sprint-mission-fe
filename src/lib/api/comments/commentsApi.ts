@@ -6,7 +6,7 @@ import {
   GetProductCommentsResponse,
 } from "@/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 export async function postProductComment(
   productId: number,

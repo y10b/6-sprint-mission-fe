@@ -1,6 +1,6 @@
 import { IArticle, ICreateArticleInput, TUpdateArticleInput } from "@/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 export const fetchArticlesFromAPI = async ({
   page = 1,

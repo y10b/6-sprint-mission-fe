@@ -8,7 +8,7 @@ import {
 } from "@/types";
 import { fetchWithRefresh } from "@/lib/api/auth/fetchWithRefresh";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 // 유효성 검사 함수
 const validateProductData = (productData: ICreateProductInput): boolean => {
