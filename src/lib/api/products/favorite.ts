@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function addFavorite(productId: number) {
   if (!productId) {
@@ -27,7 +27,7 @@ export async function removeFavorite(productId: number) {
     throw new Error("상품 ID가 없습니다.");
   }
 
-  const res = await fetch(`${BASE_URL}/products/${productId}/like`, {
+  const res = await fetch(`${BASE_URL}/api/products/${productId}/like`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
