@@ -7,6 +7,9 @@ import { AuthProvider } from "@/context/AuthContext";
 export const metadata = {
   title: "판다마켓",
   description: "판다마켓에서 중고거래를 해보세요",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
