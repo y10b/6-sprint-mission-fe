@@ -20,7 +20,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-100 h-[70px] px-4 sm:px-6 md:px-50">
+    <header className="w-full flex items-center bg-white shadow-sm sticky top-0 z-100 h-[70px] px-4 sm:px-6 lg:px-8">
       <div className="flex items-center gap-2 sm:gap-5 md:gap-6">
         <Link href="/" className="block">
           <div className="relative w-[81px] h-10 sm:w-[153px] sm:h-[51px]">
@@ -75,7 +75,7 @@ export default function Header() {
             </div>
             <button
               onClick={handleLogout}
-              className="bg-primary-100 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+              className="px-3 py-1 text-xs sm:px-6 sm:py-2 sm:text-base bg-primary-100 hover:bg-blue-600 text-white font-semibold rounded-md transition"
             >
               로그아웃
             </button>
