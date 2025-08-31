@@ -47,12 +47,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // 사용자 정보 가져오기
   const fetchUserData = useCallback(async () => {
     try {
+      logger.info("[fetchUserData] getCurrentUser 호출");
       const userData = await getCurrentUser();
 
       if (userData) {
+        logger.info("[fetchUserData] 사용자 정보 조회 성공:", userData.email);
         setUser(userData);
         logger.setUser(userData.id.toString(), userData.email);
       } else {
+        logger.warn("[fetchUserData] 사용자 정보 없음, 로그아웃 상태로 설정");
         setUser(null);
       }
     } catch (error) {
@@ -80,15 +83,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsLoading(true);
       try {
         logger.info("[AuthProvider] 초기화 시작...");
+        logger.info("[AuthProvider] 현재 환경:", {
+          nodeEnv: process.env.NODE_ENV,
+          apiUrl: process.env.NEXT_PUBLIC_API_URL,
+          isClient: typeof window !== "undefined",
+        });
 
         // 먼저 refresh token으로 새로운 access token 발급 시도
+        logger.info("[AuthProvider] checkInitialToken 호출");
         const userData = await checkInitialToken();
 
         if (userData) {
+          logger.info(
+            "[AuthProvider] checkInitialToken 성공, 사용자 설정:",
+            userData.email
+          );
           setUser(userData);
           logger.setUser(userData.id.toString(), userData.email);
         } else {
           // checkInitialToken 실패 시 fallback으로 getCurrentUser 시도
+          logger.info(
+            "[AuthProvider] checkInitialToken 실패, getCurrentUser 시도"
+          );
           await fetchUserData();
         }
       } catch (error) {
@@ -97,6 +113,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } finally {
         setIsInitialized(true);
         setIsLoading(false);
+        logger.info("[AuthProvider] 초기화 완료");
       }
     };
 

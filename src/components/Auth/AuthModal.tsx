@@ -8,7 +8,7 @@ interface ModalProps {
 
 function Modal({ message, onClose }: ModalProps): React.ReactElement {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg w-[300px] shadow-lg text-center">
         <p className="text-gray-800 text-base font-medium">{message}</p>
         <button
