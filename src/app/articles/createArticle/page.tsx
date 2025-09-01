@@ -2,10 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { createArticle } from "@/lib/api/articles/articlesApi";
 import ImageUploader from "@/components/ImageUploader";
 import { uploadImage } from "@/lib/api/images/imageUpload";
-import { useMutation } from "@tanstack/react-query";
+import { useCreateArticle } from "@/lib/react-query";
 import { logger } from "@/utils/logger";
 
 const CreateArticle = () => {
@@ -62,10 +61,7 @@ const CreateArticle = () => {
     setImageError("");
   };
 
-  const { mutateAsync: submitArticle, isPending } = useMutation({
-    mutationFn: async () => {
-      await createArticleWithImage();
-    },
+  const { mutateAsync: submitArticle, isPending } = useCreateArticle({
     onSuccess: () => {
       router.push("/articles");
     },
@@ -83,11 +79,14 @@ const CreateArticle = () => {
     setErrors({ title: titleErrorMessage, content: contentErrorMessage });
 
     if (!titleErrorMessage && !contentErrorMessage) {
-      await submitArticle();
+      const articleData = await createArticleData();
+      if (articleData) {
+        await submitArticle(articleData);
+      }
     }
   };
 
-  const createArticleWithImage = async () => {
+  const createArticleData = async () => {
     let imageUrl: string | undefined = undefined;
     if (image) {
       try {
@@ -95,14 +94,14 @@ const CreateArticle = () => {
       } catch (err) {
         logger.error("이미지 업로드 실패:", err);
         setImageError("이미지 업로드에 실패했습니다.");
-        return;
+        return null;
       }
     }
-    await createArticle({
+    return {
       title,
       content,
       images: imageUrl,
-    });
+    };
   };
 
   const isFormValid = !errors.title && !errors.content && title && content;

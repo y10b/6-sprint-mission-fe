@@ -1,19 +1,12 @@
 import {
   IUser,
-  AuthResponse,
-  LoginInput,
-  SignupInput,
-  RefreshTokenResponse,
+  IAuthResponse,
+  ILoginInput,
+  ISignupInput,
+  IRefreshTokenResponse,
 } from "@/types";
 import { logger } from "@/utils/logger";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-// 디버깅용 로그 추가
-if (typeof window !== "undefined") {
-  console.log("[DEBUG] NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-  console.log("[DEBUG] BASE_URL:", BASE_URL);
-}
+import { authApiClient, ApiError } from "../client";
 
 // localStorage 의존성 제거 - httpOnly 쿠키만 사용
 export const setAccessToken = (token: string | null) => {
@@ -28,111 +21,55 @@ export const getAccessToken = () => {
 // 초기 토큰 확인
 export const checkInitialToken = async (): Promise<IUser | null> => {
   try {
-    logger.info("[checkInitialToken] 시작 - BASE_URL:", BASE_URL);
-
-    if (!BASE_URL) {
-      logger.error("[checkInitialToken] BASE_URL이 undefined입니다");
-      return null;
-    }
+    logger.info("[checkInitialToken] 시작");
 
     // 먼저 현재 액세스 토큰으로 사용자 정보 확인 시도
     logger.info("[checkInitialToken] /users/me 호출 시도");
-    const meResponse = await fetch(`${BASE_URL}/users/me`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include",
-    });
+    const userData = await authApiClient.get<{ user: IUser }>("/users/me");
 
-    logger.info(
-      "[checkInitialToken] /users/me 응답:",
-      meResponse.status,
-      meResponse.statusText
-    );
+    logger.info("[checkInitialToken] 현재 토큰으로 사용자 정보 획득 성공");
+    return userData.user || userData;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      try {
+        // 현재 토큰이 만료된 경우 리프레시 시도
+        logger.info("[checkInitialToken] 액세스 토큰 만료, 리프레시 시도");
+        await authApiClient.post("/users/refresh");
 
-    if (meResponse.ok) {
-      const userData = await meResponse.json();
-      logger.info("[checkInitialToken] 현재 토큰으로 사용자 정보 획득 성공");
-      return userData.user || userData;
-    }
+        // 새로 받은 액세스 토큰으로 사용자 정보 확인
+        logger.info("[checkInitialToken] 토큰 갱신 성공, 사용자 정보 재조회");
+        const refreshedUserData = await authApiClient.get<{ user: IUser }>(
+          "/users/me"
+        );
 
-    // 현재 토큰이 만료된 경우 리프레시 시도
-    logger.info("[checkInitialToken] 액세스 토큰 만료, 리프레시 시도");
-    const refreshResponse = await fetch(`${BASE_URL}/users/refresh`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-
-    logger.info(
-      "[checkInitialToken] /users/refresh 응답:",
-      refreshResponse.status,
-      refreshResponse.statusText
-    );
-
-    if (refreshResponse.ok) {
-      // 새로 받은 액세스 토큰으로 사용자 정보 확인
-      logger.info("[checkInitialToken] 토큰 갱신 성공, 사용자 정보 재조회");
-      const meResponseAfterRefresh = await fetch(`${BASE_URL}/users/me`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-      });
-
-      logger.info(
-        "[checkInitialToken] 갱신 후 /users/me 응답:",
-        meResponseAfterRefresh.status,
-        meResponseAfterRefresh.statusText
-      );
-
-      if (meResponseAfterRefresh.ok) {
-        const userData = await meResponseAfterRefresh.json();
         logger.info("[checkInitialToken] 토큰 갱신 후 사용자 정보 획득 성공");
-        return userData.user || userData;
+        return refreshedUserData.user || refreshedUserData;
+      } catch (refreshError) {
+        logger.warn(
+          "[checkInitialToken] 토큰 갱신 실패 또는 리프레시 토큰 없음"
+        );
+        return null;
       }
     }
 
-    // 리프레시 토큰이 없거나 만료된 경우
-    logger.warn("[checkInitialToken] 토큰 갱신 실패 또는 리프레시 토큰 없음");
-    return null;
-  } catch (error) {
     logger.error("토큰 확인 중 오류", error);
     return null;
   }
 };
 
-export const login = async (credentials: LoginInput): Promise<AuthResponse> => {
+export const login = async (
+  credentials: ILoginInput
+): Promise<IAuthResponse> => {
   try {
     const requestData = {
       email: credentials.email,
       encryptedPassword: credentials.password,
     };
 
-    const response = await fetch(`${BASE_URL}/users/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(requestData),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        result.error ||
-          result.message ||
-          "이메일 또는 비밀번호가 일치하지 않습니다."
-      );
-    }
-
+    const result = await authApiClient.post<IAuthResponse>(
+      "/users/login",
+      requestData
+    );
     return result;
   } catch (error) {
     logger.error("로그인 오류", error);
@@ -140,7 +77,9 @@ export const login = async (credentials: LoginInput): Promise<AuthResponse> => {
   }
 };
 
-export const signup = async (userData: SignupInput): Promise<AuthResponse> => {
+export const signup = async (
+  userData: ISignupInput
+): Promise<IAuthResponse> => {
   try {
     const requestData = {
       email: userData.email,
@@ -148,21 +87,10 @@ export const signup = async (userData: SignupInput): Promise<AuthResponse> => {
       nickname: userData.nickname,
     };
 
-    const response = await fetch(`${BASE_URL}/users/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(requestData),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || result.message || "Signup failed");
-    }
-
+    const result = await authApiClient.post<IAuthResponse>(
+      "/users/register",
+      requestData
+    );
     return result;
   } catch (error) {
     logger.error("회원가입 오류", error);
@@ -172,137 +100,52 @@ export const signup = async (userData: SignupInput): Promise<AuthResponse> => {
 
 export const logout = async (): Promise<void> => {
   try {
-    const response = await fetch(`${BASE_URL}/users/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      logger.error("로그아웃 실패", new Error(`Status: ${response.status}`));
-    }
+    await authApiClient.post("/users/logout");
   } catch (error) {
     logger.error("로그아웃 오류", error);
+    // 로그아웃은 실패해도 클라이언트에서 계속 진행
   }
 };
 
 export const getCurrentUser = async (): Promise<IUser | null> => {
   try {
-    logger.info("[getCurrentUser] 시작 - BASE_URL:", BASE_URL);
+    logger.info("[getCurrentUser] 시작");
 
-    if (!BASE_URL) {
-      logger.error("[getCurrentUser] BASE_URL이 undefined입니다");
-      return null;
-    }
-
-    const response = await fetch(`${BASE_URL}/users/me`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    logger.info(
-      "[getCurrentUser] /users/me 응답:",
-      response.status,
-      response.statusText
-    );
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        try {
-          logger.info("[getCurrentUser] 401 에러, 토큰 갱신 시도");
-          const refreshResponse = await fetch(`${BASE_URL}/users/refresh`, {
-            method: "POST",
-            credentials: "include",
-          });
-
-          logger.info(
-            "[getCurrentUser] /users/refresh 응답:",
-            refreshResponse.status,
-            refreshResponse.statusText
-          );
-
-          if (!refreshResponse.ok) {
-            logger.error(
-              "토큰 갱신 실패",
-              new Error(`Status: ${refreshResponse.status}`)
-            );
-            return null;
-          }
-
-          // After refresh, retry getting user info
-          logger.info("[getCurrentUser] 토큰 갱신 성공, 사용자 정보 재조회");
-          const retryResponse = await fetch(`${BASE_URL}/users/me`, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          });
-
-          logger.info(
-            "[getCurrentUser] 갱신 후 /users/me 응답:",
-            retryResponse.status,
-            retryResponse.statusText
-          );
-
-          if (!retryResponse.ok) {
-            logger.error(
-              "갱신 후 사용자 정보 조회 실패",
-              new Error(`Status: ${retryResponse.status}`)
-            );
-            return null;
-          }
-
-          const retryData = await retryResponse.json();
-          logger.info("[getCurrentUser] 토큰 갱신 후 사용자 정보 획득 성공");
-          return retryData.user || retryData;
-        } catch (refreshError) {
-          logger.error("토큰 갱신 중 오류", refreshError);
-          return null;
-        }
-      }
-      logger.error(
-        "사용자 정보 조회 실패",
-        new Error(`Status: ${response.status}`)
-      );
-      return null;
-    }
-
-    const result = await response.json();
+    const userData = await authApiClient.get<{ user: IUser }>("/users/me");
     logger.info("[getCurrentUser] 사용자 정보 조회 성공");
-    return result.user || result;
+    return userData.user || userData;
   } catch (error) {
-    logger.error("사용자 정보 조회 중 오류", error);
+    if (error instanceof ApiError && error.status === 401) {
+      try {
+        logger.info("[getCurrentUser] 401 에러, 토큰 갱신 시도");
+        await authApiClient.post("/users/refresh");
+
+        logger.info("[getCurrentUser] 토큰 갱신 성공, 사용자 정보 재조회");
+        const refreshedUserData = await authApiClient.get<{ user: IUser }>(
+          "/users/me"
+        );
+
+        logger.info("[getCurrentUser] 갱신 후 사용자 정보 조회 성공");
+        return refreshedUserData.user || refreshedUserData;
+      } catch (refreshError) {
+        logger.error("[getCurrentUser] 토큰 갱신 중 오류:", refreshError);
+        return null;
+      }
+    }
+
+    logger.error("[getCurrentUser] 오류:", error);
     return null;
   }
 };
 
-export const refreshToken = async (): Promise<RefreshTokenResponse> => {
-  const response = await fetch(`${BASE_URL}/users/refresh`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
+export const refreshToken = async (): Promise<IRefreshTokenResponse> => {
+  try {
+    await authApiClient.post("/users/refresh");
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    logger.error(
-      "토큰 갱신 실패",
-      new Error(
-        `Status: ${response.status}, Details: ${JSON.stringify(errorData)}`
-      )
-    );
-    throw new Error("Token refresh failed");
+    // httpOnly 쿠키로 관리되므로 클라이언트에서 토큰 저장하지 않음
+    return { accessToken: "managed-by-httponly-cookies" };
+  } catch (error) {
+    logger.error("토큰 갱신 실패", error);
+    throw error;
   }
-
-  const result = await response.json();
-
-  // httpOnly 쿠키로 관리되므로 클라이언트에서 토큰 저장하지 않음
-  return { accessToken: "managed-by-httponly-cookies" };
 };

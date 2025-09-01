@@ -1,43 +1,32 @@
 import { FieldValues } from "react-hook-form";
-import { BaseEntity } from "./index";
+import {
+  IUser,
+  ISignupInput,
+  ILoginInput,
+  IShowPasswordState,
+  TId,
+} from "./common";
 
-// === 사용자 관련 타입 ===
-export interface IUser extends BaseEntity {
-  email: string;
-  nickname: string;
-  image?: string | null;
-}
+/**
+ * 인증 관련 특화 타입 및 인터페이스 정의
+ * (공통 타입은 common.d.ts에서 관리)
+ */
 
 // === 폼 데이터 타입 ===
-export interface SignupFormData extends FieldValues {
+export interface ISignupFormData extends FieldValues {
   email: string;
   nickname: string;
   password: string;
   passwordConfirmation: string;
 }
 
-export interface SigninFormData {
+export interface ISigninFormData {
   email: string;
   password: string;
-}
-
-export interface ShowPasswordState {
-  password: boolean;
-  passwordConfirmation: boolean;
-}
-
-// === API 입력 타입 ===
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-export interface SignupInput extends LoginInput {
-  nickname: string;
 }
 
 // === API 응답 타입 ===
-export interface AuthResponse {
+export interface IAuthResponse {
   success: boolean;
   user: IUser;
   accessToken?: string;
@@ -51,13 +40,13 @@ export interface AuthResponse {
   message?: string;
 }
 
-export interface RefreshTokenResponse {
+export interface IRefreshTokenResponse {
   accessToken: string;
 }
 
 // === JWT 토큰 관련 타입 ===
-export interface TokenPayload {
-  userId: number;
+export interface IJwtTokenPayload {
+  userId: TId;
   email: string;
   nickname: string;
   iat: number;
@@ -65,8 +54,12 @@ export interface TokenPayload {
 }
 
 // === 에러 타입 ===
-export interface AuthError {
+export interface IAuthError {
   success: false;
   error: string;
   message?: string;
 }
+
+// === 토큰 타입 ===
+export type TAccessToken = string;
+export type TRefreshToken = string;

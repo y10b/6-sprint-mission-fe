@@ -1,7 +1,6 @@
 import { IArticle, ICreateArticleInput, TUpdateArticleInput } from "@/types";
 import { logger } from "@/utils/logger";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
+import { apiClient, ApiClient } from "../client";
 
 export const fetchArticlesFromAPI = async ({
   page = 1,
@@ -9,7 +8,7 @@ export const fetchArticlesFromAPI = async ({
   sort = "latest",
   keyword = "",
 }) => {
-  const params = new URLSearchParams({
+  const queryParams = ApiClient.createQueryParams({
     page: String(page),
     limit: String(limit),
     sort,
@@ -17,16 +16,10 @@ export const fetchArticlesFromAPI = async ({
   });
 
   try {
-    const res = await fetch(`${BASE_URL}/articles?${params}`, {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    if (!res.ok) throw new Error("게시글 데이터를 불러오는 데 실패했습니다.");
-
-    const data = await res.json();
+    const data = await apiClient.get<{
+      articles: IArticle[];
+      totalCount: number;
+    }>(`/articles${queryParams}`);
     return {
       articles: data.articles,
       totalCount: data.totalCount,
@@ -39,19 +32,9 @@ export const fetchArticlesFromAPI = async ({
 
 export const getArticleWithLikes = async (articleId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("게시글 정보를 가져오는데 실패했습니다.");
-    }
-
-    const data = await response.json();
+    const data = await apiClient.get<{ likeCount: number; isLiked: boolean }>(
+      `/articles/${articleId}`
+    );
     return {
       likeCount: data.likeCount || 0,
       isLiked: data.isLiked || false,
@@ -64,20 +47,9 @@ export const getArticleWithLikes = async (articleId: number) => {
 
 export const toggleArticleLike = async (articleId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/articles/${articleId}/like`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("좋아요 토글에 실패했습니다.");
-    }
-
-    const data = await response.json();
+    const data = await apiClient.post<{ liked: boolean }>(
+      `/articles/${articleId}/favorite`
+    );
     return {
       liked: data.liked,
     };
@@ -91,93 +63,51 @@ export async function updateArticle(
   articleId: number,
   updateData: TUpdateArticleInput
 ): Promise<IArticle> {
-  const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(updateData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "게시글 수정에 실패했습니다.");
+  try {
+    return await apiClient.patch<IArticle>(
+      `/articles/${articleId}`,
+      updateData
+    );
+  } catch (error) {
+    logger.error("게시글 수정 실패:", error);
+    throw error;
   }
-
-  return response.json();
 }
 
 export async function deleteArticle(articleId: number): Promise<void> {
-  const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "게시글 삭제에 실패했습니다.");
+  try {
+    await apiClient.delete(`/articles/${articleId}`);
+  } catch (error) {
+    logger.error("게시글 삭제 실패:", error);
+    throw error;
   }
 }
 
 export async function getArticle(articleId: number): Promise<IArticle> {
-  const response = await fetch(`${BASE_URL}/articles/${articleId}`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "게시글을 불러오는데 실패했습니다.");
+  try {
+    return await apiClient.get<IArticle>(`/articles/${articleId}`);
+  } catch (error) {
+    logger.error("게시글 조회 실패:", error);
+    throw error;
   }
-
-  return response.json();
 }
 
 export async function getArticles(): Promise<IArticle[]> {
-  const response = await fetch(`${BASE_URL}/articles`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.message || "게시글 목록을 불러오는데 실패했습니다."
-    );
+  try {
+    return await apiClient.get<IArticle[]>(`/articles`);
+  } catch (error) {
+    logger.error("게시글 목록 조회 실패:", error);
+    throw error;
   }
-
-  return response.json();
 }
 
 export async function createArticle(
   articleData: ICreateArticleInput
 ): Promise<IArticle> {
-  const response = await fetch(`${BASE_URL}/articles`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(articleData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "게시글 작성에 실패했습니다.");
+  try {
+    return await apiClient.post<IArticle>(`/articles`, articleData);
+  } catch (error) {
+    logger.error("게시글 작성 실패:", error);
+    throw error;
   }
-
-  return response.json();
 }

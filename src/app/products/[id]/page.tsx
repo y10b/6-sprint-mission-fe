@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getProductById } from "@/lib/api/products/productsApi";
 import Image from "next/image";
 import { formatNumber } from "@/utils/formatNumber";
 import LikeToProduct from "@/components/LikeToProduct";
@@ -11,7 +10,7 @@ import Link from "next/link";
 import { TfiBackLeft } from "react-icons/tfi";
 import DropdownMenu from "@/components/Dropdownmenu";
 import { useAuth } from "@/context/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useProduct, usePrefetchProduct } from "@/lib/react-query";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -24,16 +23,12 @@ const ProductPage = () => {
   const { user, isInitialized } = useAuth();
   const [product, setProduct] = useState<IProduct | null>(null);
 
-  // React Query로 상품 데이터 가져오기
+  // 최적화된 상품 데이터 가져오기
   const {
     data: productData,
     isPending: isLoading,
     error,
-  } = useQuery<IProduct, Error>({
-    queryKey: ["product", id],
-    queryFn: () => getProductById(Number(id)),
-    enabled: isInitialized && !!user && !!id,
-  });
+  } = useProduct(Number(id), isInitialized && !!user && !!id);
 
   // productData 로컬 상태에 반영
   useEffect(() => {

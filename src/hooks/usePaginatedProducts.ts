@@ -1,10 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/lib/api/products/productsApi";
-import { IProductsResponse, IPaginationParams } from "@/types/product";
+/**
+ * @deprecated 이제 useProducts를 사용하세요: import { useProducts } from "@/lib/react-query";
+ */
+import { useProducts } from "@/lib/react-query";
+import { IPaginationParams } from "@/types/product";
 
 export const usePaginatedProducts = (params: IPaginationParams) => {
-  return useQuery<IProductsResponse>({
-    queryKey: ["products", params],
-    queryFn: () => getProducts(params),
-  });
+  return useProducts(params);
 };

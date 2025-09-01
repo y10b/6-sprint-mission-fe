@@ -1,10 +1,10 @@
-# 타입 시스템 사용 가이드
+# 🎯 타입 시스템 사용 가이드 (리팩토링 버전)
 
-## 개요
+## 📋 개요
 
-프로젝트의 모든 타입 정의가 `@/types`에서 중앙 관리됩니다.
+프로젝트의 모든 타입 정의가 `@/types`에서 **백엔드와 동일한 패턴**으로 중앙 관리됩니다.
 
-## 환경변수 설정
+## ⚙️ 환경변수 설정
 
 프론트엔드 프로젝트 루트에 `.env.local` 파일 생성:
 
@@ -13,17 +13,17 @@ NEXT_PUBLIC_API_URL=http://3.34.5.30:5000
 NEXT_PUBLIC_API_AUTH=http://3.34.5.30:5000/api/auth
 ```
 
-## 사용법
+## 🔧 사용법
 
-### 1. 중앙화된 import
+### 1. ✅ 중앙화된 import (백엔드 스타일)
 
 ```typescript
-// ❌ 개별 파일에서 import
+// ❌ 기존 방식 - 개별 파일에서 import
 import { IProduct } from "@/types/product";
 import { IArticle } from "@/types/article";
 
-// ✅ 중앙화된 index에서 import
-import { IProduct, IArticle, ApiResponse, IUser, IComment } from "@/types";
+// ✅ 새로운 방식 - 중앙화된 index에서 import (백엔드와 동일)
+import { IProduct, IArticle, IApiResponse, IUser, IComment } from "@/types";
 ```
 
 ### 2. API 응답 타입 활용
@@ -98,13 +98,42 @@ src/types/
 └── README.md         # 이 문서
 ```
 
-## 타입 명명 규칙
+## 🏷️ 타입 명명 규칙 (백엔드와 통일)
+
+### ✅ **새로운 규칙 (백엔드와 동일)**
 
 - **인터페이스**: `I` 접두사 (예: `IProduct`, `IUser`, `IComment`)
-- **타입 별칭**: `T` 접두사 (예: `TUpdateInput`)
-- **응답 타입**: `Response` 접미사 (예: `IProductsResponse`, `AuthResponse`)
-- **입력 타입**: `Input` 접미사 (예: `ICreateProductInput`, `LoginInput`)
-- **폼 데이터**: `FormData` 접미사 (예: `SignupFormData`)
+- **타입 별칭**: `T` 접두사 (예: `TUpdateInput`, `TId`, `TSortOrder`)
+- **응답 타입**: `I` + `Response` (예: `IProductsResponse`, `IAuthResponse`)
+- **입력 타입**: `I` + `Input` (예: `ICreateProductInput`, `ILoginInput`)
+- **폼 데이터**: `I` + `FormData` (예: `ISignupFormData`)
+
+### 📁 **파일 구조 (백엔드 스타일)**
+
+```
+src/types/
+├── common.d.ts       # 🆕 공통 타입 중앙 관리 (백엔드의 express.d.ts와 같은 역할)
+├── index.ts          # 중앙 export 파일
+├── auth.d.ts         # 인증 특화 타입
+├── product.d.ts      # 상품 특화 타입
+├── article.d.ts      # 게시글 특화 타입
+├── comment.d.ts      # 댓글 특화 타입
+├── component.d.ts    # 컴포넌트 Props 타입
+├── image.d.ts        # 이미지 특화 타입
+└── README.md         # 이 문서
+```
+
+### 🔄 **레거시 호환성**
+
+기존 코드와의 호환성을 위해 타입 별칭을 제공합니다:
+
+```typescript
+// 기존 코드는 그대로 작동
+import { ApiResponse, BaseEntity, ImageData } from "@/types";
+
+// 새로운 코드는 I/T 접두사 사용 권장
+import { IApiResponse, IBaseEntity, IImageData } from "@/types";
+```
 
 ## 일반적인 패턴
 

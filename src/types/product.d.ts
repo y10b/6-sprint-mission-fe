@@ -1,11 +1,27 @@
-import { BaseEntity } from "./index";
+import {
+  IBaseEntity,
+  TId,
+  IPaginatedResponse,
+  IPaginationParams,
+  IImageData,
+  IUploadedImage,
+} from "./common";
 
-export interface IProduct extends BaseEntity {
+/**
+ * 상품 관련 특화 타입 및 인터페이스 정의
+ * (공통 타입은 common.d.ts에서 관리)
+ */
+
+// 상품 댓글 타입 (comment.d.ts에서 import)
+export type { IProductComment } from "./comment";
+
+// === 상품 엔티티 ===
+export interface IProduct extends IBaseEntity {
   name: string;
   description: string;
   price: number;
   tags: string[];
-  sellerId: number;
+  sellerId: TId;
   sellerNickname: string;
   comments: IProductComment[];
   favoriteCount: number;
@@ -13,20 +29,10 @@ export interface IProduct extends BaseEntity {
   images: string[];
 }
 
-export type { IProductComment } from "./comment";
+// === API 응답 타입 ===
+export interface IProductsResponse extends IPaginatedResponse<IProduct> {}
 
-export interface IPaginationParams {
-  page?: number;
-  pageSize?: number;
-  orderBy?: string;
-  keyword?: string;
-}
-
-export interface IProductsResponse {
-  list: IProduct[];
-  totalCount: number;
-}
-
+// === API 입력 타입 ===
 export interface ICreateProductInput {
   name: string;
   description: string;
@@ -37,21 +43,15 @@ export interface ICreateProductInput {
 
 export type TUpdateProductInput = Partial<ICreateProductInput>;
 
-// --- UI/Form 전용 타입들 ---
-
-export interface ImageData {
-  file: File;
-  url: string;
-}
-
-export interface CreateProductFormData {
+// === 폼 데이터 타입 ===
+export interface ICreateProductFormData {
   name: string;
   description: string;
   price: number;
   tags: string[];
 }
 
-export interface EditableProductFields {
+export interface IEditableProductFields {
   name: string;
   description: string;
   price: number;
@@ -59,13 +59,13 @@ export interface EditableProductFields {
   images: string[];
 }
 
-export interface UploadedImage {
-  file: File;
-  url: string;
-}
-
-export interface EditProductFormState extends EditableProductFields {
+export interface IEditProductFormState extends IEditableProductFields {
   isValid: boolean;
   isDirty: boolean;
-  sellerId?: number;
+  sellerId?: TId;
+}
+
+// === 상품 파라미터 타입 ===
+export interface IProductPaginationParams extends IPaginationParams {
+  sortBy?: "latest" | "oldest" | "favorite";
 }

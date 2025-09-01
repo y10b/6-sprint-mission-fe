@@ -1,11 +1,20 @@
-import { BaseEntity } from "./index";
+import { IBaseEntity, TId, IPaginatedResponse } from "./common";
 
-export interface IArticle extends BaseEntity {
+/**
+ * 게시글 관련 특화 타입 및 인터페이스 정의
+ * (공통 타입은 common.d.ts에서 관리)
+ */
+
+// 게시글 댓글 타입 (comment.d.ts에서 import)
+export type { IArticleComment } from "./comment";
+
+// === 게시글 엔티티 ===
+export interface IArticle extends IBaseEntity {
   title: string;
   content: string;
   authorNickname: string;
   user: {
-    id: number;
+    id: TId;
     nickname: string;
   };
   authorImage?: string | null;
@@ -14,20 +23,10 @@ export interface IArticle extends BaseEntity {
   isLiked: boolean;
 }
 
-// IArticleComment는 comment.d.ts에서 정의됨
-// 서버로부터 받는 댓글 타입 (IArticleComment와 동일하므로 comment.d.ts의 IArticleComment를 재export)
-export type { IArticleComment } from "./comment";
-export type ServerComment = IArticleComment;
+// === API 응답 타입 ===
+export interface IArticlesResponse extends IPaginatedResponse<IArticle> {}
 
-export type TArticleFormData = Pick<IArticle, "title" | "content" | "images">;
-
-// Article 목록 응답 타입
-export interface IArticlesResponse {
-  list: IArticle[];
-  totalCount: number;
-}
-
-// Article 생성/수정 입력 타입
+// === API 입력 타입 ===
 export interface ICreateArticleInput {
   title: string;
   content: string;
@@ -35,3 +34,9 @@ export interface ICreateArticleInput {
 }
 
 export type TUpdateArticleInput = Partial<ICreateArticleInput>;
+
+// === 폼 데이터 타입 ===
+export type TArticleFormData = Pick<IArticle, "title" | "content" | "images">;
+
+// === 서버 댓글 타입 (호환성을 위해 유지) ===
+export type TServerComment = IArticleComment;

@@ -4,12 +4,10 @@ import {
   ICreateProductInput,
   TUpdateProductInput,
   IProductsResponse,
-  ApiResponse,
+  IApiResponse,
 } from "@/types";
-import { fetchWithRefresh } from "@/lib/api/auth/fetchWithRefresh";
+import { apiClient, ApiClient } from "../client";
 import { logger } from "@/utils/logger";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 // 유효성 검사 함수
 const validateProductData = (productData: ICreateProductInput): boolean => {
@@ -51,41 +49,20 @@ const validateProductData = (productData: ICreateProductInput): boolean => {
 // 상품 생성
 export const createProduct = async (
   productData: ICreateProductInput
-): Promise<ApiResponse<IProduct>> => {
+): Promise<IApiResponse<IProduct>> => {
   try {
     if (!validateProductData(productData)) {
       return { success: false, error: "Invalid product data." };
     }
 
-    const response = await fetchWithRefresh(`${BASE_URL}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productData),
-    });
-
-    let data: any;
-    try {
-      data = await response.json();
-    } catch (e) {
-      const text = await response.text();
-      return {
-        success: false,
-        error: text || "Failed to parse response.",
-      };
-    }
-
-    if (response.ok) {
-      return { success: true, data };
-    } else {
-      return {
-        success: false,
-        error: data.message || data.error || "Failed to create product.",
-      };
-    }
+    const data = await apiClient.post<IProduct>("/products", productData);
+    return { success: true, data };
   } catch (error: any) {
-    return { success: false, error: error.message || "Unknown error" };
+    logger.error("상품 생성 오류", error);
+    return {
+      success: false,
+      error: error.message || "상품 생성에 실패했습니다.",
+    };
   }
 };
 
@@ -102,26 +79,16 @@ export const getProducts = async ({
   keyword?: string;
 }): Promise<IProductsResponse> => {
   try {
-    const params = new URLSearchParams({
+    const queryParams = ApiClient.createQueryParams({
       page: page.toString(),
       pageSize: pageSize.toString(),
       sort: orderBy,
       keyword,
     });
 
-    const response = await fetch(`${BASE_URL}/products?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch products: ${response.statusText}`);
-    }
-
-    const data = await response.json();
+    const data = await apiClient.get<IProductsResponse>(
+      `/products${queryParams}`
+    );
     return data;
   } catch (error) {
     logger.error("Error fetching products", error);
@@ -132,19 +99,7 @@ export const getProducts = async ({
 // 상품 상세 가져오기
 export const getProductById = async (id: number): Promise<IProduct> => {
   try {
-    const response = await fetch(`${BASE_URL}/products/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch product details.");
-    }
-
-    const data: IProduct = await response.json();
+    const data = await apiClient.get<IProduct>(`/products/${id}`);
     return data;
   } catch (error) {
     logger.error("Error fetching product details", error);
@@ -156,33 +111,14 @@ export const getProductById = async (id: number): Promise<IProduct> => {
 export const deleteProduct = async (
   productId: string
 ): Promise<Record<string, unknown>> => {
-  const res = await fetch(`${BASE_URL}/products/${productId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    let errorMessage = "상품 삭제 실패";
-
-    try {
-      const errorData = await res.json();
-      errorMessage = errorData.message || "상품 삭제 실패";
-    } catch (e) {
-      const errorText = await res.text();
-      errorMessage = errorText || "상품 삭제 실패 (응답 형식 오류)";
-    }
-
-    throw new Error(errorMessage);
-  }
-
   try {
-    const data = await res.json();
-    return data;
-  } catch {
-    return {};
+    const result = await apiClient.delete<Record<string, unknown>>(
+      `/products/${productId}`
+    );
+    return result;
+  } catch (error) {
+    logger.error("상품 삭제 오류", error);
+    throw error;
   }
 };
 
@@ -192,23 +128,10 @@ export const updateProduct = async (
   updatedData: TUpdateProductInput
 ): Promise<IProduct> => {
   try {
-    const response = await fetchWithRefresh(
-      `${BASE_URL}/products/${productId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      }
+    const data = await apiClient.patch<IProduct>(
+      `/products/${productId}`,
+      updatedData
     );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to update product.");
-    }
-
     return data;
   } catch (error) {
     logger.error("Error updating product", error);
