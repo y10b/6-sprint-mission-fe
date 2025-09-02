@@ -10,13 +10,15 @@ import { IProductComment, GetProductCommentsResponse } from "@/types";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
 import DropdownMenu from "@/components/Dropdownmenu";
 
-interface CommentsProductsProps {
+interface ICommentsProductsProps {
   productId: number;
 }
 
-export default function CommentsProducts({ productId }: CommentsProductsProps) {
+export default function CommentsProducts({
+  productId,
+}: ICommentsProductsProps) {
   const [comments, setComments] = useState<IProductComment[]>([]);
-  const [nextCursor, setNextCursor] = useState<number | null>(null);
+  const [nextCursor, setNextCursor] = useState<number | string | null>(null);
   const [newComment, setNewComment] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");

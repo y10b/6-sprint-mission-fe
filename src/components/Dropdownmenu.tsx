@@ -11,7 +11,7 @@ import { updateComment, deleteComment } from "@/lib/api/comments/commentsApi";
 import { deleteProduct } from "@/lib/api/products/productsApi";
 import { updateArticle, deleteArticle } from "@/lib/api/articles/articlesApi";
 
-interface DropdownMenuProps {
+interface IDropdownMenuProps {
   type: "product" | "article" | "comment";
   itemId: number;
   parentId?: number;
@@ -19,7 +19,7 @@ interface DropdownMenuProps {
   onDelete?: () => void;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({
+const DropdownMenu: React.FC<IDropdownMenuProps> = ({
   type,
   itemId,
   parentId,

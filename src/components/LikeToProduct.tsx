@@ -30,6 +30,11 @@ const LikeToProduct = memo(
     const [count, setCount] = useState(initialCount);
     const [isLoading, setIsLoading] = useState(false);
 
+    // 타입 가드 함수 추가
+    const hasFavoriteCount = (data: any): data is { favoriteCount: number } => {
+      return data && typeof data.favoriteCount === "number";
+    };
+
     // 좋아요 토글 핸들러를 useCallback으로 메모이제이션
     const handleToggle = useCallback(async () => {
       if (isLoading) return; // 중복 요청 방지
@@ -48,10 +53,9 @@ const LikeToProduct = memo(
           // 좋아요 삭제
           data = await removeFavorite(productId);
           // 서버 응답이 빈 객체인 경우를 대비한 안전한 처리
-          const newCount =
-            data && typeof data.favoriteCount === "number"
-              ? data.favoriteCount
-              : Math.max(0, prevCount - 1);
+          const newCount = hasFavoriteCount(data)
+            ? data.favoriteCount
+            : Math.max(0, prevCount - 1);
           setIsClicked(false);
           setCount(newCount);
           onLikeRemove?.(productId, newCount);
@@ -59,10 +63,9 @@ const LikeToProduct = memo(
           // 좋아요 추가
           data = await addFavorite(productId);
           // 서버 응답이 빈 객체인 경우를 대비한 안전한 처리
-          const newCount =
-            data && typeof data.favoriteCount === "number"
-              ? data.favoriteCount
-              : prevCount + 1;
+          const newCount = hasFavoriteCount(data)
+            ? data.favoriteCount
+            : prevCount + 1;
           setIsClicked(true);
           setCount(newCount);
           onLikeToggle?.(productId, newCount);
@@ -79,10 +82,9 @@ const LikeToProduct = memo(
             logger.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
             try {
               const data = await removeFavorite(productId);
-              const newCount =
-                data && typeof data.favoriteCount === "number"
-                  ? data.favoriteCount
-                  : Math.max(0, prevCount - 1);
+              const newCount = hasFavoriteCount(data)
+                ? data.favoriteCount
+                : Math.max(0, prevCount - 1);
               setIsClicked(false);
               setCount(newCount);
               onLikeRemove?.(productId, newCount);

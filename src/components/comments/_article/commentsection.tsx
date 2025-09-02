@@ -10,7 +10,7 @@ import { createArticleComment } from "@/lib/api/comments/commentsApi";
 import { useState } from "react";
 import { logger } from "@/utils/logger";
 
-interface CommentSectionProps {
+interface ICommentSectionProps {
   comments: IArticleComment[];
   setComments: React.Dispatch<React.SetStateAction<IArticleComment[]>>;
   newComment: string;
@@ -18,7 +18,7 @@ interface CommentSectionProps {
   articleId: number;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({
+const CommentSection: React.FC<ICommentSectionProps> = ({
   comments,
   setComments,
   newComment,

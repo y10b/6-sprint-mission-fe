@@ -1,12 +1,12 @@
 import React, { forwardRef } from "react";
 
-interface FormTextareaProps
+interface IFormTextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "ref"> {
   label: string;
   error?: string;
 }
 
-const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
+const FormTextarea = forwardRef<HTMLTextAreaElement, IFormTextareaProps>(
   ({ label, error, className = "", ...props }, ref) => {
     return (
       <div className="mb-6">

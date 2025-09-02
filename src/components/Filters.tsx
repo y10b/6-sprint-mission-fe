@@ -6,22 +6,22 @@ import { FaChevronDown } from "react-icons/fa";
 
 export type OrderByValue = "latest" | "likes";
 
-interface OrderOption {
+interface IOrderOption {
   value: OrderByValue;
   label: string;
 }
 
-interface FiltersProps {
+interface IFiltersProps {
   orderBy: OrderByValue;
   setOrderBy: (value: OrderByValue) => void;
 }
 
-const options: readonly OrderOption[] = [
+const options: readonly IOrderOption[] = [
   { value: "latest", label: "최신 순" },
   { value: "likes", label: "좋아요 순" },
 ] as const;
 
-export default function Filters({ orderBy, setOrderBy }: FiltersProps) {
+export default function Filters({ orderBy, setOrderBy }: IFiltersProps) {
   const selectedOption = useMemo(
     () => options.find((option) => option.value === orderBy),
     [orderBy]

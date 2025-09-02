@@ -9,7 +9,7 @@ import {
 } from "@/lib/api/articles/articlesApi";
 import { logger } from "@/utils/logger";
 
-interface LikeToArticleProps {
+interface ILikeToArticleProps {
   articleId: number;
   initialCount: number;
   onLikeToggle?: (articleId: number, count: number) => void;
@@ -19,7 +19,7 @@ const LikeToArticle = ({
   articleId,
   initialCount = 0,
   onLikeToggle,
-}: LikeToArticleProps) => {
+}: ILikeToArticleProps) => {
   const [isClicked, setIsClicked] = useState(false);
   const [count, setCount] = useState(initialCount);
 

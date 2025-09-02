@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-interface FormInputProps {
+interface IFormInputProps {
   label: string;
   error?: string;
   type?: string;
@@ -14,7 +14,7 @@ interface FormInputProps {
   showPassword?: boolean;
 }
 
-const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
+const FormInput = forwardRef<HTMLInputElement, IFormInputProps>(
   (
     {
       label,

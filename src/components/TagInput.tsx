@@ -1,7 +1,7 @@
 import React, { useState, KeyboardEvent } from "react";
 import { FiX } from "react-icons/fi";
 
-interface TagInputProps {
+interface ITagInputProps {
   label: string;
   tags: string[];
   setTags: (tags: string[]) => void;
@@ -15,7 +15,7 @@ export default function TagInput({
   setTags,
   placeholder = "태그를 입력하세요",
   error,
-}: TagInputProps) {
+}: ITagInputProps) {
   const [input, setInput] = useState("");
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

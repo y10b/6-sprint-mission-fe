@@ -13,8 +13,9 @@ import { getCurrentUser, checkInitialToken } from "@/lib/api/auth/auth.api";
 import { logout as logoutApi } from "@/lib/api/auth/auth.api";
 import { logger } from "@/utils/logger";
 import { IUser } from "@/types";
+import Modal from "@/components/Auth/AuthModal";
 
-interface AuthContextType {
+interface IAuthContextType {
   user: IUser | null;
   isLoading: boolean;
   isInitialized: boolean;
@@ -23,16 +24,17 @@ interface AuthContextType {
   fetchUserData: () => Promise<void>;
 }
 
-interface AuthProviderProps {
+interface IAuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<IAuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -46,6 +48,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // 사용자 정보 가져오기
   const fetchUserData = useCallback(async () => {
+    // 공개 페이지에서는 API 호출 하지 않음
+    const publicPaths = ["/", "/products", "/articles", "/signin", "/signup"];
+    const isPublicPath = publicPaths.includes(pathname);
+
+    if (isPublicPath) {
+      logger.info(
+        "[fetchUserData] 공개 페이지에서는 사용자 정보 조회 건너뜀",
+        pathname
+      );
+      // public 경로에서는 사용자 상태를 초기화하지 않고 API 호출만 생략
+      return;
+    }
+
     try {
       logger.info("[fetchUserData] getCurrentUser 호출");
       const userData = await getCurrentUser();
@@ -62,7 +77,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       logger.error("사용자 정보 조회 에러", error);
       setUser(null);
     }
-  }, []);
+  }, [pathname]);
 
   // 로그아웃
   const logout = useCallback(async () => {
@@ -87,7 +102,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           nodeEnv: process.env.NODE_ENV,
           apiUrl: process.env.NEXT_PUBLIC_API_URL,
           isClient: typeof window !== "undefined",
+          pathname: pathname,
         });
+
+        // 인증이 필요하지 않은 페이지들 (목록 페이지만, 상세 페이지 제외)
+        const publicPaths = [
+          "/",
+          "/products",
+          "/articles",
+          "/signin",
+          "/signup",
+        ];
+        const isPublicPath = publicPaths.includes(pathname);
+
+        if (isPublicPath) {
+          logger.info("[AuthProvider] 공개 페이지: 인증 확인 건너뜀", pathname);
+          // public 경로에서는 사용자 상태를 초기화하지 않음
+          setIsInitialized(true);
+          setIsLoading(false);
+          return;
+        }
 
         // 먼저 refresh token으로 새로운 access token 발급 시도
         logger.info("[AuthProvider] checkInitialToken 호출");
@@ -118,17 +152,41 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     initAuth();
-  }, []); // fetchUserData 의존성 제거하여 무한 루프 방지
+  }, [pathname]); // pathname을 의존성에 추가
 
-  // 로그인한 상태에서 특정 경로에 접근 시 리다이렉트
+  // 인증 권한 확인 및 모달 표시
   useEffect(() => {
     if (!isInitialized) return;
 
-    const publicPaths = ["/", "/signin", "/signup"];
-    if (user && publicPaths.includes(pathname)) {
+    // 로그인/회원가입 페이지는 로그인 상태에서 접근 불가
+    const authOnlyPaths = ["/signin", "/signup"];
+    if (user && authOnlyPaths.includes(pathname)) {
       router.replace("/products");
+      return;
+    }
+
+    // 인증이 필요한 페이지 체크
+    const publicPaths = ["/", "/products", "/articles", "/signin", "/signup"];
+    const needsAuth = !publicPaths.includes(pathname);
+
+    // 로그인하지 않은 사용자가 인증이 필요한 페이지에 접근한 경우
+    if (needsAuth && !user) {
+      logger.info("[AuthProvider] 인증이 필요한 페이지 접근:", pathname);
+      setShowAuthModal(true);
     }
   }, [isInitialized, user, pathname, router]);
+
+  // 인증 모달 닫기 및 로그인 페이지로 이동
+  const handleAuthModalClose = useCallback(() => {
+    setShowAuthModal(false);
+    router.push("/signin");
+  }, [router]);
+
+  // 인증 모달 취소 (이전 페이지로 이동)
+  const handleAuthModalCancel = useCallback(() => {
+    setShowAuthModal(false);
+    router.back();
+  }, [router]);
 
   const value = {
     user,
@@ -139,7 +197,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     fetchUserData,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {showAuthModal && (
+        <Modal
+          message="로그인이 필요한 페이지입니다. 로그인 페이지로 이동하시겠습니까?"
+          onClose={handleAuthModalClose}
+          onCancel={handleAuthModalCancel}
+          showCancel={true}
+        />
+      )}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

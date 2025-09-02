@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signup } from "@/lib/api/auth/auth.api";
 import { login as loginApi } from "@/lib/api/auth/auth.api";
@@ -13,11 +13,15 @@ import {
 } from "@/utils/authValidation";
 import Link from "next/link";
 import FormField from "@/components/Auth/AuthFormField";
-import SnsSign from "@/components/SnsSign";
 import Modal from "@/components/Auth/AuthModal";
 import { logger } from "@/utils/logger";
 import { AxiosError } from "axios";
-import { AuthError, ShowPasswordState, SignupFormData } from "@/types/auth";
+import { IAuthError, ISignupFormData } from "@/types/auth";
+
+type ShowPasswordState = {
+  password: boolean;
+  passwordConfirmation: boolean;
+};
 
 export default function Signup() {
   const { login } = useAuth();
@@ -35,7 +39,7 @@ export default function Signup() {
     watch,
     setError,
     formState: { errors, isValid },
-  } = useForm<SignupFormData>({
+  } = useForm<ISignupFormData>({
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -46,10 +50,10 @@ export default function Signup() {
   });
 
   const toggleShow = (field: keyof ShowPasswordState): void => {
-    setShow((prev) => ({ ...prev, [field]: !prev[field] }));
+    setShow((prev: ShowPasswordState) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const onSubmit = async (data: SignupFormData): Promise<void> => {
+  const onSubmit = async (data: ISignupFormData): Promise<void> => {
     try {
       await signup(data);
       const loginResponse = await loginApi({
@@ -65,7 +69,7 @@ export default function Signup() {
       if (err instanceof Error) {
         errorMessage = err.message;
       } else {
-        const error = err as AxiosError<AuthError>;
+        const error = err as AxiosError<IAuthError>;
         errorMessage =
           error.response?.data?.error ||
           error.response?.data?.message ||
@@ -166,8 +170,6 @@ export default function Signup() {
         >
           회원가입
         </button>
-
-        <SnsSign />
 
         <div className="flex justify-center items-center mt-6 text-sm">
           <span className="text-gray-800">이미 회원이신가요?</span>

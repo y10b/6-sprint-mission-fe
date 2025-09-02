@@ -1,13 +1,13 @@
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
-interface DeleteModalProps {
+interface IDeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-function DeleteModal({ isOpen, onClose, onConfirm }: DeleteModalProps) {
+function DeleteModal({ isOpen, onClose, onConfirm }: IDeleteModalProps) {
   if (!isOpen) return null;
 
   return (

@@ -189,3 +189,4 @@ export interface ICursorPaginatedResponse<T> {
   nextCursor: number | string | null;
   hasMore: boolean;
 }
+

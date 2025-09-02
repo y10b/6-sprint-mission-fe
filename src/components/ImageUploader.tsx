@@ -1,7 +1,7 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
 
-interface Props {
+interface IProps {
   images: { file: File; url: string }[];
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageDelete: (index: number) => void;
@@ -13,7 +13,7 @@ const ImageUploader = ({
   handleImageChange,
   handleImageDelete,
   error,
-}: Props) => {
+}: IProps) => {
   return (
     <div className="mb-6">
       <label className="block text-base font-semibold text-gray-800 mb-2">

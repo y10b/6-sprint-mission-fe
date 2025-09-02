@@ -7,11 +7,10 @@ import { useAuth } from "@/context/AuthContext";
 import { login as loginApi } from "@/lib/api/auth/auth.api";
 import { getValidationError } from "@/utils/authValidation";
 import Link from "next/link";
-import SnsSign from "@/components/SnsSign";
 import AuthFormField from "@/components/Auth/AuthFormField";
 import Modal from "@/components/Auth/AuthModal";
 import { AxiosError } from "axios";
-import { AuthError, SigninFormData } from "@/types/auth";
+import { IAuthError, ISigninFormData } from "@/types/auth";
 import { logger } from "@/utils/logger";
 
 export default function Signin() {
@@ -26,11 +25,13 @@ export default function Signin() {
     handleSubmit,
     formState: { errors, isValid },
     setError,
-  } = useForm<SigninFormData>({
+  } = useForm<ISigninFormData>({
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
+  const onSubmit: SubmitHandler<ISigninFormData> = async (
+    data: ISigninFormData
+  ) => {
     try {
       const result = await loginApi(data);
 
@@ -53,7 +54,7 @@ export default function Signin() {
       if (err instanceof Error) {
         errorMessage = err.message;
       } else {
-        const error = err as AxiosError<AuthError>;
+        const error = err as AxiosError<IAuthError>;
         errorMessage =
           error.response?.data?.error ||
           error.response?.data?.message ||
@@ -129,8 +130,6 @@ export default function Signin() {
         >
           로그인
         </button>
-
-        <SnsSign />
 
         <div className="flex justify-center items-center mt-6 text-sm">
           <span className="text-gray-800">판다마켓이 처음이신가요?</span>

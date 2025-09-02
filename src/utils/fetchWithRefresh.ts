@@ -1,13 +1,13 @@
 import { refreshToken } from "@/lib/api/auth/auth.api";
 import { logger } from "@/utils/logger";
 
-interface FetchOptions extends RequestInit {
+interface IFetchOptions extends RequestInit {
   retryCount?: number;
 }
 
 export async function fetchWithRefresh(
   url: string,
-  options: FetchOptions = {}
+  options: IFetchOptions = {}
 ): Promise<Response> {
   const { retryCount = 0, ...fetchOptions } = options;
 

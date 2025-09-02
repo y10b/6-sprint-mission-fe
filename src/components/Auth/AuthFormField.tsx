@@ -1,7 +1,6 @@
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { UseFormRegisterReturn } from "react-hook-form";
 
-interface FormFieldProps {
+interface IFormFieldProps {
   label: string;
   id: string;
   type?: string;
@@ -10,7 +9,7 @@ interface FormFieldProps {
   toggleType?: boolean;
   onToggle?: () => void;
   show?: boolean;
-  register: UseFormRegisterReturn;
+  register: any;
 }
 
 export default function AuthFormField({
@@ -23,7 +22,7 @@ export default function AuthFormField({
   onToggle,
   show,
   register,
-}: FormFieldProps) {
+}: IFormFieldProps) {
   return (
     <div className="mb-4">
       <label

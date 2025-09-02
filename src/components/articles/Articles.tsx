@@ -7,7 +7,7 @@ import ArticleList from "@/components/articles/ArticleList";
 import { Dispatch, SetStateAction } from "react";
 import { IArticle } from "@/types";
 
-interface ArticlesProps {
+interface IArticlesProps {
   articles: IArticle[];
   keyword: string;
   setKeyword: Dispatch<SetStateAction<string>>;
@@ -29,7 +29,7 @@ const Articles = ({
   setCurrentPage,
   articlesPerPage,
   totalCount,
-}: ArticlesProps) => {
+}: IArticlesProps) => {
   const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(keyword.toLowerCase())
   );

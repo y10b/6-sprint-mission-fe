@@ -1,17 +1,17 @@
 import * as Sentry from "@sentry/nextjs";
 
-interface LoggerConfig {
+interface ILoggerConfig {
   sendToSentry?: boolean;
   showInConsole?: boolean;
 }
 
 class Logger {
-  private defaultConfig: LoggerConfig = {
+  private defaultConfig: ILoggerConfig = {
     sendToSentry: process.env.NODE_ENV === "production",
     showInConsole: process.env.NODE_ENV === "development",
   };
 
-  error(message: string, error?: Error | unknown, config?: LoggerConfig) {
+  error(message: string, error?: Error | unknown, config?: ILoggerConfig) {
     const finalConfig = { ...this.defaultConfig, ...config };
 
     // 콘솔에 출력 (개발 환경)
@@ -32,7 +32,7 @@ class Logger {
     }
   }
 
-  warn(message: string, data?: unknown, config?: LoggerConfig) {
+  warn(message: string, data?: unknown, config?: ILoggerConfig) {
     const finalConfig = { ...this.defaultConfig, ...config };
 
     if (finalConfig.showInConsole) {
@@ -44,7 +44,7 @@ class Logger {
     }
   }
 
-  info(message: string, data?: unknown, config?: LoggerConfig) {
+  info(message: string, data?: unknown, config?: ILoggerConfig) {
     const finalConfig = { ...this.defaultConfig, ...config };
 
     if (finalConfig.showInConsole) {

@@ -1,4 +1,4 @@
-interface RequestInit extends globalThis.RequestInit {
+interface IRequestInit extends globalThis.RequestInit {
   credentials?: RequestCredentials;
   headers?: HeadersInit;
 }
