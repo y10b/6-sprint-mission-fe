@@ -46,23 +46,10 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     logger.setUser(userData.id.toString(), userData.email);
   }, []);
 
-  // 사용자 정보 가져오기
+  // 사용자 정보 가져오기 (모든 페이지에서 로그인 상태 확인)
   const fetchUserData = useCallback(async () => {
-    // 공개 페이지에서는 API 호출 하지 않음
-    const publicPaths = ["/", "/products", "/articles", "/signin", "/signup"];
-    const isPublicPath = publicPaths.includes(pathname);
-
-    if (isPublicPath) {
-      logger.info(
-        "[fetchUserData] 공개 페이지에서는 사용자 정보 조회 건너뜀",
-        pathname
-      );
-      // public 경로에서는 사용자 상태를 초기화하지 않고 API 호출만 생략
-      return;
-    }
-
     try {
-      logger.info("[fetchUserData] getCurrentUser 호출");
+      logger.info("[fetchUserData] getCurrentUser 호출 - 로그인 상태 확인");
       const userData = await getCurrentUser();
 
       if (userData) {
@@ -70,14 +57,15 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         setUser(userData);
         logger.setUser(userData.id.toString(), userData.email);
       } else {
-        logger.warn("[fetchUserData] 사용자 정보 없음, 로그아웃 상태로 설정");
+        logger.warn("[fetchUserData] 사용자 정보 없음 - 로그아웃 상태");
         setUser(null);
       }
     } catch (error) {
       logger.error("사용자 정보 조회 에러", error);
-      setUser(null);
+      // 에러 발생 시에도 로그아웃 상태로 설정하지 않고 기존 상태 유지
+      // setUser(null);
     }
-  }, [pathname]);
+  }, []);
 
   // 로그아웃
   const logout = useCallback(async () => {
@@ -105,23 +93,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
           pathname: pathname,
         });
 
-        // 인증이 필요하지 않은 페이지들 (목록 페이지만, 상세 페이지 제외)
-        const publicPaths = [
-          "/",
-          "/products",
-          "/articles",
-          "/signin",
-          "/signup",
-        ];
-        const isPublicPath = publicPaths.includes(pathname);
-
-        if (isPublicPath) {
-          logger.info("[AuthProvider] 공개 페이지: 인증 확인 건너뜀", pathname);
-          // public 경로에서는 사용자 상태를 초기화하지 않음
-          setIsInitialized(true);
-          setIsLoading(false);
-          return;
-        }
+        // 모든 페이지에서 로그인 상태 확인
+        logger.info("[AuthProvider] 로그인 상태 확인 시작", pathname);
 
         // 먼저 refresh token으로 새로운 access token 발급 시도
         logger.info("[AuthProvider] checkInitialToken 호출");

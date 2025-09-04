@@ -10,6 +10,7 @@ export * from "./query-options";
 export * from "./hooks/use-auth";
 export * from "./hooks/use-products";
 export * from "./hooks/use-articles";
+export * from "./hooks/use-likes";
 
 // Re-export commonly used TanStack Query hooks
 export {
@@ -27,4 +28,3 @@ export type {
   QueryClient,
   QueryKey,
 } from "@tanstack/react-query";
-

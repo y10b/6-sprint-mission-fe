@@ -13,14 +13,21 @@ import FormTextarea from "@/components/FormTextarea";
 import ImageUploader from "@/components/ImageUploader";
 import TagInput from "@/components/TagInput";
 import { uploadImage } from "@/lib/api/images/imageUpload";
-import { createProduct } from "@/lib/api/products/productsApi";
+import { useCreateProduct } from "@/lib/react-query";
 import { useAuth } from "@/context/AuthContext";
-import type { CreateProductFormData, ImageData } from "@/types/product";
+import type { ICreateProductFormData } from "@/types/product";
+
+// 이미지 데이터 타입 정의
+interface ImageData {
+  file: File;
+  url: string;
+}
 import { logger } from "@/utils/logger";
 
 export default function CreateProduct() {
   const router = useRouter();
   const { user, isInitialized } = useAuth();
+  const createProductMutation = useCreateProduct();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<ImageData[]>([]);
   const [imageError, setImageError] = useState("");
@@ -31,7 +38,7 @@ export default function CreateProduct() {
     formState: { errors },
     setValue,
     watch,
-  } = useForm<CreateProductFormData>({
+  } = useForm<ICreateProductFormData>({
     defaultValues: {
       name: "",
       description: "",
@@ -63,7 +70,7 @@ export default function CreateProduct() {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const onSubmit = async (data: CreateProductFormData) => {
+  const onSubmit = async (data: ICreateProductFormData) => {
     if (images.length === 0) {
       setImageError("이미지를 1장 이상 등록해 주세요.");
       return;
@@ -84,16 +91,18 @@ export default function CreateProduct() {
         imageUrls,
       };
 
-      const result = await createProduct(productData);
+      // React Query mutation 사용으로 자동 캐시 무효화
+      const result = await createProductMutation.mutateAsync(productData);
 
-      if (result.success) {
-        router.push("/");
+      if (result.success && result.data) {
+        // 생성된 상품의 상세 페이지로 이동하여 이미지 확인
+        logger.info("상품 생성 성공, 상세 페이지로 이동:", result.data.id);
+        router.push(`/products/${result.data.id}`);
       } else {
-        alert(`상품 등록 실패: ${result.error}`);
+        logger.error(`상품 등록 실패: ${result.error}`);
       }
     } catch (error) {
       logger.error("상품 등록 에러:", error);
-      alert("상품 등록 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }

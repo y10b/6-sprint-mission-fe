@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { MdMoreVert } from "react-icons/md";
-import { useRouter } from "next/navigation";
-import { logger } from "@/utils/logger";
 
 import DeleteModal from "@/components/DeleteModal";
+import MessageModal from "@/components/MessageModal";
+import EditModal from "@/components/EditModal";
 
-import { updateComment, deleteComment } from "@/lib/api/comments/commentsApi";
-import { deleteProduct } from "@/lib/api/products/productsApi";
-import { updateArticle, deleteArticle } from "@/lib/api/articles/articlesApi";
+import { useDropdownActions } from "@/hooks/useDropdownActions";
+import { useToast } from "@/context/ToastContext";
 
 interface IDropdownMenuProps {
   type: "product" | "article" | "comment";
@@ -28,8 +27,39 @@ const DropdownMenu: React.FC<IDropdownMenuProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [messageModal, setMessageModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const { showToast } = useToast();
+
+  // 커스텀 훅 사용
+  const { handleEdit, handleDelete, isLoading } = useDropdownActions({
+    type,
+    itemId,
+    onDelete,
+    onError: (message) => {
+      setMessageModal({
+        isOpen: true,
+        title: "오류",
+        message,
+        type: "error",
+      });
+    },
+    onToast: (message, type) => {
+      showToast(message, type);
+    },
+  });
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -46,77 +76,28 @@ const DropdownMenu: React.FC<IDropdownMenuProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleEdit = async () => {
-    if (!itemId) return;
+  // 수정 버튼 클릭 처리
+  const handleEditClick = () => {
+    setIsOpen(false);
 
-    if (type === "product") {
-      router.push(`/products/${itemId.toString()}/edit`);
-    } else if (type === "article") {
-      router.push(`/articles/${itemId.toString()}/edit`);
+    if (type === "comment") {
+      setIsEditModalOpen(true);
     } else {
-      const content = prompt("수정할 내용을 입력해주세요");
-      if (!content) {
-        alert("내용이 비어있습니다!");
-        return;
-      }
-
-      try {
-        if (type === "comment") {
-          await updateComment(itemId, content);
-          alert("댓글 수정 성공!");
-          window.location.reload();
-        } else if (type === "article") {
-          const title = prompt("수정할 제목을 입력해주세요") || "";
-          if (!title) {
-            alert("제목이 비어있습니다!");
-            return;
-          }
-          await updateArticle(itemId, { title, content });
-          alert("글 수정 성공!");
-        }
-        setIsOpen(false);
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "수정에 실패했습니다.";
-        alert(errorMessage);
-      }
+      // product나 article의 경우 페이지 이동
+      handleEdit();
     }
+  };
+
+  // 수정 모달에서 제출 처리
+  const handleEditSubmit = (content: string) => {
+    handleEdit(content);
+    setIsEditModalOpen(false);
   };
 
   // 삭제 확인 처리
   const handleConfirmDelete = async () => {
-    try {
-      switch (type) {
-        case "product": {
-          await deleteProduct(itemId.toString());
-          alert("상품이 삭제되었습니다.");
-          router.push("/products");
-          break;
-        }
-        case "comment": {
-          await deleteComment(itemId);
-          alert("댓글 삭제 완료");
-          if (onDelete) onDelete();
-          break;
-        }
-        case "article": {
-          await deleteArticle(itemId);
-          alert("글 삭제 완료");
-          if (onDelete) onDelete();
-          router.push("/articles");
-          break;
-        }
-        default:
-          break;
-      }
-    } catch (error) {
-      logger.error("삭제 실패:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "삭제에 실패했습니다.";
-      alert(errorMessage);
-    } finally {
-      setIsDeleteModalOpen(false);
-    }
+    await handleDelete();
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -128,7 +109,7 @@ const DropdownMenu: React.FC<IDropdownMenuProps> = ({
           <ul className="py-1">
             <li
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center cursor-pointer"
-              onClick={handleEdit}
+              onClick={handleEditClick}
             >
               수정하기
             </li>
@@ -145,10 +126,30 @@ const DropdownMenu: React.FC<IDropdownMenuProps> = ({
         </div>
       )}
 
+      {/* 삭제 확인 모달 */}
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
+      />
+
+      {/* 댓글 수정 모달 */}
+      <EditModal
+        isOpen={isEditModalOpen}
+        title="댓글 수정"
+        placeholder="수정할 내용을 입력해주세요"
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleEditSubmit}
+        isLoading={isLoading}
+      />
+
+      {/* 성공/오류 메시지 모달 */}
+      <MessageModal
+        isOpen={messageModal.isOpen}
+        title={messageModal.title}
+        message={messageModal.message}
+        type={messageModal.type}
+        onClose={() => setMessageModal({ ...messageModal, isOpen: false })}
       />
     </div>
   );

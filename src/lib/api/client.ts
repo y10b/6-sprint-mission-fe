@@ -161,7 +161,7 @@ export class ApiClient {
   }
 
   /**
-   * 공통 요청 메서드
+   * 공통 요청 메서드 (토큰 갱신 로직 포함)
    */
   private async request<T>(endpoint: string, options: RequestInit): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
@@ -178,7 +178,22 @@ export class ApiClient {
     try {
       logger.info(`API Request: ${config.method} ${url}`);
 
-      const response = await fetch(url, config);
+      let response = await fetch(url, config);
+
+      // 401 에러 시 토큰 갱신 시도
+      if (response.status === 401) {
+        try {
+          logger.info("토큰 만료 감지, 갱신 시도");
+          await refreshAccessToken();
+
+          // 토큰 갱신 후 재요청
+          response = await fetch(url, config);
+        } catch (refreshError) {
+          logger.error("토큰 갱신 실패", refreshError);
+          throw new ApiError(401, "인증이 필요합니다.");
+        }
+      }
+
       const result = await handleResponse<T>(response);
 
       logger.info(`API Success: ${config.method} ${url}`);
@@ -217,14 +232,24 @@ export const apiClient = new ApiClient();
 export const authApiClient = new ApiClient(API_CONFIG.BASE_URL);
 
 /**
- * 토큰 갱신 함수 (다른 파일에서 import해서 사용)
+ * 토큰 갱신 함수 (쿠키 기반 인증 시스템에 맞게 수정)
  */
-export async function refreshAccessToken(): Promise<{ accessToken: string }> {
+export async function refreshAccessToken(): Promise<boolean> {
   try {
-    const response = await authApiClient.post<{ accessToken: string }>(
-      "/auth/refresh"
-    );
-    return response;
+    const response = await fetch(`${API_CONFIG.BASE_URL}/users/refresh`, {
+      method: "POST",
+      credentials: "include", // 쿠키 포함
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("토큰 갱신 실패");
+    }
+
+    logger.info("토큰 갱신 성공");
+    return true;
   } catch (error) {
     logger.error("토큰 갱신 실패", error);
     throw error;
@@ -232,7 +257,7 @@ export async function refreshAccessToken(): Promise<{ accessToken: string }> {
 }
 
 /**
- * 토큰 갱신을 포함한 요청 (필요시 사용)
+ * 토큰 갱신을 포함한 요청 (쿠키 기반 인증에 맞게 수정)
  */
 export async function requestWithRefresh<T>(
   request: () => Promise<T>,
@@ -243,10 +268,12 @@ export async function requestWithRefresh<T>(
   } catch (error) {
     if (error instanceof ApiError && error.status === 401 && maxRetries > 0) {
       try {
+        // 쿠키 기반 토큰 갱신
         await refreshAccessToken();
         return await request();
       } catch (refreshError) {
         logger.error("토큰 갱신 후 재요청 실패", refreshError);
+        // 토큰 갱신 실패 시 로그인 페이지로 리다이렉트할 수 있도록 에러 전파
         throw refreshError;
       }
     }

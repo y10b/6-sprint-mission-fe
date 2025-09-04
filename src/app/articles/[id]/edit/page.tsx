@@ -5,12 +5,15 @@ import { useParams, useRouter } from "next/navigation";
 import { getArticle, updateArticle } from "@/lib/api/articles/articlesApi";
 import ImageUploader from "@/components/ImageUploader";
 import { uploadImage } from "@/lib/api/images/imageUpload";
+import MessageModal from "@/components/MessageModal";
 import type { TArticleFormData } from "@/types/article";
 import { logger } from "@/utils/logger";
+import { useToast } from "@/context/ToastContext";
 
 export default function EditArticlePage() {
   const { id } = useParams();
   const router = useRouter();
+  const { showToast } = useToast();
 
   const [form, setForm] = useState<TArticleFormData>({
     title: "",
@@ -21,6 +24,15 @@ export default function EditArticlePage() {
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [errorModal, setErrorModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+  });
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string>("");
@@ -69,12 +81,17 @@ export default function EditArticlePage() {
         content: form.content,
         images: imageUrl,
       });
-      alert("게시글이 수정되었습니다!");
+      // 성공 시 토스트 알림
+      showToast("게시글이 수정되었습니다!", "success");
       router.push(`/articles/${id}`);
     } catch (err) {
       logger.error("수정 실패:", err);
-      setError("게시글 수정에 실패했습니다.");
-      alert("수정에 실패했습니다.");
+      // 오류 시 모달 표시
+      setErrorModal({
+        isOpen: true,
+        title: "수정 실패",
+        message: "게시글 수정에 실패했습니다. 다시 시도해주세요.",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -147,6 +164,15 @@ export default function EditArticlePage() {
           error={imageError}
         />
       </form>
+
+      {/* 오류 모달 */}
+      <MessageModal
+        isOpen={errorModal.isOpen}
+        title={errorModal.title}
+        message={errorModal.message}
+        type="error"
+        onClose={() => setErrorModal({ ...errorModal, isOpen: false })}
+      />
     </div>
   );
 }

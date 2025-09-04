@@ -114,7 +114,10 @@ export const createMutationOptions = <TData, TError = Error, TVariables = void>(
 
 export const invalidationTargets = {
   // 상품 생성/수정/삭제 시 무효화할 쿼리들
-  onProductChange: [queryKeys.products.all],
+  onProductChange: [
+    queryKeys.products.all,
+    queryKeys.products.lists(), // 모든 상품 목록 쿼리
+  ],
 
   // 게시글 생성/수정/삭제 시 무효화할 쿼리들
   onArticleChange: [queryKeys.articles.all],
@@ -137,4 +140,3 @@ export const invalidationTargets = {
       : queryKeys.likes.articles(),
   ],
 } as const;
-

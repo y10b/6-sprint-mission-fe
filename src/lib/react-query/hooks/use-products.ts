@@ -56,6 +56,7 @@ export function useProduct(productId: TId, enabled: boolean = true) {
     queryFn: () => productsApi.getProductById(productId),
     ...createQueryOptions<IProduct>({
       ...STATIC_QUERY_OPTIONS,
+      staleTime: 5 * 60 * 1000, // 5분으로 단축 (이미지 업데이트 반영을 위해)
       enabled: enabled && !!productId,
     }),
   });
@@ -79,18 +80,32 @@ export function useCreateProduct() {
       ICreateProductInput
     >({
       onSuccess: (data) => {
-        // 상품 목록 무효화
-        invalidationTargets.onProductChange.forEach((queryKey) => {
-          queryClient.invalidateQueries({ queryKey });
-        });
+        console.log("상품 생성 성공 - 캐시 업데이트 시작:", data);
 
         // 성공한 상품을 캐시에 추가 (옵티미스틱 업데이트)
         if (data.success && data.data) {
+          console.log("새 상품 캐시에 추가:", data.data.id);
           queryClient.setQueryData(
             queryKeys.products.detail(data.data.id),
             data.data
           );
+
+          // 생성된 상품의 상세 정보도 즉시 무효화하여 최신 데이터 보장
+          setTimeout(() => {
+            console.log("새 상품 상세 캐시 무효화:", data.data.id);
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.products.detail(data.data.id),
+            });
+          }, 100); // 약간의 지연 후 무효화
         }
+
+        // 상품 목록 무효화
+        invalidationTargets.onProductChange.forEach((queryKey) => {
+          console.log("캐시 무효화:", queryKey);
+          queryClient.invalidateQueries({ queryKey });
+        });
+
+        console.log("상품 생성 캐시 업데이트 완료");
       },
     }),
   });
@@ -116,16 +131,21 @@ export function useUpdateProduct() {
       { productId: string; data: TUpdateProductInput }
     >({
       onSuccess: (updatedProduct, { productId }) => {
+        console.log("상품 수정 성공 - 캐시 업데이트 시작:", productId);
+
         // 수정된 상품 캐시 업데이트
         queryClient.setQueryData(
           queryKeys.products.detail(Number(productId)),
           updatedProduct
         );
+        console.log("상품 상세 캐시 업데이트 완료");
 
         // 상품 목록 무효화
         invalidationTargets.onProductChange.forEach((queryKey) => {
+          console.log("캐시 무효화:", queryKey);
           queryClient.invalidateQueries({ queryKey });
         });
+        console.log("상품 목록 캐시 무효화 완료");
       },
     }),
   });
@@ -194,4 +214,3 @@ export function useInvalidateProducts() {
     },
   };
 }
-

@@ -5,10 +5,14 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import ImageUploader from "@/components/ImageUploader";
 import { uploadImage } from "@/lib/api/images/imageUpload";
 import { useCreateArticle } from "@/lib/react-query";
+import MessageModal from "@/components/MessageModal";
 import { logger } from "@/utils/logger";
+import { useToast } from "@/context/ToastContext";
 
 const CreateArticle = () => {
   const router = useRouter();
+  const { showToast } = useToast();
+
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
@@ -18,6 +22,15 @@ const CreateArticle = () => {
     content: "",
   });
   const [imageError, setImageError] = useState<string>("");
+  const [errorModal, setErrorModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+  });
 
   const validateTitle = (title: string): string => {
     const trimmedTitle = title.trim();
@@ -61,14 +74,7 @@ const CreateArticle = () => {
     setImageError("");
   };
 
-  const { mutateAsync: submitArticle, isPending } = useCreateArticle({
-    onSuccess: () => {
-      router.push("/articles");
-    },
-    onError: () => {
-      alert("게시글 작성에 실패했습니다.");
-    },
-  });
+  const { mutateAsync: submitArticle, isPending } = useCreateArticle();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,7 +87,19 @@ const CreateArticle = () => {
     if (!titleErrorMessage && !contentErrorMessage) {
       const articleData = await createArticleData();
       if (articleData) {
-        await submitArticle(articleData);
+        try {
+          await submitArticle(articleData);
+          // 성공 시 토스트 알림
+          showToast("게시글이 작성되었습니다!", "success");
+          router.push("/articles");
+        } catch (error) {
+          // 오류 시 모달 표시
+          setErrorModal({
+            isOpen: true,
+            title: "작성 실패",
+            message: "게시글 작성에 실패했습니다. 다시 시도해주세요.",
+          });
+        }
       }
     }
   };
@@ -173,6 +191,15 @@ const CreateArticle = () => {
           />
         </div>
       </form>
+
+      {/* 오류 모달 */}
+      <MessageModal
+        isOpen={errorModal.isOpen}
+        title={errorModal.title}
+        message={errorModal.message}
+        type="error"
+        onClose={() => setErrorModal({ ...errorModal, isOpen: false })}
+      />
     </div>
   );
 };

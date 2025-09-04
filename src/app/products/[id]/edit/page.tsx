@@ -2,25 +2,45 @@
 
 import { useEffect, useState, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getProductById, updateProduct } from "@/lib/api/products/productsApi";
+import { getProductById } from "@/lib/api/products/productsApi";
 import { uploadImage } from "@/lib/api/images/imageUpload";
+import { useUpdateProduct } from "@/lib/react-query";
 import FormInput from "@/components/FormInput";
 import FormTextarea from "@/components/FormTextarea";
 import TagInput from "@/components/TagInput";
 import ImageUploader from "@/components/ImageUploader";
-import {
-  TUpdateProductInput,
-  EditableProductFields,
-  UploadedImage,
-  EditProductFormState,
-} from "@/types/product";
+import MessageModal from "@/components/MessageModal";
+import { TUpdateProductInput } from "@/types/product";
+
+// 로컬 타입 정의
+interface EditableProductFields {
+  name: string;
+  description: string;
+  price: number;
+  tags: string[];
+  images: string[];
+}
+
+interface UploadedImage {
+  file: File;
+  url: string;
+}
+
+interface EditProductFormState extends EditableProductFields {
+  isValid: boolean;
+  isDirty: boolean;
+  sellerId?: number;
+}
 import { useAuth } from "@/context/AuthContext";
 import { logger } from "@/utils/logger";
+import { useToast } from "@/context/ToastContext";
 
 export default function EditProductPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
+  const { showToast } = useToast();
+  const updateProductMutation = useUpdateProduct();
 
   const [product, setProduct] = useState<EditProductFormState>({
     name: "",
@@ -35,6 +55,15 @@ export default function EditProductPage() {
   const [displayImages, setDisplayImages] = useState<UploadedImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [errorModal, setErrorModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+  });
 
   useEffect(() => {
     if (!id) return;
@@ -45,8 +74,14 @@ export default function EditProductPage() {
 
         // 현재 로그인한 사용자가 판매자가 아니면 상품 상세 페이지로 리다이렉트
         if (!user || user.id !== data.sellerId) {
-          alert("상품 수정 권한이 없습니다.");
-          router.push(`/products/${id}`);
+          setErrorModal({
+            isOpen: true,
+            title: "접근 권한 없음",
+            message: "상품 수정 권한이 없습니다.",
+          });
+          setTimeout(() => {
+            router.push(`/products/${id}`);
+          }, 2000);
           return;
         }
 
@@ -113,7 +148,7 @@ export default function EditProductPage() {
       const value = field === "price" ? Number(e.target.value) : e.target.value;
       const updatedFields = { [field]: value };
 
-      setProduct((prev) => ({
+      setProduct((prev: EditProductFormState) => ({
         ...prev,
         ...updatedFields,
         isDirty: true,
@@ -132,14 +167,14 @@ export default function EditProductPage() {
         images: [...product.images, ...uploadedUrls],
       };
 
-      setProduct((prev) => ({
+      setProduct((prev: EditProductFormState) => ({
         ...prev,
         ...updatedFields,
         isDirty: true,
         isValid: validateForm(updatedFields),
       }));
 
-      setDisplayImages((prev) => [
+      setDisplayImages((prev: UploadedImage[]) => [
         ...prev,
         ...files.map((file, index) => ({
           file,
@@ -164,8 +199,8 @@ export default function EditProductPage() {
       isValid: validateForm(updatedFields),
     }));
 
-    setDisplayImages((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
+    setDisplayImages((prev: UploadedImage[]) =>
+      prev.filter((_: UploadedImage, index: number) => index !== indexToRemove)
     );
   };
 
@@ -182,12 +217,22 @@ export default function EditProductPage() {
     };
 
     try {
-      await updateProduct(id.toString(), updateData);
-      alert("상품이 수정되었습니다!");
+      // React Query mutation 사용으로 자동 캐시 무효화
+      await updateProductMutation.mutateAsync({
+        productId: id.toString(),
+        data: updateData,
+      });
+      // 성공 시 토스트 알림
+      showToast("상품이 수정되었습니다!", "success");
       router.push(`/products/${id}`);
     } catch (err) {
       logger.error("상품 수정 에러", err);
-      setError("상품 수정에 실패했습니다.");
+      // 오류 시 모달 표시
+      setErrorModal({
+        isOpen: true,
+        title: "수정 실패",
+        message: "상품 수정에 실패했습니다. 다시 시도해주세요.",
+      });
     }
   };
 
@@ -244,7 +289,7 @@ export default function EditProductPage() {
           label="*태그"
           tags={product.tags}
           setTags={(newTags: string[]) =>
-            setProduct((prev) => ({
+            setProduct((prev: EditProductFormState) => ({
               ...prev,
               tags: newTags,
               isDirty: true,
@@ -254,6 +299,15 @@ export default function EditProductPage() {
           placeholder="예: 전자제품, 세일, 인기상품"
         />
       </form>
+
+      {/* 오류 모달 */}
+      <MessageModal
+        isOpen={errorModal.isOpen}
+        title={errorModal.title}
+        message={errorModal.message}
+        type="error"
+        onClose={() => setErrorModal({ ...errorModal, isOpen: false })}
+      />
     </div>
   );
 }

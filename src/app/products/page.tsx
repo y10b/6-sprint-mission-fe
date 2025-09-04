@@ -60,9 +60,7 @@ export default function ProductList() {
     setPage(1);
   };
 
-  const handleLikeToggle = () => {
-    // 좋아요 토글 로직 구현
-  };
+  // LikeToProduct 컴포넌트가 React Query를 사용하여 자동으로 캐시를 무효화하므로 별도 핸들러 불필요
 
   const handleOrderByChange = (value: OrderByValue) => {
     setOrderBy(value);
@@ -146,8 +144,6 @@ export default function ProductList() {
                     productId={id}
                     initialCount={favoriteCount}
                     initialIsFavorite={isLiked}
-                    onLikeToggle={handleLikeToggle}
-                    onLikeRemove={handleLikeToggle}
                   />
                 </div>
               </Link>

@@ -57,18 +57,7 @@ const ProductPage = () => {
     images = [],
   } = product;
 
-  const handleLikeToggle = () => {
-    setProduct((prev: IProduct | null): IProduct | null => {
-      if (!prev) return null; // prev가 null이면 그대로 null 반환
-
-      return {
-        ...prev,
-        favoriteCount: prev.favoriteCount + 1,
-        isLiked: !prev.isLiked,
-        // id, name 등은 prev로부터 복사하므로 필수 필드 보장됨
-      };
-    });
-  };
+  // LikeToProduct 컴포넌트가 React Query를 사용하여 자동으로 캐시를 무효화하므로 별도 핸들러 불필요
 
   const sliderSettings = {
     dots: true,
@@ -191,8 +180,6 @@ const ProductPage = () => {
                   productId={productId}
                   initialCount={favoriteCount}
                   initialIsFavorite={isLiked}
-                  onLikeToggle={handleLikeToggle}
-                  onLikeRemove={handleLikeToggle}
                 />
               </div>
             </div>

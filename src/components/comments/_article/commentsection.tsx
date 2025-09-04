@@ -5,10 +5,12 @@ import Dropdown from "@/components/Dropdownmenu";
 import { getProfileImg } from "@/utils/imagePath";
 import Image from "next/image";
 import ENTRY_IMAGE from "../../../../public/img/Img_reply_empty.png";
+import MessageModal from "@/components/MessageModal";
 import { IArticleComment } from "@/types/article";
 import { createArticleComment } from "@/lib/api/comments/commentsApi";
 import { useState } from "react";
 import { logger } from "@/utils/logger";
+import { useToast } from "@/context/ToastContext";
 
 interface ICommentSectionProps {
   comments: IArticleComment[];
@@ -25,6 +27,17 @@ const CommentSection: React.FC<ICommentSectionProps> = ({
   setNewComment,
   articleId,
 }) => {
+  const { showToast } = useToast();
+  const [errorModal, setErrorModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+  });
+
   const handleCommentSubmit = async () => {
     if (newComment.trim() === "") return;
 
@@ -32,13 +45,18 @@ const CommentSection: React.FC<ICommentSectionProps> = ({
       const newCommentData = await createArticleComment(articleId, newComment);
       setComments((prev) => [...prev, newCommentData]);
       setNewComment("");
+      // 성공 시 토스트 알림
+      showToast("댓글이 등록되었습니다!", "success");
     } catch (error) {
       logger.error("Error data:", error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("댓글 등록에 실패했습니다.");
-      }
+      // 오류 시 모달 표시
+      const errorMessage =
+        error instanceof Error ? error.message : "댓글 등록에 실패했습니다.";
+      setErrorModal({
+        isOpen: true,
+        title: "댓글 등록 실패",
+        message: errorMessage,
+      });
     }
   };
 
@@ -126,6 +144,15 @@ const CommentSection: React.FC<ICommentSectionProps> = ({
           </div>
         )}
       </div>
+
+      {/* 오류 모달 */}
+      <MessageModal
+        isOpen={errorModal.isOpen}
+        title={errorModal.title}
+        message={errorModal.message}
+        type="error"
+        onClose={() => setErrorModal({ ...errorModal, isOpen: false })}
+      />
     </div>
   );
 };

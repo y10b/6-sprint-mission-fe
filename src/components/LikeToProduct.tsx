@@ -1,6 +1,6 @@
-import React, { useState, useCallback, memo, useMemo } from "react";
+import React, { useState, useCallback, memo, useMemo, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { addFavorite, removeFavorite } from "@/lib/api/products/favorite";
+import { useToggleProductLike } from "@/lib/react-query";
 import { logger } from "@/utils/logger";
 import { TId } from "@/types";
 
@@ -28,7 +28,16 @@ const LikeToProduct = memo(
   }: ILikeToProductProps) => {
     const [isClicked, setIsClicked] = useState(initialIsFavorite);
     const [count, setCount] = useState(initialCount);
-    const [isLoading, setIsLoading] = useState(false);
+
+    // React Query mutation 훅 사용
+    const toggleLikeMutation = useToggleProductLike();
+    const isLoading = toggleLikeMutation.isPending;
+
+    // props 변경 시 상태 업데이트 (캐시 무효화로 인한 props 변경 반영)
+    useEffect(() => {
+      setIsClicked(initialIsFavorite);
+      setCount(initialCount);
+    }, [initialIsFavorite, initialCount]);
 
     // 타입 가드 함수 추가
     const hasFavoriteCount = (data: any): data is { favoriteCount: number } => {
@@ -45,29 +54,28 @@ const LikeToProduct = memo(
       // 낙관적 업데이트 (Optimistic Update)
       setIsClicked(!prevClicked);
       setCount(prevClicked ? prevCount - 1 : prevCount + 1);
-      setIsLoading(true);
 
       try {
-        let data;
+        // React Query mutation 사용
+        const data = await toggleLikeMutation.mutateAsync({
+          productId,
+          isCurrentlyLiked: prevClicked,
+        });
+
+        // 서버 응답에 따른 최종 상태 업데이트
+        const newCount = hasFavoriteCount(data)
+          ? data.favoriteCount
+          : prevClicked
+          ? Math.max(0, prevCount - 1)
+          : prevCount + 1;
+
+        setIsClicked(!prevClicked);
+        setCount(newCount);
+
+        // 콜백 호출
         if (prevClicked) {
-          // 좋아요 삭제
-          data = await removeFavorite(productId);
-          // 서버 응답이 빈 객체인 경우를 대비한 안전한 처리
-          const newCount = hasFavoriteCount(data)
-            ? data.favoriteCount
-            : Math.max(0, prevCount - 1);
-          setIsClicked(false);
-          setCount(newCount);
           onLikeRemove?.(productId, newCount);
         } else {
-          // 좋아요 추가
-          data = await addFavorite(productId);
-          // 서버 응답이 빈 객체인 경우를 대비한 안전한 처리
-          const newCount = hasFavoriteCount(data)
-            ? data.favoriteCount
-            : prevCount + 1;
-          setIsClicked(true);
-          setCount(newCount);
           onLikeToggle?.(productId, newCount);
         }
       } catch (error) {
@@ -81,7 +89,10 @@ const LikeToProduct = memo(
           if (message.includes("이미 찜한 상품")) {
             logger.warn("이미 찜한 상품이므로 좋아요를 취소합니다.");
             try {
-              const data = await removeFavorite(productId);
+              const data = await toggleLikeMutation.mutateAsync({
+                productId,
+                isCurrentlyLiked: true, // 강제로 제거
+              });
               const newCount = hasFavoriteCount(data)
                 ? data.favoriteCount
                 : Math.max(0, prevCount - 1);
@@ -95,10 +106,16 @@ const LikeToProduct = memo(
             logger.error("좋아요 처리 실패", error);
           }
         }
-      } finally {
-        setIsLoading(false);
       }
-    }, [isClicked, count, isLoading, productId, onLikeToggle, onLikeRemove]);
+    }, [
+      isClicked,
+      count,
+      isLoading,
+      productId,
+      onLikeToggle,
+      onLikeRemove,
+      toggleLikeMutation,
+    ]);
 
     // 포맷된 카운트를 useMemo로 메모이제이션
     const formattedCount = useMemo(() => {
