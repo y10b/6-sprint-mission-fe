@@ -16,6 +16,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IProduct } from "@/types/product";
+import { ProductDetailSkeleton } from "@/components/skeleton/SkeletonUI";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -37,9 +38,9 @@ const ProductPage = () => {
     }
   }, [productData]);
 
-  if (!isInitialized) return <p>로딩 중...</p>;
+  if (!isInitialized) return <ProductDetailSkeleton />;
 
-  if (isLoading) return <p>상품 정보를 불러오는 중...</p>;
+  if (isLoading) return <ProductDetailSkeleton />;
 
   if (error) return <p>상품을 불러오는 데 실패했습니다.</p>;
   if (!product) return <p>상품 정보를 불러올 수 없습니다.</p>;

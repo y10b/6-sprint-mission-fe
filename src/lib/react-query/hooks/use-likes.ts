@@ -42,30 +42,18 @@ export function useToggleProductLike() {
       { productId: TId; isCurrentlyLiked: boolean }
     >({
       onSuccess: (data, { productId, isCurrentlyLiked }) => {
-        console.log("좋아요 토글 성공 - 캐시 업데이트 시작:", {
-          productId,
-          wasLiked: isCurrentlyLiked,
-        });
-
         // 좋아요 토글 시 무효화할 쿼리들
         invalidationTargets
           .onLikeToggle("product", productId)
           .forEach((queryKey) => {
-            console.log("좋아요 관련 캐시 무효화:", queryKey);
             queryClient.invalidateQueries({ queryKey });
           });
 
         // 상품 목록도 무효화 (좋아요 개수 업데이트를 위해)
         queryClient.invalidateQueries({ queryKey: queryKeys.products.lists() });
-
-        console.log("좋아요 토글 캐시 업데이트 완료");
       },
       onError: (error, { productId, isCurrentlyLiked }) => {
         logger.error("좋아요 토글 실패:", error);
-        console.log("좋아요 토글 실패 - 캐시 복원 필요:", {
-          productId,
-          wasLiked: isCurrentlyLiked,
-        });
       },
     }),
   });
@@ -81,8 +69,6 @@ export function useAddProductLike() {
     mutationFn: (productId: TId) => addFavorite(productId),
     ...createMutationOptions<any, Error, TId>({
       onSuccess: (data, productId) => {
-        console.log("좋아요 추가 성공:", productId);
-
         // 관련 캐시 무효화
         invalidationTargets
           .onLikeToggle("product", productId)
@@ -105,8 +91,6 @@ export function useRemoveProductLike() {
     mutationFn: (productId: TId) => removeFavorite(productId),
     ...createMutationOptions<any, Error, TId>({
       onSuccess: (data, productId) => {
-        console.log("좋아요 제거 성공:", productId);
-
         // 관련 캐시 무효화
         invalidationTargets
           .onLikeToggle("product", productId)

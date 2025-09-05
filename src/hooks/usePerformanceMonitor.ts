@@ -64,16 +64,6 @@ export function usePerformanceMonitor(
       });
     }
 
-    // 개발 환경에서 주기적으로 성능 리포트 출력
-    if (currentMetrics.renderCount % 50 === 0) {
-      console.log(`📊 [Performance] ${componentName} 성능 리포트:`, {
-        totalRenders: currentMetrics.renderCount,
-        averageRenderTime: `${currentMetrics.averageRenderTime.toFixed(2)}ms`,
-        lastRenderTime: `${currentMetrics.lastRenderTime.toFixed(2)}ms`,
-        totalTime: `${currentMetrics.totalRenderTime.toFixed(2)}ms`,
-      });
-    }
-
     renderStartTime.current = 0;
   }, [enabled, componentName, logThreshold]);
 
@@ -115,7 +105,7 @@ export function useWhyDidYouUpdate(
   props: Record<string, any>,
   enabled: boolean = process.env.NODE_ENV === "development"
 ) {
-  const previousProps = useRef<Record<string, any>>();
+  const previousProps = useRef<Record<string, any>>({});
 
   useEffect(() => {
     if (!enabled) return;
@@ -132,13 +122,6 @@ export function useWhyDidYouUpdate(
           };
         }
       });
-
-      if (Object.keys(changedProps).length) {
-        console.log(
-          `🔄 [Why-Did-You-Update] ${name} 리렌더링 원인:`,
-          changedProps
-        );
-      }
     }
 
     previousProps.current = props;
@@ -158,16 +141,6 @@ export function useComponentLifecycle(
     if (!enabled) return;
 
     mountTime.current = performance.now();
-    console.log(`🟢 [Lifecycle] ${componentName} 마운트됨`);
-
-    return () => {
-      const lifeTime = performance.now() - mountTime.current;
-      console.log(
-        `🔴 [Lifecycle] ${componentName} 언마운트됨 (생존시간: ${lifeTime.toFixed(
-          2
-        )}ms)`
-      );
-    };
   }, [componentName, enabled]);
 }
 
@@ -180,13 +153,6 @@ export function useMemoryMonitor(
 ) {
   const logMemoryUsage = useCallback(() => {
     if (!enabled || !(performance as any).memory) return;
-
-    const memory = (performance as any).memory;
-    console.log(`💾 [Memory] ${componentName} 메모리 사용량:`, {
-      used: `${(memory.usedJSHeapSize / 1048576).toFixed(2)} MB`,
-      total: `${(memory.totalJSHeapSize / 1048576).toFixed(2)} MB`,
-      limit: `${(memory.jsHeapSizeLimit / 1048576).toFixed(2)} MB`,
-    });
   }, [componentName, enabled]);
 
   useEffect(() => {
@@ -195,7 +161,3 @@ export function useMemoryMonitor(
 
   return { logMemoryUsage };
 }
-
-
-
-

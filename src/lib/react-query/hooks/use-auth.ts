@@ -27,14 +27,14 @@ import * as authApi from "../../api/auth/auth.api";
  */
 export function useCurrentUser(enabled: boolean = true) {
   return useQuery({
-    queryKey: queryKeys.users.me(),
-    queryFn: () => authApi.getCurrentUser(),
     ...createQueryOptions<IUser | null>({
       ...REAL_TIME_QUERY_OPTIONS,
       enabled,
       // 인증 실패 시에도 에러로 처리하지 않음
       retry: false,
     }),
+    queryKey: queryKeys.users.me(),
+    queryFn: () => authApi.getCurrentUser(),
   });
 }
 
@@ -43,14 +43,14 @@ export function useCurrentUser(enabled: boolean = true) {
  */
 export function useInitialAuth(enabled: boolean = true) {
   return useQuery({
-    queryKey: [...queryKeys.users.me(), "initial"],
-    queryFn: () => authApi.checkInitialToken(),
     ...createQueryOptions<IUser | null>({
       staleTime: 0, // 항상 fresh하게 확인
       gcTime: 0, // 캐시하지 않음
       enabled,
       retry: false,
     }),
+    queryKey: [...queryKeys.users.me(), "initial"],
+    queryFn: () => authApi.checkInitialToken(),
   });
 }
 
@@ -207,7 +207,3 @@ export function useAuthCache() {
     },
   };
 }
-
-
-
-

@@ -7,6 +7,10 @@ import { fetchArticlesFromAPI } from "@/lib/api/articles/articlesApi";
 import { OrderByValue } from "@/components/Filters";
 import type { IArticle } from "@/types/article";
 import { logger } from "@/utils/logger";
+import {
+  ArticleListSkeleton,
+  BestArticlesSkeleton,
+} from "@/components/skeleton/SkeletonUI";
 
 const ArticlePage = () => {
   const [allArticles, setAllArticles] = useState<IArticle[]>([]);
@@ -16,9 +20,11 @@ const ArticlePage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [articlesPerPage] = useState<number>(4);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const data = await fetchArticlesFromAPI({
         page: currentPage,
         limit: articlesPerPage,
@@ -39,6 +45,8 @@ const ArticlePage = () => {
       setBestArticles(best.articles);
     } catch (err) {
       logger.error("데이터 가져오기 실패:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,18 +61,32 @@ const ArticlePage = () => {
 
   return (
     <div className="mx-auto w-[343px] sm:w-[696px] md:w-300">
-      <BestArticles articles={bestArticles} defaultImage="/img/making.png" />
-      <Articles
-        articles={allArticles}
-        keyword={keyword}
-        setKeyword={setKeyword}
-        orderBy={orderBy}
-        setOrderBy={handleOrderByChange}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        articlesPerPage={articlesPerPage}
-        totalCount={totalCount}
-      />
+      {isLoading ? (
+        <>
+          <BestArticlesSkeleton />
+          <div className="mt-10">
+            <ArticleListSkeleton count={articlesPerPage} />
+          </div>
+        </>
+      ) : (
+        <>
+          <BestArticles
+            articles={bestArticles}
+            defaultImage="/img/making.png"
+          />
+          <Articles
+            articles={allArticles}
+            keyword={keyword}
+            setKeyword={setKeyword}
+            orderBy={orderBy}
+            setOrderBy={handleOrderByChange}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            articlesPerPage={articlesPerPage}
+            totalCount={totalCount}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import {
 import { IProductComment, GetProductCommentsResponse } from "@/types";
 import { formatTimeAgoOrDate } from "@/utils/formatTimeAgoOrDate";
 import DropdownMenu from "@/components/Dropdownmenu";
+import { CommentListSkeleton } from "@/components/skeleton/SkeletonUI";
 
 interface ICommentsProductsProps {
   productId: number;
@@ -21,13 +22,19 @@ export default function CommentsProducts({
   const [nextCursor, setNextCursor] = useState<number | string | null>(null);
   const [newComment, setNewComment] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
   const fetchComments = useCallback(
     async (isInitial = false) => {
       if (!productId) return;
 
-      setIsLoading(true);
+      if (isInitial) {
+        setIsInitialLoading(true);
+      } else {
+        setIsLoading(true);
+      }
+
       try {
         const currentCursor = isInitial ? null : nextCursor;
         const response = await getCommentsByProductId({
@@ -43,7 +50,11 @@ export default function CommentsProducts({
       } catch (error) {
         setError("댓글을 불러오는 데 실패했습니다.");
       } finally {
-        setIsLoading(false);
+        if (isInitial) {
+          setIsInitialLoading(false);
+        } else {
+          setIsLoading(false);
+        }
       }
     },
     [productId, nextCursor]
@@ -109,7 +120,9 @@ export default function CommentsProducts({
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {comments.length === 0 ? (
+      {isInitialLoading ? (
+        <CommentListSkeleton count={4} />
+      ) : comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center">
           <div className="relative w-[140px] h-[140px] mb-2">
             <Image src="/img/Img_inquiry_empty.png" alt="댓글 없음" fill />

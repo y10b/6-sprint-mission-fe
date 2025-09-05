@@ -13,6 +13,7 @@ import BestProducts from "./BestProducts";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { IProductsResponse, IProduct } from "@/types/product";
 import { UseQueryResult } from "@tanstack/react-query";
+import { ProductListSkeleton } from "@/components/skeleton/SkeletonUI";
 
 export default function ProductList() {
   const [search, setSearch] = useState<{ keyword: string; text: string }>({
@@ -116,41 +117,44 @@ export default function ProductList() {
       </div>
 
       {isError && <p className="text-red-500">불러오기 실패</p>}
-      {isLoading && <p>로딩 중...</p>}
 
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
-        {products.map(
-          ({ id, name, price, images, favoriteCount, isLiked }: IProduct) => (
-            <li key={id}>
-              <Link href={`/products/${id}`}>
-                <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
-                  <Image
-                    src={getImageUrl(images?.[0]) || "/img/making.png"}
-                    alt={name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 743px) 50vw, (max-width: 1199px) 33vw, 20vw"
-                  />
-                </div>
+      {isLoading ? (
+        <ProductListSkeleton count={pageSize} />
+      ) : (
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
+          {products.map(
+            ({ id, name, price, images, favoriteCount, isLiked }: IProduct) => (
+              <li key={id}>
+                <Link href={`/products/${id}`}>
+                  <div className="relative w-full aspect-square rounded-2xl overflow-hidden">
+                    <Image
+                      src={getImageUrl(images?.[0]) || "/img/making.png"}
+                      alt={name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 743px) 50vw, (max-width: 1199px) 33vw, 20vw"
+                    />
+                  </div>
 
-                <div className="mt-3">
-                  <h3 className="text-sm font-medium leading-6 text-secondary-800 line-clamp-2">
-                    {name}
-                  </h3>
-                  <p className="text-base font-bold leading-[26px] text-secondary-800">
-                    {formatNumber(price)}원
-                  </p>
-                  <LikeToProduct
-                    productId={id}
-                    initialCount={favoriteCount}
-                    initialIsFavorite={isLiked}
-                  />
-                </div>
-              </Link>
-            </li>
-          )
-        )}
-      </ul>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-medium leading-6 text-secondary-800 line-clamp-2">
+                      {name}
+                    </h3>
+                    <p className="text-base font-bold leading-[26px] text-secondary-800">
+                      {formatNumber(price)}원
+                    </p>
+                    <LikeToProduct
+                      productId={id}
+                      initialCount={favoriteCount}
+                      initialIsFavorite={isLiked}
+                    />
+                  </div>
+                </Link>
+              </li>
+            )
+          )}
+        </ul>
+      )}
 
       {isFetching && (
         <p className="text-center mt-4 text-gray-400">업데이트 중...</p>

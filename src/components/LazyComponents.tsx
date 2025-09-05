@@ -37,21 +37,17 @@ const LoadingButton = () => (
 // =============================================================================
 
 // 게시글 관련 컴포넌트들
-export const LazyArticleList = lazy(
-  () => import("./articles/ArticleList.optimized")
-);
+export const LazyArticleList = lazy(() => import("./articles/ArticleList"));
 export const LazyArticleDetail = lazy(() => import("./articles/ArticleDetail"));
 export const LazyBestArticles = lazy(() => import("./articles/BestArticles"));
 
 // 검색 및 필터 컴포넌트들
-export const LazySearch = lazy(() => import("./Search.optimized"));
+export const LazySearch = lazy(() => import("./Search"));
 export const LazyFilters = lazy(() => import("./Filters"));
-export const LazyPagination = lazy(() => import("./Pagination.optimized"));
+export const LazyPagination = lazy(() => import("./Pagination"));
 
 // 좋아요 컴포넌트들
-export const LazyLikeToProduct = lazy(
-  () => import("./LikeToProduct.optimized")
-);
+export const LazyLikeToProduct = lazy(() => import("./LikeToProduct"));
 export const LazyLikeToArticle = lazy(() => import("./LikeToArticle"));
 
 // 폼 관련 컴포넌트들
@@ -69,7 +65,7 @@ export const LazyCommentsProducts = lazy(
   () => import("./comments/_product/CommentsProducts")
 );
 export const LazyCommentsArticles = lazy(
-  () => import("./comments/_article/CommentsArticle")
+  () => import("./comments/_article/commentsection")
 );
 
 // =============================================================================
@@ -175,7 +171,3 @@ export const preloadImageUploader = preloadComponent(
 export const preloadDeleteModal = preloadComponent(
   () => import("./DeleteModal")
 );
-
-
-
-

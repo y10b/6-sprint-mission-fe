@@ -80,6 +80,7 @@ export async function updateComment(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
     credentials: "include",
     body: JSON.stringify({ content }),
@@ -98,6 +99,10 @@ export async function deleteComment(
 ): Promise<{ success: boolean }> {
   const res = await fetch(`${BASE_URL}/comments/${commentId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
     credentials: "include",
   });
 

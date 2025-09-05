@@ -35,13 +35,13 @@ export function useArticles(
   } = {}
 ) {
   return useQuery({
-    queryKey: queryKeys.articles.list(filters),
-    queryFn: () => articlesApi.fetchArticlesFromAPI(filters),
     ...createQueryOptions<{ articles: IArticle[]; totalCount: number }>({
       ...DEFAULT_QUERY_OPTIONS,
       // 게시글은 자주 업데이트되므로 staleTime을 짧게
       staleTime: 1 * 60 * 1000, // 1분
     }),
+    queryKey: queryKeys.articles.list(filters),
+    queryFn: () => articlesApi.fetchArticlesFromAPI(filters),
   });
 }
 
@@ -50,12 +50,12 @@ export function useArticles(
  */
 export function useArticle(articleId: TId, enabled: boolean = true) {
   return useQuery({
-    queryKey: queryKeys.articles.detail(articleId),
-    queryFn: () => articlesApi.getArticle(articleId),
     ...createQueryOptions<IArticle>({
       ...DEFAULT_QUERY_OPTIONS,
       enabled: enabled && !!articleId,
     }),
+    queryKey: queryKeys.articles.detail(articleId),
+    queryFn: () => articlesApi.getArticle(articleId),
   });
 }
 
@@ -64,12 +64,12 @@ export function useArticle(articleId: TId, enabled: boolean = true) {
  */
 export function useArticleLikes(articleId: TId, enabled: boolean = true) {
   return useQuery({
-    queryKey: queryKeys.articles.likes(articleId),
-    queryFn: () => articlesApi.getArticleWithLikes(articleId),
     ...createQueryOptions<{ likeCount: number; isLiked: boolean }>({
       ...REAL_TIME_QUERY_OPTIONS,
       enabled: enabled && !!articleId,
     }),
+    queryKey: queryKeys.articles.likes(articleId),
+    queryFn: () => articlesApi.getArticleWithLikes(articleId),
   });
 }
 
@@ -78,11 +78,11 @@ export function useArticleLikes(articleId: TId, enabled: boolean = true) {
  */
 export function useAllArticles() {
   return useQuery({
-    queryKey: queryKeys.articles.all,
-    queryFn: () => articlesApi.getArticles(),
     ...createQueryOptions<IArticle[]>({
       ...DEFAULT_QUERY_OPTIONS,
     }),
+    queryKey: queryKeys.articles.all,
+    queryFn: () => articlesApi.getArticles(),
   });
 }
 
@@ -207,11 +207,20 @@ export function useToggleArticleLike() {
       },
       onError: (_, articleId, context) => {
         // 에러 발생 시 이전 데이터로 롤백
-        if (context?.previousLikes) {
-          queryClient.setQueryData(
-            queryKeys.articles.likes(articleId),
-            context.previousLikes
-          );
+        if (
+          context &&
+          typeof context === "object" &&
+          "previousLikes" in context
+        ) {
+          const typedContext = context as {
+            previousLikes?: { likeCount: number; isLiked: boolean };
+          };
+          if (typedContext.previousLikes) {
+            queryClient.setQueryData(
+              queryKeys.articles.likes(articleId),
+              typedContext.previousLikes
+            );
+          }
         }
       },
       onSettled: (_, __, articleId) => {
@@ -271,7 +280,3 @@ export function useInvalidateArticles() {
     },
   };
 }
-
-
-
-

@@ -50,8 +50,8 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           <Image
             src={post.images}
             alt="게시글 이미지"
-            width={600}
-            height={400}
+            width={300}
+            height={200}
             className="rounded-lg"
           />
         </div>
@@ -60,8 +60,8 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           <Image
             src={getDefaultImg()}
             alt="기본 이미지"
-            width={600}
-            height={400}
+            width={300}
+            height={200}
             className="rounded-lg"
           />
         </div>
